@@ -1,6 +1,11 @@
 #include <iostream>
+#include <Pixel.h>
 
-int main()
+class Sandbox : public Pixel::Application {
+
+};
+
+Pixel::Application* Pixel::CreateApplication()
 {
-	std::cout << "Hello From Pixel Engine!" << std::endl;
+	return new Sandbox;
 }

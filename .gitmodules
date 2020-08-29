@@ -1,0 +1,3 @@
+[submodule "Pixel/vendor/GLFW"]
+	path = Pixel/vendor/GLFW
+	url = https://github.com/TheCherno/GLFW

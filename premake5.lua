@@ -11,6 +11,11 @@ workspace "Pixel"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "Pixel/vendor/GLFW/include"
+
+include "Pixel/vendor/GLFW"
+
 project "Pixel"
 	location "Pixel"
 	kind "StaticLib"
@@ -27,21 +32,32 @@ project "Pixel"
 		"%{prj.name}/src/**.cpp"
 	}
 
+	includedirs
+	{
+		"%{IncludeDir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
+	}
+
 	filter "system:windows"
 		systemversion "latest"
 
 	filter "configurations:Debug"
-		defines "HZ_DEBUG"
+		defines "PIXEL_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "HZ_RELEASE"
+		defines "PIXEL_RELEASE"
 		runtime "Release"
 		optimize "on"
 
 	filter "configurations:Dist"
-		defines "HZ_DIST"
+		defines "PIXEL_DIST"
 		runtime "Release"
 		optimize "on"
 
@@ -61,6 +77,11 @@ project "Sandbox"
 		"%{prj.name}/src/**.cpp"
 	}
 
+	includedirs
+	{
+		"Pixel/src/Pixel"
+	}
+
 	links
 	{
 		"Pixel"
@@ -71,16 +92,16 @@ project "Sandbox"
 
 
 	filter "configurations:Debug"
-		defines "HZ_DEBUG"
+		defines "PIXEL_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "HZ_RELEASE"
+		defines "PIXEL_RELEASE"
 		runtime "Release"
 		optimize "on"
 
 	filter "configurations:Dist"
-		defines "HZ_DIST"
+		defines "PIXEL_DIST"
 		runtime "Release"
 		optimize "on"
