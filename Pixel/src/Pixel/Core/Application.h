@@ -4,6 +4,8 @@
 #include <string>
 
 #include "Platform/Window.h"
+#include "Events/Events.h"
+#include "Events/WindowEvents.h"
 
 int main(int argc, char** argv);
 
@@ -14,9 +16,13 @@ namespace Pixel {
 		virtual ~Application() = default;
 
 		void Run();
+		void OnEvent(Event& event);
 	private:
 		bool is_running;
 		std::unique_ptr<Window> window;
+
+		bool OnClose(const QuitEvent& event);
+		bool OnResize(const ResizeEvent& event);
 	};
 
 	Application* CreateApplication();

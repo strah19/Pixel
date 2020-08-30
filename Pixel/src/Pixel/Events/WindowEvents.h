@@ -5,23 +5,21 @@
 
 namespace Pixel {
 	struct QuitEvent : public Event {
-		QuitEvent(const std::string& name)
-			: Event(name), closed(false) { }
+		QuitEvent()
+			: Event("QuitEvent") { }
 		virtual ~QuitEvent() = default;
 
 		std::string GetName() const { return name; }
-
-		bool closed;
 	};
 
 	struct ResizeEvent : public Event {
-		ResizeEvent(const std::string& name)
-			: Event(name), resize(false) { }
+		ResizeEvent(int width, int height)
+			: Event("ResizeEvent"), width(width), height(height) { }
 		virtual ~ResizeEvent() = default;
 
 		std::string GetName() const { return name; }
 
-		bool resize;
+		int width, height;
 	};
 }
 

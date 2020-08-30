@@ -14,6 +14,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Pixel/vendor/GLFW/include"
 IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include"
+IncludeDir["glm"] = "Pixel/vendor/glm"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
@@ -41,7 +42,8 @@ project "Pixel"
 	{
 		"Pixel/src/Pixel",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.GLAD}"
+		"%{IncludeDir.GLAD}",
+		"%{IncludeDir.glm}"
 	}
 
 	defines

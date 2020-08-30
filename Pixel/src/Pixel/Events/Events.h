@@ -4,7 +4,21 @@
 #include <string>
 #include <functional>
 
+#define PIXEL_BIND_EVENT(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
 namespace Pixel {
+	using EventType = std::size_t;
+
+	inline EventType GetEventType() {
+		static EventType current__type = 0;
+		return current__type++;
+	}
+
+	template <typename T> inline EventType GetEventType() {
+		static EventType type = GetEventType();
+		return type;
+	}
+
 	class Event {
 	public:
 		Event(const std::string& name)
@@ -16,7 +30,7 @@ namespace Pixel {
 
 		bool Handled;
 
-		virtual std::string GetName() const { return ""; }
+		virtual std::string GetName() const = 0;
 	protected:
 		bool active;
 		std::string name;
@@ -34,7 +48,7 @@ namespace Pixel {
 
 		template<typename T>
 		bool Dispatch(const std::function<bool(T&)> func) {
-			if (event->ActivityCheck()) {
+			if (event->ActivityCheck() && dynamic_cast<T*>(event)) {
 				event->Handled = func(static_cast<T&>(*event));
 				return true;
 			}

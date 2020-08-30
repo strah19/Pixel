@@ -29,7 +29,7 @@ namespace Pixel {
 
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void* GetNativeWindow() const = 0;
-		virtual bool Update() = 0;
+		virtual void Update() = 0;
 
 		static std::unique_ptr<Window> CreateWindow(const WindowProperties& properties);
 	};

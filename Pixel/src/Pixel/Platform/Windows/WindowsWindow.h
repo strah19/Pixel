@@ -17,7 +17,7 @@ namespace Pixel {
 
 		void SetEventCallback(const EventCallbackFn& callback) override { data.event_call_back = callback; }
 		void* GetNativeWindow() const override;
-		bool Update() override;
+		void Update() override;
 	private:
 		GLFWwindow* native_window;
 
