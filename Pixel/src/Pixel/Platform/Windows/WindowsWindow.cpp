@@ -3,6 +3,8 @@
 #include "glad/glad.h"
 
 #include "Events/WindowEvents.h"
+#include "Events/MouseEvents.h"
+#include "Events/KeyboardEvents.h"
 
 namespace Pixel {
 	static uint32_t glfw_window_count = 0;
@@ -66,6 +68,27 @@ namespace Pixel {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			QuitEvent event;
+			data.event_call_back(event);
+		});
+
+		glfwSetCursorPosCallback(native_window, [](GLFWwindow* window, double x, double y) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			MousePositionEvent event((float)x, (float)y);
+			data.event_call_back(event);
+		});
+
+		glfwSetKeyCallback(native_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			KeyboardEvents event(key, scancode, action);
+			data.event_call_back(event);
+		});
+
+		glfwSetMouseButtonCallback(native_window, [](GLFWwindow* window, int button, int action, int mods) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			MouseButtonEvents event(action, button);
 			data.event_call_back(event);
 		});
 

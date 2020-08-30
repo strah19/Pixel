@@ -6,6 +6,7 @@
 #include "Platform/Window.h"
 #include "Events/Events.h"
 #include "Events/WindowEvents.h"
+#include "Events/MouseEvents.h"
 
 int main(int argc, char** argv);
 
@@ -17,6 +18,7 @@ namespace Pixel {
 
 		void Run();
 		void OnEvent(Event& event);
+		virtual void UserDefEvent(Event& event) { }
 	private:
 		bool is_running;
 		std::unique_ptr<Window> window;

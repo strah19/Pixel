@@ -7,18 +7,6 @@
 #define PIXEL_BIND_EVENT(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 namespace Pixel {
-	using EventType = std::size_t;
-
-	inline EventType GetEventType() {
-		static EventType current__type = 0;
-		return current__type++;
-	}
-
-	template <typename T> inline EventType GetEventType() {
-		static EventType type = GetEventType();
-		return type;
-	}
-
 	class Event {
 	public:
 		Event(const std::string& name)

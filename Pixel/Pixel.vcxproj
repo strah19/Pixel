@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="src\Pixel\Core\Application.h" />
     <ClInclude Include="src\Pixel\Core\EntryPoint.h" />
+    <ClInclude Include="src\Pixel\Core\KeyCodes.h" />
     <ClInclude Include="src\Pixel\Core\PlatformDetection.h" />
     <ClInclude Include="src\Pixel\Events\Events.h" />
     <ClInclude Include="src\Pixel\Events\KeyboardEvents.h" />

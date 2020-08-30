@@ -6,7 +6,7 @@
 namespace Pixel {
 	struct QuitEvent : public Event {
 		QuitEvent()
-			: Event("QuitEvent") { }
+			: Event("Quit Event") { }
 		virtual ~QuitEvent() = default;
 
 		std::string GetName() const { return name; }
@@ -14,7 +14,7 @@ namespace Pixel {
 
 	struct ResizeEvent : public Event {
 		ResizeEvent(int width, int height)
-			: Event("ResizeEvent"), width(width), height(height) { }
+			: Event("Resize Event"), width(width), height(height) { }
 		virtual ~ResizeEvent() = default;
 
 		std::string GetName() const { return name; }

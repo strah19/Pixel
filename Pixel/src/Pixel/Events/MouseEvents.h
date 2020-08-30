@@ -5,16 +5,24 @@
 
 namespace Pixel {
 	struct MouseButtonEvents : public Event {
-		MouseButtonEvents(const std::string& name)
-			: Event(name), x(0), y(0), down(false), button_id(0), clicks(0) { }
+		MouseButtonEvents(bool action, int button_id)
+			: Event("Mouse Button Event"), action(action), button_id(button_id) { }
 		virtual ~MouseButtonEvents() = default;
 
 		std::string GetName() const { return name; }
 
-		int x, y;
-		bool down;
+		int action;
 		int button_id;
-		int clicks;
+	};
+
+	struct MousePositionEvent : public Event {
+		MousePositionEvent(float x, float y)
+			: Event("Mouse Position Event"), x(x), y(y) { }
+		virtual ~MousePositionEvent() = default;
+
+		std::string GetName() const { return name; }
+
+		float x, y;
 	};
 }
 

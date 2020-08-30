@@ -5,15 +5,15 @@
 
 namespace Pixel {
 	struct KeyboardEvents : public Event {
-		KeyboardEvents(const std::string& name)
-			: Event(name), name(), pressed(false), repeat(0) { }
+		KeyboardEvents(int key, int scancode, int action)
+			: Event("Keyboard Event"), key(key), scancode(scancode), action(action) { }
 		virtual ~KeyboardEvents() = default;
 
 		std::string GetName() const { return name; }
 
-		bool pressed;
-		int repeat;
-		std::string name;
+		int key;
+		int scancode;
+		int action;
 	};
 }
 

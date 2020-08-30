@@ -1,6 +1,5 @@
 #include "pixelpch.h"
 #include "Application.h"
-#include <glm/glm.hpp>
 
 namespace Pixel {
 	Application::Application(const std::string& name, uint32_t width, uint32_t height) 
@@ -12,13 +11,13 @@ namespace Pixel {
 	void Application::Run() {
 		while (is_running) {
 			window->Update();
-			std::cout << window->GetWidth() << std::endl;
 		}
 	}
 
 	void Application::OnEvent(Event& event) {
 		EventDispatcher dispatcher(&event);
 
+		UserDefEvent(event);
 		dispatcher.Dispatch<ResizeEvent>(PIXEL_BIND_EVENT(OnResize));
 		dispatcher.Dispatch<QuitEvent>(PIXEL_BIND_EVENT(OnClose));
 	}
