@@ -7,6 +7,8 @@ int main(int argc, char** argv)
 {
 	auto app = Pixel::CreateApplication();
 
+	app->Run();
+
 	delete app;
 }
 

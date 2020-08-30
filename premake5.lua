@@ -26,6 +26,9 @@ project "Pixel"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "pixelpch.h"
+	pchsource "Pixel/src/Pixel/pixelpch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",
@@ -34,10 +37,17 @@ project "Pixel"
 
 	includedirs
 	{
+		"Pixel/src/Pixel",
 		"%{IncludeDir.GLFW}"
 	}
 
-	links
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE"
+	}
+
+	links 
 	{
 		"GLFW",
 		"opengl32.lib"
