@@ -1,11 +1,12 @@
 #include "pixelpch.h"
 #include "WindowsWindow.h"
+#include "glad/glad.h"
 
 namespace Pixel {
 	static uint32_t glfw_window_count = 0;
 
 	WindowsWindow::WindowsWindow(const WindowProperties& properties)
-		: properties(properties) {
+		: data({ properties }) {
 		Construct();
 	}
 
@@ -18,21 +19,24 @@ namespace Pixel {
 	}
 
 	uint32_t WindowsWindow::GetWidth() const {
-		return properties.width;
-		
+		return data.properties.width;	
 	}
 
 	uint32_t WindowsWindow::GetHeight() const {
-		return properties.height;
+		return data.properties.height;
 	}
 
 	void* WindowsWindow::GetNativeWindow() const {
 		return native_window;
 	}
 
-	void WindowsWindow::Update() {
-		glfwSwapBuffers(native_window);
-		glfwPollEvents();
+	bool WindowsWindow::Update() {
+		if (!glfwWindowShouldClose(native_window)) {
+			glfwSwapBuffers(native_window);
+			glfwPollEvents();
+			return true;
+		}
+		return false;
 	}
 
 	void WindowsWindow::Construct() {
@@ -44,8 +48,12 @@ namespace Pixel {
 		if (!glfwInit())
 			return false;
 
-		native_window = glfwCreateWindow(properties.width, properties.height, properties.title.c_str(), NULL, NULL);
+		native_window = glfwCreateWindow(data.properties.width, data.properties.height, data.properties.title.c_str(), NULL, NULL);
 		glfw_window_count++;
+
+		glfwMakeContextCurrent(native_window);
+		glfwSetWindowUserPointer(native_window, &data);
+		int error = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
 		return (native_window != nullptr);
 	}

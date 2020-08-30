@@ -9,7 +9,7 @@ namespace Pixel {
 
 	void Application::Run() {
 		while (is_running) {
-			window->Update();
+			is_running = window->Update();
 		}
 	}
 }

@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;PIXEL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,7 +97,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;PIXEL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -121,7 +121,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;PIXEL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -140,15 +140,24 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\PixelMath\Operations\Angles.h" />
+    <ClInclude Include="src\PixelMath\Operations\Symbols.h" />
+    <ClInclude Include="src\PixelMath\Vectors\vec2d.h" />
     <ClInclude Include="src\Pixel\Core\Application.h" />
     <ClInclude Include="src\Pixel\Core\EntryPoint.h" />
     <ClInclude Include="src\Pixel\Core\PlatformDetection.h" />
+    <ClInclude Include="src\Pixel\Events\Events.h" />
+    <ClInclude Include="src\Pixel\Events\KeyboardEvents.h" />
+    <ClInclude Include="src\Pixel\Events\MouseEvents.h" />
+    <ClInclude Include="src\Pixel\Events\WindowEvents.h" />
     <ClInclude Include="src\Pixel\Pixel.h" />
     <ClInclude Include="src\Pixel\Platform\Window.h" />
     <ClInclude Include="src\Pixel\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Pixel\pixelpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\PixelMath\Operations\Angles.cpp" />
+    <ClCompile Include="src\PixelMath\Vectors\vec2d.cpp" />
     <ClCompile Include="src\Pixel\Core\Application.cpp" />
     <ClCompile Include="src\Pixel\Platform\Windows.cpp" />
     <ClCompile Include="src\Pixel\Platform\Windows\WindowsWindow.cpp" />
@@ -159,6 +168,9 @@
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\GLAD\GLAD.vcxproj">
+      <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

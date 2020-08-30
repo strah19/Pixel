@@ -13,8 +13,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Pixel/vendor/GLFW/include"
+IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include"
 
 include "Pixel/vendor/GLFW"
+include "Pixel/vendor/GLAD"
 
 project "Pixel"
 	location "Pixel"
@@ -38,7 +40,8 @@ project "Pixel"
 	includedirs
 	{
 		"Pixel/src/Pixel",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLAD}"
 	}
 
 	defines
@@ -50,6 +53,7 @@ project "Pixel"
 	links 
 	{
 		"GLFW",
+		"GLAD",
 		"opengl32.lib"
 	}
 

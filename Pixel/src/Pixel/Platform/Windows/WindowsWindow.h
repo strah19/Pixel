@@ -12,14 +12,21 @@ namespace Pixel {
 
 		virtual ~WindowsWindow();
 
-		uint32_t GetWidth() const;
-		uint32_t GetHeight() const;
+		uint32_t GetWidth() const override;
+		uint32_t GetHeight() const override;
 
-		void* GetNativeWindow() const;
-		void Update();
+		void SetEventCallback(const EventCallbackFn& callback) override { data.event_call_back = callback; }
+		void* GetNativeWindow() const override;
+		bool Update() override;
 	private:
 		GLFWwindow* native_window;
-		WindowProperties properties;
+
+		struct WindowData {
+			WindowProperties properties;
+			EventCallbackFn event_call_back;
+		};
+
+		WindowData data;
 
 		void Construct();
 		bool Initialize();
