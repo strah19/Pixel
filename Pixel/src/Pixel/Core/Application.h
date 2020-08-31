@@ -17,7 +17,6 @@ namespace Pixel {
 		virtual ~Application() = default;
 
 		void Run();
-		void OnEvent(Event& event);
 		virtual void UserDefEvent(Event& event) { }
 	private:
 		bool is_running;
@@ -25,6 +24,7 @@ namespace Pixel {
 
 		bool OnClose(const QuitEvent& event);
 		bool OnResize(const ResizeEvent& event);
+		void OnEvent(Event& event);
 	};
 
 	Application* CreateApplication();
