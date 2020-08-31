@@ -47,7 +47,10 @@
     <ClInclude Include="src\Pixel\Core\KeyCodes.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererContext.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Pixel\Renderer\Renderer.h" />
+    <ClInclude Include="src\Pixel\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Pixel\Renderer\RendererCommands.h" />
+    <ClInclude Include="src\Pixel\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Pixel\Renderer\Buffers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pixel\Core\Application.cpp">
@@ -61,5 +64,8 @@
     </ClCompile>
     <ClCompile Include="src\Pixel\pixelpch.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererContext.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\RendererAPI.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\VertexArray.cpp" />
   </ItemGroup>
 </Project>

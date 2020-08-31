@@ -152,9 +152,12 @@
     <ClInclude Include="src\Pixel\Platform\Window.h" />
     <ClInclude Include="src\Pixel\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Pixel\pixelpch.h" />
-    <ClInclude Include="src\Pixel\Renderer\Renderer.h" />
+    <ClInclude Include="src\Pixel\Renderer\Buffers.h" />
+    <ClInclude Include="src\Pixel\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererAPI.h" />
+    <ClInclude Include="src\Pixel\Renderer\RendererCommands.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererContext.h" />
+    <ClInclude Include="src\Pixel\Renderer\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pixel\Core\Application.cpp" />
@@ -163,7 +166,10 @@
     <ClCompile Include="src\Pixel\pixelpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Pixel\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererContext.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
