@@ -28,14 +28,21 @@ namespace Pixel {
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::SetVertexAttributes(VertexBufferLayout& buffer_layout) {
-		uint32_t stride = buffer_layout.Calculate();
-		for (auto& elements : buffer_layout.GetLayout()) {
+	void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer> vertex_buf) {
+		uint32_t stride = vertex_buf->GetLayout()->Calculate();
+
+		vertex_buf->Bind();
+		index_buffer->Bind();
+		Bind();
+
+		for (auto& elements : vertex_buf->GetLayout()->GetLayout()) {
 			glVertexAttribPointer(elements.index, elements.size, VertexShaderTypeToOpenGL(elements.type), elements.normalized ? GL_TRUE : GL_FALSE, stride * sizeof(float),
-			(void*)(elements.offset * sizeof(float)));
+				(void*)(elements.offset * sizeof(float)));
 
 			glEnableVertexAttribArray(elements.index);
 			std::cout << elements.index << " " << elements.offset << " " << elements.size << " " << stride << std::endl;
 		}
+
+		vertex_buffers.push_back(vertex_buf);
 	}
 }

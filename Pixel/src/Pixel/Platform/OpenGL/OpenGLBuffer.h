@@ -11,8 +11,13 @@ namespace Pixel {
 
 		void Bind();
 		void UnBind();
+		uint32_t GetId() const { return vertex_buffer_id; }
+
+		void SetLayout(const VertexBufferLayout& lay) { layout = std::make_shared<VertexBufferLayout>(lay); }
+		std::shared_ptr<VertexBufferLayout> GetLayout() { return layout; }
 	private:
 		uint32_t vertex_buffer_id;
+		std::shared_ptr<VertexBufferLayout> layout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer {
@@ -22,6 +27,7 @@ namespace Pixel {
 
 		void Bind();
 		void UnBind();
+		uint32_t GetId() const { return index_buffer_id; }
 	private:
 		uint32_t index_buffer_id;
 	};

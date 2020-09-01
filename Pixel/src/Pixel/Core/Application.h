@@ -8,6 +8,8 @@
 #include "Events/WindowEvents.h"
 #include "Events/MouseEvents.h"
 
+#include "Renderer/VertexArray.h"
+
 int main(int argc, char** argv);
 
 namespace Pixel {
@@ -25,6 +27,9 @@ namespace Pixel {
 		bool OnClose(const QuitEvent& event);
 		bool OnResize(const ResizeEvent& event);
 		void OnEvent(Event& event);
+
+		unsigned int shaderProgram;
+		std::shared_ptr<VertexArray> vertex;
 	};
 
 	Application* CreateApplication();
