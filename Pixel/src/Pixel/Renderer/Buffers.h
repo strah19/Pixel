@@ -19,6 +19,22 @@ namespace Pixel {
 			: size(size), index(0), normalized(normalized), type(type), offset(0) { }
 	};
 
+	static uint32_t GetSizeInBytes(VertexShaderType type) {
+		switch (type)
+		{
+		case Pixel::VertexShaderType::None: return 0;
+			break;
+		case Pixel::VertexShaderType::Float: return 4;
+			break;
+		case Pixel::VertexShaderType::Int: return 4;
+			break;
+		default:
+			break;
+		}
+
+		return 0;
+	}
+
 	class VertexBufferLayout {
 	public:
 		VertexBufferLayout(const std::initializer_list<VertexBufferElement>& elements)

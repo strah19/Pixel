@@ -36,8 +36,9 @@ namespace Pixel {
 		Bind();
 
 		for (auto& elements : vertex_buf->GetLayout()->GetLayout()) {
-			glVertexAttribPointer(elements.index, elements.size, VertexShaderTypeToOpenGL(elements.type), elements.normalized ? GL_TRUE : GL_FALSE, stride * sizeof(float),
-				(void*)(elements.offset * sizeof(float)));
+			glVertexAttribPointer(elements.index, elements.size, VertexShaderTypeToOpenGL(elements.type), elements.normalized ? GL_TRUE : GL_FALSE, 
+				stride * GetSizeInBytes(elements.type),
+				(void*)(elements.offset * GetSizeInBytes(elements.type)));
 
 			glEnableVertexAttribArray(elements.index);
 			std::cout << elements.index << " " << elements.offset << " " << elements.size << " " << stride << std::endl;

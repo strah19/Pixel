@@ -15,6 +15,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Pixel/vendor/GLFW/include"
 IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include"
 IncludeDir["glm"] = "Pixel/vendor/glm"
+IncludeDir["stb_image"] = "Pixel/vendor/stb_image"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
@@ -43,13 +44,15 @@ project "Pixel"
 		"Pixel/src/Pixel",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	defines
 	{
 		"_CRT_SECURE_NO_WARNINGS",
-		"GLFW_INCLUDE_NONE"
+		"GLFW_INCLUDE_NONE",
+		"STB_IMAGE_IMPLEMENTATION"
 	}
 
 	links 

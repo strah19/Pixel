@@ -4,27 +4,35 @@
 #include "Renderer/Buffers.h"
 
 #include <glad/glad.h>
+#include <stb_image.h>
 
 const char* vertexShaderSource = "#version 450 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "layout (location = 1) in vec3 aColor;\n"
+"layout(location = 2) in vec2 aTexCoord;\n"
 
 "out vec3 outColor;\n"
+"out vec2 TexCoord;\n"
+
 "uniform float offset;\n"
 
 "void main()\n"
 "{\n"
 "   gl_Position = vec4(aPos.x + offset, aPos.y, aPos.z, 1.0);\n"
 "   outColor = aColor;\n"
+"   TexCoord = aTexCoord;\n"
 "}\0";
 
 const char* fragmentShaderSource = "#version 450 core\n"
 "out vec4 FragColor;\n"
 "in vec3 outColor;\n"
+"in vec2 TexCoord;\n"
+
+"uniform sampler2D ourTexture;\n"
 
 "void main()\n"
 "{\n"
-"  FragColor = vec4(outColor, 1.0);\n"
+"  FragColor = texture(ourTexture, TexCoord) * vec4(outColor, 1.0);\n"
 "}\0";
 
 namespace Pixel {
@@ -39,44 +47,30 @@ namespace Pixel {
 		};
 
 		float vertices[] = {
-		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f
+		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
 
-		unsigned int vertexShader;
-		vertexShader = glCreateShader(GL_VERTEX_SHADER);	//creates empty shader object with type
-		glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);	//gives shader source to shader object
-		glCompileShader(vertexShader);	//compiles source code in shader object
-		int  success;
-		char infoLog[512];
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-		if (!success) {
-			glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		glGenTextures(1, &texture1);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		int w, h, nrChannels;
+		unsigned char* data = stbi_load("wall.jpg", &w, &h, &nrChannels, 0);
+		if (data) {
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
 		}
+		else
+			std::cout << "Failed to load texture" << std::endl;		
+		stbi_image_free(data);
 
-		unsigned int fragmentShader;
-		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-		glCompileShader(fragmentShader);
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-		if (!success) {
-			glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-			std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-		}
-
-		shaderProgram = glCreateProgram();	//creates program which can attach shaders
-		glAttachShader(shaderProgram, vertexShader);	//attaches shader object to rpogram
-		glAttachShader(shaderProgram, fragmentShader);
-		glLinkProgram(shaderProgram);	//links all shader objects attached together
-		glDeleteShader(vertexShader);	//deletes shader P.S- once shader linked to program the shader is no longer needed
-		glDeleteShader(fragmentShader);
-		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-		if (!success) {
-			glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		}
+		shader = Shader::Create();
+		shader->Init(vertexShaderSource, fragmentShaderSource);
 
 		std::shared_ptr<VertexBuffer> buffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices));
 		vertex = VertexArray::CreateVertexArray();
@@ -84,6 +78,7 @@ namespace Pixel {
 		VertexBufferLayout layout;
 		layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float));
 		layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float));
+		layout.AddToBuffer(VertexBufferElement(2, false, VertexShaderType::Float));
 		
 		buffer->SetLayout(layout);
 
@@ -96,8 +91,15 @@ namespace Pixel {
 			glClear(GL_COLOR_BUFFER_BIT);
 			glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
-			glUseProgram(shaderProgram);
+			shader->Bind();
+
+			float offset = 0.2f;
+			shader->Set1f("offset", offset);
+
 			glBindVertexArray(vertex->GetId());
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture1);
+
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex->GetIndexBuffers()->GetId());
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
