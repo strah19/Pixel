@@ -35,7 +35,10 @@ namespace Pixel {
 	}
 
 	void WindowsWindow::Update() {
-		glfwSwapBuffers(native_window);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+		context->SwapBuffers();
 		glfwPollEvents();
 	}
 
@@ -51,9 +54,12 @@ namespace Pixel {
 		native_window = glfwCreateWindow(data.properties.width, data.properties.height, data.properties.title.c_str(), NULL, NULL);
 		glfw_window_count++;
 
-		glfwMakeContextCurrent(native_window);
 		glfwSetWindowUserPointer(native_window, &data);
-		int error = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+		context = RendererContext::CreateRendererContext(this);
+		if (!context->Init())
+			return false;
+		context->SetVSync(1);
 
 		glfwSetWindowSizeCallback(native_window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);

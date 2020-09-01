@@ -1,11 +1,36 @@
 #include "pixelpch.h"
 #include "Application.h"
 
+#include "Renderer/Buffers.h"
+#include "Renderer/VertexArray.h"
+
 namespace Pixel {
 	Application::Application(const std::string& name, uint32_t width, uint32_t height) 
 		: is_running(true) {
 		window = Window::CreateWindow({ name, width, height });
 		window->SetEventCallback(PIXEL_BIND_EVENT(OnEvent));
+
+		uint32_t indices[]{
+			0, 1, 3,
+			1, 2, 3
+		};
+
+		float vertices[] = {
+		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f
+		};
+
+		std::shared_ptr<IndexBuffer> index = IndexBuffer::CreateIndexBuffer(indices, sizeof(indices));
+		std::shared_ptr<VertexBuffer> buffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices));
+		std::shared_ptr<VertexArray> vertex = VertexArray::CreateVertexArray();
+
+		VertexBufferLayout layout;
+		layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float));
+		layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float));
+		
+		vertex->SetVertexAttributes(layout);
 	}
 
 	void Application::Run() {

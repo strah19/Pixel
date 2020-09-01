@@ -3,6 +3,7 @@
 
 #include "Platform/Window.h"
 #include <GLFW/glfw3.h>
+#include "Renderer/RendererContext.h"
 
 namespace Pixel {
 	class WindowsWindow : public Window {
@@ -20,6 +21,7 @@ namespace Pixel {
 		void Update() override;
 	private:
 		GLFWwindow* native_window;
+		std::unique_ptr<RendererContext> context;
 
 		struct WindowData {
 			WindowProperties properties;
