@@ -14,7 +14,7 @@ namespace Pixel {
 
 		virtual void Init(const char* vertex_shader, const char* fragment_shader) = 0;
 
-		static std::shared_ptr<Shader> Create();
+		static std::shared_ptr<Shader> CreateShader();
 
 		/* Uniforms go here! */
 		virtual void Set1f(const std::string& name, float& value) = 0;

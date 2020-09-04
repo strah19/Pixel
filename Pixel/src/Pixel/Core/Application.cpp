@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <stb_image.h>
+#include <GLFW/glfw3.h>
 
 const char* vertexShaderSource = "#version 450 core\n"
 "layout (location = 0) in vec3 aPos;\n"
@@ -55,21 +56,25 @@ namespace Pixel {
 
 		glGenTextures(1, &texture1);
 		glBindTexture(GL_TEXTURE_2D, texture1);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 		int w, h, nrChannels;
 		unsigned char* data = stbi_load("wall.jpg", &w, &h, &nrChannels, 0);
 		if (data) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else
-			std::cout << "Failed to load texture" << std::endl;		
+			std::cout << "Failed to load texture" << std::endl;
+		
+		glTextureParameteri(texture1, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(texture1, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTextureParameteri(texture1, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(texture1, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 		stbi_image_free(data);
 
-		shader = Shader::Create();
+		shader = Shader::CreateShader();
 		shader->Init(vertexShaderSource, fragmentShaderSource);
 
 		std::shared_ptr<VertexBuffer> buffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices));
@@ -84,24 +89,21 @@ namespace Pixel {
 
 		vertex->SetIndexBuffer(IndexBuffer::CreateIndexBuffer(indices, sizeof(indices)));
 		vertex->AddVertexBuffer(buffer);
+
+		renderer = Pixel::Renderer2D::CreateRenderer();
+		commands = Pixel::RendererCommands::CreateRendererCommands();
 	}
 
 	void Application::Run() {
 		while (is_running) {
-			glClear(GL_COLOR_BUFFER_BIT);
-			glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-
-			shader->Bind();
+			commands->Clear();
+			commands->SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 			float offset = 0.2f;
 			shader->Set1f("offset", offset);
 
-			glBindVertexArray(vertex->GetId());
-			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texture1);
-
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex->GetIndexBuffers()->GetId());
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			renderer->Submit(vertex, shader);
 
 			window->Update();
 		}

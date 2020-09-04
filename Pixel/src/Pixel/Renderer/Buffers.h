@@ -50,7 +50,7 @@ namespace Pixel {
 		}
 
 		uint32_t Calculate() {
-			uint32_t stride = 0;
+			stride = 0;
 			for (auto& element : elements) {
 				element.offset = stride;
 				stride += element.size;
@@ -61,8 +61,11 @@ namespace Pixel {
 
 		std::vector<VertexBufferElement> GetLayout() const { return elements; }
 		VertexBufferElement LastElement() const { return elements.back(); }
+
+		uint32_t GetStride() const { return stride; }
 	private:
 		std::vector<VertexBufferElement> elements;
+		uint32_t stride;
 	};
 
 	class VertexBuffer {
