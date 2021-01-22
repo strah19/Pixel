@@ -12,6 +12,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/RendererCommands.h"
 #include "Renderer/Renderer2D.h"
+#include "Renderer/Texture.h"
 
 int main(int argc, char** argv);
 
@@ -36,7 +37,7 @@ namespace Pixel {
 		std::shared_ptr<RendererCommands> commands;
 		std::shared_ptr<Renderer2D> renderer;
 
-		unsigned int texture1;
+		std::shared_ptr<Texture> texture;
 	};
 
 	Application* CreateApplication();

@@ -10,8 +10,6 @@ namespace Pixel {
 		void EndScene();
 
 		void Submit(std::shared_ptr<VertexArray> vertex_array, std::shared_ptr<Shader> shader);		/* Will take in a shader and vertex buffer to draw. */
-	private:
-
 	};
 }
 

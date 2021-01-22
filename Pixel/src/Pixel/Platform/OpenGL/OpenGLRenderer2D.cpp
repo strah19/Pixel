@@ -17,6 +17,7 @@ namespace Pixel {
 		vertex_array->Bind();
 		vertex_array->GetIndexBuffers()->Bind();
 
-		glDrawElements(GL_TRIANGLES, vertex_array->GetVertexBuffers().back()->GetLayout()->GetStride(), GL_UNSIGNED_INT, 0);
+		for(auto& i : vertex_array->GetVertexBuffers())
+			glDrawElements(GL_TRIANGLES, i->GetLayout()->GetStride(), GL_UNSIGNED_INT, 0);
 	}
 }

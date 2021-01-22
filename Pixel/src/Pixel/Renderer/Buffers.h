@@ -65,7 +65,7 @@ namespace Pixel {
 		uint32_t GetStride() const { return stride; }
 	private:
 		std::vector<VertexBufferElement> elements;
-		uint32_t stride;
+		uint32_t stride = 0;
 	};
 
 	class VertexBuffer {
