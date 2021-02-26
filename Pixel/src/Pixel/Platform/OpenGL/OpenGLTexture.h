@@ -20,9 +20,9 @@ namespace Pixel {
 	private:
 		uint32_t texture_id;
 
-		uint32_t width;
-		uint32_t height;
-		GLenum internal_format, data_format;
+		uint32_t width = 0;
+		uint32_t height = 0;
+		GLenum internal_format = 0, data_format = 0;
 	};
 }
 

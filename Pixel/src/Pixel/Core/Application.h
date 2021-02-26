@@ -10,7 +10,6 @@
 
 #include "Renderer/VertexArray.h"
 #include "Renderer/Shader.h"
-#include "Renderer/RendererCommands.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Texture.h"
 
@@ -34,8 +33,6 @@ namespace Pixel {
 
 		std::shared_ptr<VertexArray> vertex;
 		std::shared_ptr<Shader> shader;
-		std::shared_ptr<RendererCommands> commands;
-		std::shared_ptr<Renderer2D> renderer;
 
 		std::shared_ptr<Texture> texture;
 	};

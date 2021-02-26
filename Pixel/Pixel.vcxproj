@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;STB_IMAGE_IMPLEMENTATION;PIXEL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,7 +97,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;STB_IMAGE_IMPLEMENTATION;PIXEL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -121,7 +121,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;STB_IMAGE_IMPLEMENTATION;PIXEL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -151,16 +151,16 @@
     <ClInclude Include="src\Pixel\Pixel.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLContext.h" />
-    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLRenderer2D.h" />
+    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLVertexArray.h" />
-    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLRendererCommands.h" />
     <ClInclude Include="src\Pixel\Platform\Window.h" />
     <ClInclude Include="src\Pixel\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Pixel\Renderer\Buffers.h" />
     <ClInclude Include="src\Pixel\Renderer\FrameBuffer.h" />
     <ClInclude Include="src\Pixel\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Pixel\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererCommands.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererContext.h" />
     <ClInclude Include="src\Pixel\Renderer\Shader.h" />
@@ -172,8 +172,7 @@
     <ClCompile Include="src\Pixel\Core\Application.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLContext.cpp" />
-    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLRenderer2D.cpp" />
-    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLRendererCommands.cpp" />
+    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLVertexArray.cpp" />
@@ -181,6 +180,7 @@
     <ClCompile Include="src\Pixel\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererCommands.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererContext.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Shader.cpp" />

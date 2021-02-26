@@ -1,45 +1,20 @@
 #include "pixelpch.h"
 #include "Application.h"
+#include "Renderer/RendererAPI.h"
+#include "Renderer/RendererCommands.h"
 
 #include "Renderer/Buffers.h"
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-const char* vertexShaderSource = "#version 450 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aColor;\n"
-"layout(location = 2) in vec2 aTexCoord;\n"
-
-"out vec3 outColor;\n"
-"out vec2 TexCoord;\n"
-
-"uniform float offset;\n"
-
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x + offset, aPos.y, aPos.z, 1.0);\n"
-"   outColor = aColor;\n"
-"   TexCoord = aTexCoord;\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 450 core\n"
-"out vec4 FragColor;\n"
-"in vec3 outColor;\n"
-"in vec2 TexCoord;\n"
-
-"uniform sampler2D ourTexture;\n"
-
-"void main()\n"
-"{\n"
-"  FragColor = texture(ourTexture, TexCoord) * vec4(outColor, 1.0);\n"
-"}\0";
+#include <GLFW/glfw3.h> 
 
 namespace Pixel {
 	Application::Application(const std::string& name, uint32_t width, uint32_t height) 
 		: is_running(true) {
 		window = Window::CreateWindow({ name, width, height });
 		window->SetEventCallback(PIXEL_BIND_EVENT(OnEvent));
+
+		Pixel::RendererCommand::Init();
 
 		uint32_t indices[]{
 			0, 1, 3,
@@ -54,7 +29,7 @@ namespace Pixel {
 		};
 
 		shader = Shader::CreateShader();
-		shader->Init(vertexShaderSource, fragmentShaderSource);
+		shader->Init("shaders/shader.glsl");
 
 		std::shared_ptr<VertexBuffer> buffer = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices));
 		vertex = VertexArray::CreateVertexArray();
@@ -69,22 +44,19 @@ namespace Pixel {
 		vertex->SetIndexBuffer(IndexBuffer::CreateIndexBuffer(indices, sizeof(indices)));
 		vertex->AddVertexBuffer(buffer);
 
-		renderer = Pixel::Renderer2D::CreateRenderer();
-		commands = Pixel::RendererCommands::CreateRendererCommands();
-
 		texture = Pixel::Texture::CreateTexture("wall.jpg");
 	}
 
 	void Application::Run() {
 		while (is_running) {
-			commands->Clear();
-			commands->SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+			Pixel::RendererCommand::Clear();
+			Pixel::RendererCommand::SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 			float offset = 0.2f;
 			shader->Set1f("offset", offset);
 
 			texture->Bind();
-			renderer->Submit(vertex, shader);
+			Pixel::Renderer::Submit(vertex, shader);
 
 			window->Update();
 		}

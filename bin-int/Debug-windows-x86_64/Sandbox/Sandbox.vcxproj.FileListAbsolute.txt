@@ -1,2 +1,0 @@
-C:\Users\stra2\source\repos\Pixel\bin\Debug-windows-x86_64\Sandbox\Sandbox.pdb
-C:\Users\stra2\source\repos\Pixel\bin-int\Debug-windows-x86_64\Sandbox\Sandbox.pdb

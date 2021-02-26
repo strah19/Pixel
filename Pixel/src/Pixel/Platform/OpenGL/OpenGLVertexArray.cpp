@@ -41,7 +41,6 @@ namespace Pixel {
 				(void*)(elements.offset * GetSizeInBytes(elements.type)));
 
 			glEnableVertexAttribArray(elements.index);
-			std::cout << elements.index << " " << elements.offset << " " << elements.size << " " << stride << std::endl;
 		}
 
 		vertex_buffers.push_back(vertex_buf);

@@ -14,8 +14,8 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Pixel/vendor/GLFW/include"
 IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include"
-IncludeDir["glm"] = "Pixel/vendor/glm"
 IncludeDir["stb_image"] = "Pixel/vendor/stb_image"
+IncludeDir["glm"] = "Pixel/vendor/glm"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
@@ -44,8 +44,8 @@ project "Pixel"
 		"Pixel/src/Pixel",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
-		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.glm}"
 	}
 
 	defines
@@ -81,7 +81,7 @@ project "Pixel"
 		optimize "on"
 
 project "Sandbox"
-	location "Pixel"
+	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 	staticruntime "on"
@@ -98,7 +98,8 @@ project "Sandbox"
 
 	includedirs
 	{
-		"Pixel/src/Pixel"
+		"Pixel/src/Pixel",
+		"%{IncludeDir.glm}"
 	}
 
 	links

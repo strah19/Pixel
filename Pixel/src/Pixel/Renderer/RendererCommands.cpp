@@ -1,16 +1,25 @@
 #include "pixelpch.h"
 #include "RendererCommands.h"
 
-#include "Platform/OpenGL/OpenGLRendererCommands.h"
-
 namespace Pixel {
-	RenderAPI RendererCommands::API = RenderAPI::OpenGL;
+	static std::shared_ptr<RendererAPI> renderer_api;
 
-	std::shared_ptr<RendererCommands> RendererCommands::CreateRendererCommands() {
-		switch (RendererCommands::GetAPI()) {
-		case RenderAPI::OpenGL: return std::make_shared<OpenGLRendererCommands>();
-		case RenderAPI::None: return nullptr;
-		}
-		return nullptr;
+	void RendererCommand::Init() {
+		renderer_api = RendererAPI::CreateRendererAPI();
+	}
+
+	void RendererCommand::SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) { 
+		renderer_api->SetViewport(x, y, w, h); 	
+	}
+	void RendererCommand::Clear() { 
+		renderer_api->Clear(); 
+	}
+
+	void RendererCommand::SetClearColor(float r, float g, float b, float a) { 
+		renderer_api->SetClearColor(r, g, b, a);
+	}
+
+	void RendererCommand::DrawVertexArray(std::shared_ptr<VertexArray> vertex_array) {
+		renderer_api->DrawVertexArray(vertex_array);
 	}
 }

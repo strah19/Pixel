@@ -6,7 +6,7 @@
 
 namespace Pixel {
 	std::shared_ptr<VertexArray> VertexArray::CreateVertexArray() {
-		switch (RendererCommands::GetAPI()) {
+		switch (RendererAPI::GetAPI()) {
 		case RenderAPI::OpenGL: return std::make_shared<OpenGLVertexArray>();
 		case RenderAPI::None: return nullptr;
 		}

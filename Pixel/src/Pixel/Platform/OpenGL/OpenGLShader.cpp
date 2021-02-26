@@ -2,6 +2,9 @@
 #include "OpenGLShader.h"
 
 #include <glad/glad.h>
+#include <gtc/type_ptr.hpp>
+#include <fstream>
+#include <sstream>
 
 namespace Pixel {
 	OpenGLShader::~OpenGLShader() {
@@ -16,45 +19,74 @@ namespace Pixel {
 		glUseProgram(0);
 	}
 
-	void OpenGLShader::Init(const char* vertex_shader, const char* fragment_shader){
-		int32_t is_success;
-		char error[512];
+	void OpenGLShader::Init(const std::string& file_path) {
+		ShaderSources source = ParseShader(file_path);
+		shader_id = CreateShader(source.vertex, source.fragment);
+	}
 
-		uint32_t ver_shader;
-		ver_shader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(ver_shader, 1, &vertex_shader, NULL);
-		glCompileShader(ver_shader);
-		glGetShaderiv(ver_shader, GL_COMPILE_STATUS, &is_success);
+	uint32_t OpenGLShader::CompileShader(const std::string& source, uint32_t type)
+	{
+		unsigned int id = glCreateShader(type);
+		const char* src = source.c_str();
+		glShaderSource(id, 1, &src, nullptr);
+		glCompileShader(id);
 
-		if (!is_success) {
-			glGetShaderInfoLog(ver_shader, 512, NULL, error);
-			std::cout << error << std::endl;
+		int result;
+		glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+		if (!result)
+		{
+			int length;
+			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+			char* message = (char*)malloc(length * sizeof(char));
+			glGetShaderInfoLog(id, length, &length, message);
+			std::cout << "Failed to compile shader" << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
+			glDeleteShader(id);
+			return 0;
 		}
 
-		uint32_t frag_shader;
-		frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(frag_shader, 1, &fragment_shader, NULL);
-		glCompileShader(frag_shader);
-		glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &is_success);
+		return id;
+	}
 
-		if (!is_success) {
-			glGetShaderInfoLog(frag_shader, 512, NULL, error);
-			std::cout << error << std::endl;
+	ShaderSources OpenGLShader::ParseShader(const std::string& filePath)
+	{
+		std::ifstream stream(filePath);
+
+		enum class ShaderType {
+			NONE = -1, VERTEX = 0, FRAGMENT = 1
+		};
+
+		ShaderType type = ShaderType::NONE;
+		std::string line;
+		std::stringstream ss[2];
+
+		while (getline(stream, line)) {
+			if (line.find("#shader") != std::string::npos) {
+				if (line.find("vertex") != std::string::npos)
+					type = ShaderType::VERTEX;
+				else if (line.find("fragment") != std::string::npos)
+					type = ShaderType::FRAGMENT;
+			}
+			else {
+				ss[(int)type] << line << '\n';
+			}
 		}
+		return { ss[0].str(), ss[1].str() };
+	}
+	unsigned int OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+	{
+		unsigned int program = glCreateProgram();
+		unsigned int vs = CompileShader(vertexShader, GL_VERTEX_SHADER);
+		unsigned int fs = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);
 
-		shader_id = glCreateProgram();
-		glAttachShader(shader_id, ver_shader);
-		glAttachShader(shader_id, frag_shader);
+		glAttachShader(program, vs);
+		glAttachShader(program, fs);
+		glLinkProgram(program);
+		glValidateProgram(program);
 
-		glLinkProgram(shader_id);
-		glDeleteShader(ver_shader);
-		glDeleteShader(frag_shader);
+		glDeleteShader(vs);
+		glDeleteShader(fs);
 
-		glGetProgramiv(shader_id, GL_LINK_STATUS, &is_success);
-		if (!is_success) {
-			glGetProgramInfoLog(shader_id, 512, NULL, error);
-			std::cout << error << std::endl;
-		}
+		return program;
 	}
 
 	void OpenGLShader::Set1f(const std::string& name, float& value) {
@@ -63,5 +95,9 @@ namespace Pixel {
 
 	uint32_t OpenGLShader::GetUniformLocation(const std::string& name) {
 		return (glGetUniformLocation(shader_id, name.c_str()));
+	}
+
+	void OpenGLShader::SetMat4f(const std::string& name, const glm::mat4& mat4) {
+		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat4));
 	}
 }

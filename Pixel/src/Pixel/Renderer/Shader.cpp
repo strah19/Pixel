@@ -6,7 +6,7 @@
 
 namespace Pixel {
 	std::shared_ptr<Shader> Shader::CreateShader() {
-		switch (RendererCommands::GetAPI()) {
+		switch (RendererAPI::GetAPI()) {
 		case RenderAPI::OpenGL: return std::make_shared<OpenGLShader>();
 		case RenderAPI::None: return nullptr;
 		}

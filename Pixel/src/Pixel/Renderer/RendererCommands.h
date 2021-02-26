@@ -2,22 +2,17 @@
 #define RENDERER_COMMANDS_H
 
 #include <memory>
+#include "RendererAPI.h"
 
 namespace Pixel {
-	enum class RenderAPI {
-		OpenGL, None
-	};
-
-	class RendererCommands {
+	class RendererCommand {
 	public:
-		virtual void Clear() = 0;
-		virtual void SetClearColor(float r, float g, float b, float a) = 0;
-		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) = 0;
+		static void Init();
 
-		static std::shared_ptr<RendererCommands> CreateRendererCommands();
-		static RenderAPI GetAPI() { return API; }
-	private:
-		static RenderAPI API;
+		static void SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
+		static void Clear();
+		static void SetClearColor(float r, float g, float b, float a);
+		static void DrawVertexArray(std::shared_ptr<VertexArray> vertex_array); 
 	};
 }
 
