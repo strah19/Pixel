@@ -10,10 +10,16 @@
 
 #include "Renderer/VertexArray.h"
 #include "Renderer/Shader.h"
-#include "Renderer/Renderer2D.h"
+#include "Renderer/Renderer.h"
 #include "Renderer/Texture.h"
 
 int main(int argc, char** argv);
+struct Vertex {
+	glm::vec3 position;
+	glm::vec4 color;
+	glm::vec2 texture_coordinates;
+	float texture_id;
+};
 
 namespace Pixel {
 	class Application {
@@ -23,6 +29,7 @@ namespace Pixel {
 
 		void Run();
 		virtual void UserDefEvent(Event& event) { }
+		
 	private:
 		bool is_running;
 		std::unique_ptr<Window> window;
@@ -31,10 +38,7 @@ namespace Pixel {
 		bool OnResize(const ResizeEvent& event);
 		void OnEvent(Event& event);
 
-		std::shared_ptr<VertexArray> vertex;
-		std::shared_ptr<Shader> shader;
-
-		std::shared_ptr<Texture> texture;
+		std::shared_ptr<Texture> texture1;
 	};
 
 	Application* CreateApplication();

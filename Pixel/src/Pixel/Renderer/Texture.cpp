@@ -12,4 +12,12 @@ namespace Pixel {
 		}
 		return nullptr;
 	}
+
+	std::shared_ptr<Texture> Texture::CreateTexture(uint32_t width, uint32_t height) {
+		switch (RendererAPI::GetAPI()) {
+		case RenderAPI::OpenGL: return std::make_shared<OpenGLTexture>(width, height);
+		case RenderAPI::None: return nullptr;
+		}
+		return nullptr;
+	}
 }

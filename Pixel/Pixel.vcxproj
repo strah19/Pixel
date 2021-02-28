@@ -159,7 +159,7 @@
     <ClInclude Include="src\Pixel\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Pixel\Renderer\Buffers.h" />
     <ClInclude Include="src\Pixel\Renderer\FrameBuffer.h" />
-    <ClInclude Include="src\Pixel\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Pixel\Renderer\Renderer.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererCommands.h" />
     <ClInclude Include="src\Pixel\Renderer\RendererContext.h" />
@@ -179,7 +179,7 @@
     <ClCompile Include="src\Pixel\Platform\Windows.cpp" />
     <ClCompile Include="src\Pixel\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Buffer.cpp" />
-    <ClCompile Include="src\Pixel\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererCommands.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererContext.cpp" />

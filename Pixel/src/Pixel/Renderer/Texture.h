@@ -15,6 +15,7 @@ namespace Pixel {
 		virtual uint32_t GetTextureId() const = 0;
 
 		static std::shared_ptr<Texture> CreateTexture(const char* file_path);
+		static std::shared_ptr<Texture> CreateTexture(uint32_t width, uint32_t height);
 	};
 }
 

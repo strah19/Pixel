@@ -4,6 +4,11 @@
 #include <glad/glad.h>
 
 namespace Pixel {
+	void OpenGLRendererAPI::Init() {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void OpenGLRendererAPI::Clear() {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
@@ -17,7 +22,9 @@ namespace Pixel {
 	}
 
 	void OpenGLRendererAPI::DrawVertexArray(std::shared_ptr<VertexArray> vertex_array) {
-		for (auto& i : vertex_array->GetVertexBuffers())
-			glDrawElements(GL_TRIANGLES, i->GetLayout()->GetStride(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, vertex_array->GetIndexBuffers()->GetCount(), GL_UNSIGNED_INT, 0);
+	//	for (auto& i : vertex_array->GetVertexBuffers()) {
+		//	std::cout << i->GetLayout()->GetStride() << std::endl;
+		//}
 	}
 }

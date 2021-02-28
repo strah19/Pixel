@@ -6,6 +6,7 @@ namespace Pixel {
 
 	void RendererCommand::Init() {
 		renderer_api = RendererAPI::CreateRendererAPI();
+		renderer_api->Init();
 	}
 
 	void RendererCommand::SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) { 

@@ -8,6 +8,7 @@ namespace Pixel {
 	class OpenGLTexture : public Texture {
 	public:
 		OpenGLTexture(const char* file_path);
+		OpenGLTexture(uint32_t width, uint32_t height);
 
 		void Bind(uint32_t slot = 0);
 		void UnBind();

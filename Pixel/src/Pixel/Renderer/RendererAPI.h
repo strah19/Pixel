@@ -11,6 +11,7 @@ namespace Pixel {
 
 	class RendererAPI {
 	public:
+		virtual void Init() = 0;
 		virtual void Clear() = 0;
 		virtual void SetClearColor(float r, float g, float b, float a) = 0;
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) = 0;

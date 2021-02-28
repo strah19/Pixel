@@ -6,6 +6,7 @@ namespace Pixel {
 	static GLenum VertexShaderTypeToOpenGL(VertexShaderType type) {
 		switch (type) {
 		case VertexShaderType::Float: return GL_FLOAT;
+		case VertexShaderType::Int: return GL_INT;
 		case VertexShaderType::None: return GL_NONE;
 		}
 		return GL_NONE;

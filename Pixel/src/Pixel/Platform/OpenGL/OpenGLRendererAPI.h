@@ -6,6 +6,7 @@
 namespace Pixel {
 	class OpenGLRendererAPI : public RendererAPI {
 	public:
+		void Init();
 		void Clear();
 		void SetClearColor(float r, float g, float b, float a);
 		void SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h);

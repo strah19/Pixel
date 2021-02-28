@@ -78,7 +78,9 @@ namespace Pixel {
 
 		virtual void SetLayout(const VertexBufferLayout& lay) = 0;
 		virtual std::shared_ptr<VertexBufferLayout> GetLayout() = 0;
+		virtual void SetData(void* data, uint32_t size) = 0;
 
+		static std::shared_ptr<VertexBuffer> CreateVertexBuffer(uint32_t size);
 		static std::shared_ptr<VertexBuffer> CreateVertexBuffer(float* vertices, uint32_t size);
 	};
 
@@ -89,6 +91,7 @@ namespace Pixel {
 		virtual void Bind() = 0;
 		virtual void UnBind() = 0;
 		virtual uint32_t GetId() const = 0;
+		virtual uint32_t GetCount() const = 0;
 
 		static std::shared_ptr<IndexBuffer> CreateIndexBuffer(uint32_t* indices, uint32_t size);
 	};

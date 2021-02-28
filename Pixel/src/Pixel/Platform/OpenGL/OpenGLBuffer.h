@@ -6,11 +6,14 @@
 namespace Pixel {
 	class OpenGLVertexBuffer : public VertexBuffer {
 	public:
+		OpenGLVertexBuffer(uint32_t size);
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
 		virtual ~OpenGLVertexBuffer();
 
 		void Bind();
 		void UnBind();
+		void SetData(void* data, uint32_t size);
+
 		uint32_t GetId() const { return vertex_buffer_id; }
 
 		void SetLayout(const VertexBufferLayout& lay) { layout = std::make_shared<VertexBufferLayout>(lay); }
@@ -28,8 +31,10 @@ namespace Pixel {
 		void Bind();
 		void UnBind();
 		uint32_t GetId() const { return index_buffer_id; }
+		uint32_t GetCount() const { return count; }
 	private:
 		uint32_t index_buffer_id;
+		uint32_t count = 0;
 	};
 }
 

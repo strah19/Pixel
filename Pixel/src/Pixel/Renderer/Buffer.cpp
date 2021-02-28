@@ -5,6 +5,14 @@
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Pixel {
+	std::shared_ptr<VertexBuffer> VertexBuffer::CreateVertexBuffer(uint32_t size) {
+		switch (RendererAPI::GetAPI()) {
+		case RenderAPI::OpenGL: return std::make_shared<OpenGLVertexBuffer>(size);
+		case RenderAPI::None: return nullptr;
+		}
+		return nullptr;
+	}
+
 	std::shared_ptr<VertexBuffer> VertexBuffer::CreateVertexBuffer(float* vertices, uint32_t size) {
 		switch (RendererAPI::GetAPI()) {
 		case RenderAPI::OpenGL: return std::make_shared<OpenGLVertexBuffer>(vertices, size);
