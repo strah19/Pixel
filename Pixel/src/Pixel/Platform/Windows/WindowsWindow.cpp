@@ -81,6 +81,13 @@ namespace Pixel {
 			data.event_call_back(event);
 		});
 
+		glfwSetScrollCallback(native_window, [](GLFWwindow* window, double xoffset, double yoffset) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			MouseWheelEvent event((double) xoffset, (double) yoffset);
+			data.event_call_back(event);
+		});
+
 		glfwSetKeyCallback(native_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 

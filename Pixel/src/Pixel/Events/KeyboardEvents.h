@@ -3,10 +3,12 @@
 
 #include "Events/Events.h"
 
+constexpr int MAX_KEYS = 349;
+
 namespace Pixel {
 	struct KeyboardEvents : public Event {
 		KeyboardEvents(int key, int scancode, int action)
-			: Event("Keyboard Event"), key(key), scancode(scancode), action(action) { }
+			: Event("Keyboard Event"), key(key), scancode(scancode), action(action) {  }
 		virtual ~KeyboardEvents() = default;
 
 		std::string GetName() const { return name; }

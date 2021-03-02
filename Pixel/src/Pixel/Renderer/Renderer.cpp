@@ -31,31 +31,11 @@ namespace Pixel {
 		Vertex* vertices_ptr = nullptr;
 
 		glm::vec4 quad_positions[4];
-		uint32_t texture_slot_index = 1;
+		uint32_t texture_slot_index = 0;
 		std::array<std::shared_ptr<Texture>, MAX_TEXTURE_SLOTS> textures;
 	};
+
 	static RendererData renderer_data;
-
-	void Renderer::BeginScene() {
-		renderer_data.vertices_ptr = renderer_data.vertices_base;
-		renderer_data.shader->Bind();
-		renderer_data.texture_slot_index = 1;
-	}
-
-	void Renderer::EndScene() {
-		for (uint32_t i = 1; i < renderer_data.texture_slot_index; i++) {
-			renderer_data.textures[i]->Bind(i - 1);
-		}
-
-		uint32_t size = (uint32_t)((uint8_t*)renderer_data.vertices_ptr - (uint8_t*)renderer_data.vertices_base);
-
-		if (size == 0)
-			return;
-
-		renderer_data.vertex_buffer->SetData(renderer_data.vertices_base, size);
-
-		Renderer::Submit(renderer_data.vertex_array, renderer_data.shader);
-	}
 
 	void Renderer::Init() {
 		renderer_data.vertex_buffer = VertexBuffer::CreateVertexBuffer(sizeof(Vertex) * MAX_VERTEX_COUNT);
@@ -94,16 +74,39 @@ namespace Pixel {
 		renderer_data.quad_positions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
 		renderer_data.quad_positions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		renderer_data.quad_positions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+	}
 
+	void Renderer::BeginScene(OrthoCamera& camera) {
+		renderer_data.vertices_ptr = renderer_data.vertices_base;
+		renderer_data.shader->Bind();
+		renderer_data.shader->SetMat4f("proj", camera.GetProjection());
+		renderer_data.shader->SetMat4f("view", camera.GetView());
+		renderer_data.texture_slot_index = 0;
+	}
+
+	void Renderer::EndScene() {
+		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) {
+			renderer_data.textures[i]->Bind(i);
+		}
 		auto loc = renderer_data.shader->GetUniformLocation("ourTexture");
 		int sampler[MAX_TEXTURE_SLOTS];
 		for (int i = 0; i < MAX_TEXTURE_SLOTS; i++)
 			sampler[i] = i;
 		glUniform1iv(loc, MAX_TEXTURE_SLOTS, sampler);
+
+		uint32_t size = (uint32_t)((uint8_t*)renderer_data.vertices_ptr - (uint8_t*)renderer_data.vertices_base);
+
+		if (size == 0)
+			return;
+
+		renderer_data.vertex_buffer->SetData(renderer_data.vertices_base, size);
+
+		Renderer::Submit(renderer_data.vertex_array, renderer_data.shader);
 	}
 
-	void Renderer::Destroy() {
+	Renderer::~Renderer() {
 		delete[] renderer_data.vertices_base;
+
 	}
 
 	void Renderer::Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<Shader>& shader) {
@@ -115,29 +118,47 @@ namespace Pixel {
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
-		glm::mat4 trans = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		
-		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
-			renderer_data.vertices_ptr->position = trans * renderer_data.quad_positions[i];
-			renderer_data.vertices_ptr->color = color;
-			renderer_data.vertices_ptr->texture_coordinates = TEX_COORDS[i];
-			renderer_data.vertices_ptr->texture_id = 0;
-			renderer_data.vertices_ptr++;
-		}
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		DrawQuad(model, color);
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, std::shared_ptr<Texture>& texture) {
-	//	texture->Bind(renderer_data.texture_slot_index);
 		renderer_data.textures[renderer_data.texture_slot_index] = texture;
-		glm::mat4 trans = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		DrawQuad(model, color, renderer_data.texture_slot_index);
+	}
 
+	void Renderer::DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color) {
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
+		DrawQuad(model, color);
+	}
+
+	void Renderer::DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color, std::shared_ptr<Texture>& texture) {
+		renderer_data.textures[renderer_data.texture_slot_index] = texture;
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
+		DrawQuad(model, color, renderer_data.texture_slot_index);
+	}
+
+	void Renderer::DrawQuad(const glm::mat4& translation, const glm::vec4& color, uint32_t texture_id) {
 		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
-			renderer_data.vertices_ptr->position = trans* renderer_data.quad_positions[i];
+			renderer_data.vertices_ptr->position = translation * renderer_data.quad_positions[i];
 			renderer_data.vertices_ptr->color = color;
 			renderer_data.vertices_ptr->texture_coordinates = TEX_COORDS[i];
-			renderer_data.vertices_ptr->texture_id = renderer_data.texture_slot_index;
+			renderer_data.vertices_ptr->texture_id = texture_id;
 			renderer_data.vertices_ptr++;
 		}
 		renderer_data.texture_slot_index++;
+	}
+
+	void Renderer::DrawQuad(const glm::mat4& translation, const glm::vec4& color) {
+		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
+			renderer_data.vertices_ptr->position = translation * renderer_data.quad_positions[i];
+			renderer_data.vertices_ptr->color = color;
+			renderer_data.vertices_ptr->texture_coordinates = TEX_COORDS[i];
+			renderer_data.vertices_ptr->texture_id = -1;
+			renderer_data.vertices_ptr++;
+		}
 	}
 }

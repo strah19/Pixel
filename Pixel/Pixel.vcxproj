@@ -140,10 +140,13 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Pixel\Camera\OrthoCamera.h" />
+    <ClInclude Include="src\Pixel\Camera\OrthoCameraController.h" />
     <ClInclude Include="src\Pixel\Core\Application.h" />
     <ClInclude Include="src\Pixel\Core\EntryPoint.h" />
     <ClInclude Include="src\Pixel\Core\KeyCodes.h" />
     <ClInclude Include="src\Pixel\Core\PlatformDetection.h" />
+    <ClInclude Include="src\Pixel\Events\EventHandler.h" />
     <ClInclude Include="src\Pixel\Events\Events.h" />
     <ClInclude Include="src\Pixel\Events\KeyboardEvents.h" />
     <ClInclude Include="src\Pixel\Events\MouseEvents.h" />
@@ -169,7 +172,10 @@
     <ClInclude Include="src\Pixel\pixelpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Pixel\Camera\OrthoCamera.cpp" />
+    <ClCompile Include="src\Pixel\Camera\OrthoCameraController.cpp" />
     <ClCompile Include="src\Pixel\Core\Application.cpp" />
+    <ClCompile Include="src\Pixel\Events\EventHandler.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.cpp" />

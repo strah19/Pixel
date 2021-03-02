@@ -9,8 +9,7 @@ public:
 	}
 private:
 	bool KeyPress(const Pixel::KeyboardEvents& event) {
-		if (event.key == PIXEL_KEY_W)
-			std::cout << "W" << std::endl;
+	
 		return true;
 	}
 };

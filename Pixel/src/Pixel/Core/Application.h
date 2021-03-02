@@ -12,6 +12,8 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Texture.h"
+#include "Camera/OrthoCamera.h"
+#include "Camera/OrthoCameraController.h"
 
 int main(int argc, char** argv);
 struct Vertex {
@@ -25,11 +27,13 @@ namespace Pixel {
 	class Application {
 	public:
 		Application(const std::string& name = "Pixel Game Engine", uint32_t width = 1280, uint32_t height = 720);
-		virtual ~Application() = default;
+		virtual ~Application();
 
 		void Run();
 		virtual void UserDefEvent(Event& event) { }
 		
+		static Application* GetApp() { return instance; }
+		Window* GetWindow() { return window.get(); }
 	private:
 		bool is_running;
 		std::unique_ptr<Window> window;
@@ -39,6 +43,10 @@ namespace Pixel {
 		void OnEvent(Event& event);
 
 		std::shared_ptr<Texture> texture1;
+		std::shared_ptr<Texture> texture2;
+		OrthoCameraController camera;
+
+		static Application* instance;
 	};
 
 	Application* CreateApplication();

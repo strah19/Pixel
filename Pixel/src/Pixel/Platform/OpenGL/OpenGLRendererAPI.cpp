@@ -23,8 +23,5 @@ namespace Pixel {
 
 	void OpenGLRendererAPI::DrawVertexArray(std::shared_ptr<VertexArray> vertex_array) {
 		glDrawElements(GL_TRIANGLES, vertex_array->GetIndexBuffers()->GetCount(), GL_UNSIGNED_INT, 0);
-	//	for (auto& i : vertex_array->GetVertexBuffers()) {
-		//	std::cout << i->GetLayout()->GetStride() << std::endl;
-		//}
 	}
 }

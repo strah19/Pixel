@@ -98,6 +98,9 @@
     <ClInclude Include="src\Pixel\Renderer\Renderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pixel\Camera\OrthoCamera.h" />
+    <ClInclude Include="src\Pixel\Camera\OrthoCameraController.h" />
+    <ClInclude Include="src\Pixel\Events\EventHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pixel\Core\Application.cpp">
@@ -152,5 +155,8 @@
     <ClCompile Include="src\Pixel\Renderer\Renderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pixel\Camera\OrthoCamera.cpp" />
+    <ClCompile Include="src\Pixel\Camera\OrthoCameraController.cpp" />
+    <ClCompile Include="src\Pixel\Events\EventHandler.cpp" />
   </ItemGroup>
 </Project>

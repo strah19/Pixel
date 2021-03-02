@@ -8,41 +8,45 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> 
 
-float vertices[] = {
- -0.8f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
- -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f,
--0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
--0.8f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,0.0f,
-
- 0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
- 0.8f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,1.0f,
-0.8f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,1.0f,
-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f
-};
-
 namespace Pixel {
+	Application* Application::instance = nullptr;
+
 	Application::Application(const std::string& name, uint32_t width, uint32_t height) 
 		: is_running(true) {
 		window = Window::CreateWindow({ name, width, height });
 		window->SetEventCallback(PIXEL_BIND_EVENT(OnEvent));
-
+		instance = this;
 		Pixel::RendererCommand::Init();
 		Pixel::Renderer::Init();
 
 		texture1 = Pixel::Texture::CreateTexture("awesomeface.png");
+		texture2 = Pixel::Texture::CreateTexture("texture1.jpg");
+		camera = OrthoCameraController(glm::vec2(1280.0f, 720.0f));
 	}
+
+	Application::~Application() { }
 
 	void Application::Run() {
 		while (is_running) {
 			Pixel::RendererCommand::Clear();
 			Pixel::RendererCommand::SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
-			Pixel::Renderer::BeginScene();
-			Pixel::Renderer::DrawQuad({ 0, 0 }, { 1, 1.2 }, { 255, 255, 0, 255 }, texture1);
-			Pixel::Renderer::DrawQuad({ -0.5, 0 }, { 1, 1.2 }, { 0, 255, 0, 255 }, texture1);
-			Pixel::Renderer::DrawQuad({ 0.5, 0 }, { 1, 1.2 }, { 255, 0, 255, 255 }, texture1);
-			Pixel::Renderer::EndScene();
+			camera.Update();
+			Pixel::Renderer::BeginScene(camera.GetCamera());
 
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 5; j++) {
+					if((i + j) % 2 == 0)
+						Pixel::Renderer::DrawQuad({ 0 + (i * 100), 0 + (j * 100) }, { 100, 100 }, { 0.7f, 0.4f, 0.7f, 1.0f }, texture1);
+					else
+						Pixel::Renderer::DrawQuad({ 0 + (i * 100), 0 + (j * 100) }, { 100, 100 }, { 0.5f, 1.0f, 0, 1.0f }, texture2);
+				}
+			}
+
+			Pixel::Renderer::DrawRotatedQuad({ 1000, 500 }, glm::degrees((float)glfwGetTime()), { 100, 100 }, { 0.0f, 1.0f, 1.0f, 1.0f });
+
+			Pixel::Renderer::EndScene();
+	
 			window->Update();
 		}
 	}
@@ -53,11 +57,12 @@ namespace Pixel {
 		UserDefEvent(event);
 		dispatcher.Dispatch<ResizeEvent>(PIXEL_BIND_EVENT(OnResize));
 		dispatcher.Dispatch<QuitEvent>(PIXEL_BIND_EVENT(OnClose));
+
+		camera.OnEvent(event);
 	}
 
 	bool Application::OnClose(const QuitEvent& event) {
 		is_running = false;
-		Pixel::Renderer::Destroy();
 		return true;
 	}
 

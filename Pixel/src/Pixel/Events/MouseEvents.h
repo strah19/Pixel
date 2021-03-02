@@ -24,6 +24,15 @@ namespace Pixel {
 
 		float x, y;
 	};
+
+	struct MouseWheelEvent : public Event {
+		MouseWheelEvent(float xoffset, float yoffset) : Event("Mouse Wheel"), xoffset(xoffset), yoffset(yoffset) { }
+		virtual ~MouseWheelEvent() = default;
+
+		std::string GetName() const { return name; }
+
+		float xoffset, yoffset;
+	};
 }
 
 #endif // !MOUSE_EVENTS_H
