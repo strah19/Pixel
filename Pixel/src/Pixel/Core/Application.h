@@ -14,6 +14,7 @@
 #include "Renderer/Texture.h"
 #include "Camera/OrthoCamera.h"
 #include "Camera/OrthoCameraController.h"
+#include "Camera/PerspectiveCameraController.h"
 
 int main(int argc, char** argv);
 struct Vertex {
@@ -44,9 +45,9 @@ namespace Pixel {
 
 		std::shared_ptr<Texture> texture1;
 		std::shared_ptr<Texture> texture2;
-		OrthoCameraController camera;
+		PerspectiveCameraController camera;
 
-		static Application* instance;
+		static Application* instance; 
 	};
 
 	Application* CreateApplication();

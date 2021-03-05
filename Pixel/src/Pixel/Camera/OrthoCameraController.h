@@ -21,7 +21,7 @@ namespace Pixel {
 		OrthoCamera camera;
 
 		float aspect_ratio = 0.0f;
-		float zoom = -50.0f;
+		float zoom = -1.0f;
 		glm::vec3 camera_pos = { 0, 0, 0 };
 		glm::vec2 camera_speed = glm::vec2(2.0f, 2.0f);
 	};

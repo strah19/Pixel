@@ -52,6 +52,10 @@ namespace Pixel {
 		glTextureParameteri(texture_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
+	OpenGLTexture::~OpenGLTexture() {
+		glDeleteTextures(1, &texture_id);
+	}
+
 	void OpenGLTexture::SetData(void* data, uint32_t size) {
 		uint32_t bpp = data_format == GL_RGBA ? 4 : 3;
 		glTextureSubImage2D(texture_id, 0, 0, 0, width, height, data_format, GL_UNSIGNED_BYTE, data);

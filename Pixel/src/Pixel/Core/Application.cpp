@@ -21,7 +21,7 @@ namespace Pixel {
 
 		texture1 = Pixel::Texture::CreateTexture("awesomeface.png");
 		texture2 = Pixel::Texture::CreateTexture("texture1.jpg");
-		camera = OrthoCameraController(glm::vec2(1280.0f, 720.0f));
+		camera = PerspectiveCameraController(glm::vec2(1280.0f, 720.0f));
 	}
 
 	Application::~Application() { }
@@ -34,19 +34,18 @@ namespace Pixel {
 			camera.Update();
 			Pixel::Renderer::BeginScene(camera.GetCamera());
 
-			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 5; j++) {
-					if((i + j) % 2 == 0)
-						Pixel::Renderer::DrawQuad({ 0 + (i * 100), 0 + (j * 100) }, { 100, 100 }, { 0.7f, 0.4f, 0.7f, 1.0f }, texture1);
+			for (int i = 0; i < 50; i++) {
+				for (int j = 0; j < 50; j++) {
+					if ((i + j) % 2 == 0)
+						Pixel::Renderer::DrawQuad({ i, j, -2.0f }, { 0.2, 0.2 }, { 0.5f, 1.0f, 0, 0.7f }, texture1);
 					else
-						Pixel::Renderer::DrawQuad({ 0 + (i * 100), 0 + (j * 100) }, { 100, 100 }, { 0.5f, 1.0f, 0, 1.0f }, texture2);
+						Pixel::Renderer::DrawQuad({ i, j, -2.0f }, { 0.2, 0.2 }, { 0.5f, 0.0f, 0.55f, 0.7f }, texture2);
+
 				}
 			}
-
-			Pixel::Renderer::DrawRotatedQuad({ 1000, 500 }, glm::degrees((float)glfwGetTime()), { 100, 100 }, { 0.0f, 1.0f, 1.0f, 1.0f });
-
+			
 			Pixel::Renderer::EndScene();
-	
+
 			window->Update();
 		}
 	}

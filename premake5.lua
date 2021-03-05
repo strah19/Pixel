@@ -16,6 +16,8 @@ IncludeDir["GLFW"] = "Pixel/vendor/GLFW/include"
 IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include"
 IncludeDir["stb_image"] = "Pixel/vendor/stb_image"
 IncludeDir["glm"] = "Pixel/vendor/glm"
+IncludeDir["imgui"] = "Pixel/vendor/imgui"
+IncludeDir["assimp"] = "Pixel/vendor/assimp-lib/include"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
@@ -45,7 +47,9 @@ project "Pixel"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.assimp}"
 	}
 
 	defines
@@ -59,7 +63,13 @@ project "Pixel"
 	{
 		"GLFW",
 		"GLAD",
-		"opengl32.lib"
+		"opengl32.lib",
+		"assimp-vc142-mtd.lib"
+	}
+
+	libdirs 
+	{
+		"Pixel/vendor/assimp-lib/lib"
 	}
 
 	filter "system:windows"
@@ -99,7 +109,8 @@ project "Sandbox"
 	includedirs
 	{
 		"Pixel/src/Pixel",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.imgui}"
 	}
 
 	links

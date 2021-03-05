@@ -5,16 +5,15 @@ layout (location = 1) in vec4 aColor;
 layout(location = 2) in vec2 aTexCoord;
 layout(location = 3) in float tex_index;
 
-uniform mat4 proj;
-uniform mat4 view;
+uniform mat4 proj_view;
 
 out vec4 outColor;
 out vec2 TexCoord;
-out float index;
+out flat float index;
 
 void main()
 {
-	gl_Position = proj * view * vec4(aPos, 1.0);
+	gl_Position = proj_view * vec4(aPos, 1.0);
 	outColor = aColor;
 	TexCoord = aTexCoord;
 	index = tex_index;
@@ -25,15 +24,14 @@ void main()
 out vec4 FragColor;
 in vec4 outColor;
 in vec2 TexCoord;
-in float index;
+in flat float index;
 
 uniform sampler2D ourTexture[32];
 
 void main()
 {
-	int i = int(index);
-	if(i != -1){
-		FragColor = texture(ourTexture[i], TexCoord) * outColor;
+	if(index != -1.0){
+		FragColor = texture(ourTexture[int(index)], TexCoord) * outColor;
 	}
 	else {
 		FragColor = outColor;
