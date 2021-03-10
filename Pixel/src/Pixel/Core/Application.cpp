@@ -29,7 +29,7 @@ namespace Pixel {
 		texture1 = Texture::CreateTexture("texture1.jpg");
 		texture2 = Texture::CreateTexture("awesomeface.png");
 	
-		m.Init("obj/rock/rock.obj");
+		m.Init("obj/mars/planet.obj");
 	}
 
 	Application::~Application() { }
@@ -43,7 +43,6 @@ namespace Pixel {
 			
 			Pixel::Renderer::BeginScene(camera.GetCamera());
 			
-			
 			for (int i = 0; i < 50; i++) {
 				for (int j = 0; j < 50; j++) {
 					if((i + j) % 2 == 0)
@@ -56,7 +55,6 @@ namespace Pixel {
 			
 			Pixel::Renderer::EndScene();
 			
-
 			m.Draw(cube_shader, camera.GetCamera());
 
 			window->Update();

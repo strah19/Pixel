@@ -91,12 +91,7 @@ namespace Pixel {
 		renderer_data.shader->UnBind();
 	}
 
-	void Renderer::BeginScene(OrthoCamera& camera) {
-		renderer_data.proj_view = camera.GetProjection() * camera.GetView();
-		StartBatch();
-	}
-
-	void Renderer::BeginScene(PerspectiveCamera& camera) {
+	void Renderer::BeginScene(Camera& camera) {
 		renderer_data.proj_view = camera.GetProjection() * camera.GetView();
 		StartBatch();
 	}

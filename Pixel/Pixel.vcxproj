@@ -143,6 +143,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Pixel\Camera\Camera.h" />
     <ClInclude Include="src\Pixel\Camera\OrthoCamera.h" />
     <ClInclude Include="src\Pixel\Camera\OrthoCameraController.h" />
     <ClInclude Include="src\Pixel\Camera\PerspectiveCamera.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="src\Pixel\pixelpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Pixel\Camera\Camera.cpp" />
     <ClCompile Include="src\Pixel\Camera\OrthoCamera.cpp" />
     <ClCompile Include="src\Pixel\Camera\OrthoCameraController.cpp" />
     <ClCompile Include="src\Pixel\Camera\PerspectiveCamera.cpp" />

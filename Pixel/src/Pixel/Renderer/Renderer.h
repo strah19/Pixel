@@ -4,16 +4,14 @@
 #include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/Texture.h"
-#include "Camera/OrthoCamera.h"
-#include "Camera/PerspectiveCamera.h"
+#include "Camera/Camera.h"
 
 namespace Pixel {
 	class Renderer {
 	public:
 		~Renderer();
 		static void Init();
-		static void BeginScene(OrthoCamera& camera);
-		static void BeginScene(PerspectiveCamera& camera);
+		static void BeginScene(Camera& camera);
 		static void EndScene();
 
 		static void Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<Shader>& shader);		
