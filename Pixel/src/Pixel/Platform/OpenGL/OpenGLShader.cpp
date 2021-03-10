@@ -39,7 +39,7 @@ namespace Pixel {
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* message = (char*)malloc(length * sizeof(char));
 			glGetShaderInfoLog(id, length, &length, message);
-			std::cout << "Failed to compile shader" << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
+			std::cout << "Failed to compile shader " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
 			glDeleteShader(id);
 			return 0;
 		}
@@ -70,6 +70,7 @@ namespace Pixel {
 				ss[(int)type] << line << '\n';
 			}
 		}
+		stream.close();
 		return { ss[0].str(), ss[1].str() };
 	}
 	unsigned int OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)

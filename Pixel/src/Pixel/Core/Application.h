@@ -17,12 +17,6 @@
 #include "Camera/PerspectiveCameraController.h"
 
 int main(int argc, char** argv);
-struct Vertex {
-	glm::vec3 position;
-	glm::vec4 color;
-	glm::vec2 texture_coordinates;
-	float texture_id;
-};
 
 namespace Pixel {
 	class Application {
@@ -46,6 +40,8 @@ namespace Pixel {
 		std::shared_ptr<Texture> texture1;
 		std::shared_ptr<Texture> texture2;
 		PerspectiveCameraController camera;
+
+		std::shared_ptr<Shader> cube_shader;
 
 		static Application* instance; 
 	};

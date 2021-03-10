@@ -156,6 +156,8 @@
     <ClInclude Include="src\Pixel\Events\KeyboardEvents.h" />
     <ClInclude Include="src\Pixel\Events\MouseEvents.h" />
     <ClInclude Include="src\Pixel\Events\WindowEvents.h" />
+    <ClInclude Include="src\Pixel\Models\Mesh.h" />
+    <ClInclude Include="src\Pixel\Models\Model.h" />
     <ClInclude Include="src\Pixel\Pixel.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLContext.h" />
@@ -183,6 +185,8 @@
     <ClCompile Include="src\Pixel\Camera\PerspectiveCameraController.cpp" />
     <ClCompile Include="src\Pixel\Core\Application.cpp" />
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp" />
+    <ClCompile Include="src\Pixel\Models\Mesh.cpp" />
+    <ClCompile Include="src\Pixel\Models\Model.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.cpp" />

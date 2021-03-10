@@ -7,7 +7,7 @@ layout(location = 3) in float tex_index;
 
 uniform mat4 proj_view;
 
-out vec4 outColor;
+out flat vec4 outColor;
 out vec2 TexCoord;
 out flat float index;
 
@@ -22,7 +22,7 @@ void main()
 #shader fragment
 #version 450 core
 out vec4 FragColor;
-in vec4 outColor;
+in flat vec4 outColor;
 in vec2 TexCoord;
 in flat float index;
 
@@ -31,7 +31,12 @@ uniform sampler2D ourTexture[32];
 void main()
 {
 	if(index != -1.0){
-		FragColor = texture(ourTexture[int(index)], TexCoord) * outColor;
+		if(outColor == vec4(-1, -1, -1, -1)){
+			FragColor = texture(ourTexture[int(index)], TexCoord);
+		}
+		else{
+			FragColor = texture(ourTexture[int(index)], TexCoord) * outColor;
+		}
 	}
 	else {
 		FragColor = outColor;

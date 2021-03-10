@@ -16,6 +16,9 @@ namespace Pixel {
 
 		static std::shared_ptr<Texture> CreateTexture(const char* file_path);
 		static std::shared_ptr<Texture> CreateTexture(uint32_t width, uint32_t height);
+		inline std::string GetPath() const { return path; }
+	protected:
+		std::string path;
 	};
 }
 
