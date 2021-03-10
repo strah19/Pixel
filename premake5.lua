@@ -21,6 +21,7 @@ IncludeDir["assimp"] = "Pixel/vendor/assimp-lib/include"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
+include "Pixel/vendor/imgui"
 
 project "Pixel"
 	location "Pixel"
@@ -64,7 +65,8 @@ project "Pixel"
 		"GLFW",
 		"GLAD",
 		"opengl32.lib",
-		"assimp-vc142-mtd.lib"
+		"assimp-vc142-mtd.lib",
+		"ImGui"
 	}
 
 	libdirs 

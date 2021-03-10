@@ -46,9 +46,9 @@ namespace Pixel {
 			for (int i = 0; i < 50; i++) {
 				for (int j = 0; j < 50; j++) {
 					if((i + j) % 2 == 0)
-						Pixel::Renderer::DrawQuad({ i, j, -3 }, { 1, 1 }, { 0.0, 1.0, 0, 1.0 });
+						Pixel::Renderer::DrawQuad({ i, j, -7 }, { 0.5, 0.5 }, { 0.0, 1.0, 0, 1.0 });
 					else
-						Pixel::Renderer::DrawQuad({ i, j, -3 }, { 1, 1 }, { 0.0, 0.0, 1.0, 1.0 });
+						Pixel::Renderer::DrawQuad({ i, j, -3 }, { 0.5, 0.5 }, { 0.0, 0.0, 1.0, 1.0 });
 				}
 			}
 			

@@ -7,12 +7,13 @@ namespace Pixel {
         LoadModel(file_path);
     }
 
-    void Model::Draw(std::shared_ptr<Shader>& shader, PerspectiveCamera& camera) {
+    void Model::Draw(std::shared_ptr<Shader>& shader, Camera& camera) {
         shader->Bind();
         shader->SetMat4f("proj_view", glm::mat4(camera.GetProjection() * camera.GetView()));
         for (auto& mesh : meshes) {
-            mesh.Draw(shader, camera);
+            mesh.Draw(shader);
         }
+        shader->UnBind();
     }
 
 	void Model::LoadModel(const std::string& file_path) {
@@ -101,15 +102,13 @@ namespace Pixel {
                     skip = true;
                     break;
                 }
-            }
+            } 
             if (!skip) {
                 MeshTexture texture;
                 std::string filename = std::string(str.C_Str());
                 filename = path + '/' + filename;
                 texture.texture = Texture::CreateTexture(filename.c_str());
-                std::cout << filename << std::endl;
                 texture.texture_type = type_name;
-                std::cout << type_name << std::endl;
                 texture.path = str.C_Str();
                 textures.push_back(texture);
                 textures_loaded.push_back(texture);

@@ -22,7 +22,7 @@ namespace Pixel {
         vertex_array->AddVertexBuffer(vertex_buffer);
     }
 
-	void Mesh::Draw(std::shared_ptr<Shader>& shader, PerspectiveCamera& camera) {
+	void Mesh::Draw(std::shared_ptr<Shader>& shader) {
         uint32_t diffuseNr = 1;
         uint32_t specularNr = 1;
         for (uint32_t i = 0; i < textures.size(); i++) {
@@ -38,9 +38,6 @@ namespace Pixel {
             shader->Set1f(name + number, id);
         }
 
-
-        // glm::mat4 model = glm::translate(glm::mat4(1.0f), { 1.0f + (1 / 2), 1 + (1 / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { 1, 1, 1.0f });
-
         vertex_array->Bind();
         vertex_array->GetIndexBuffers()->Bind();
         vertex_buffer->Bind();
@@ -48,6 +45,5 @@ namespace Pixel {
         vertex_array->UnBind();
         vertex_array->GetIndexBuffers()->UnBind();
         vertex_buffer->UnBind();
-        shader->UnBind();
     }
 }
