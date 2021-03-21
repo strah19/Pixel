@@ -41,7 +41,7 @@ namespace Pixel {
 		std::shared_ptr<Texture> texture2;
 		PerspectiveCameraController camera;
 
-		std::shared_ptr<Shader> cube_shader;
+		std::shared_ptr<Shader> model_shader;
 
 		static Application* instance; 
 	};

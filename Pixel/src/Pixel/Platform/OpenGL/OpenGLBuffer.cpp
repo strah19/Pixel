@@ -28,7 +28,7 @@ namespace Pixel {
 	}
 
 	void OpenGLVertexBuffer::SetData(void* data, uint32_t size) {
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
+		Bind();
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
@@ -37,6 +37,19 @@ namespace Pixel {
 		Bind();
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
 		count = size / sizeof(*indices);
+	}
+
+	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t size) {
+		glGenBuffers(1, &index_buffer_id);
+		Bind();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+		count = 0;
+	}
+
+	void OpenGLIndexBuffer::SetData(uint32_t* data, uint32_t size) {
+		Bind();
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
+		count = size / sizeof(*data);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer() {

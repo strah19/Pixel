@@ -14,10 +14,10 @@ namespace Pixel {
 		void UnBind();
 
 		std::vector<std::shared_ptr<VertexBuffer>> GetVertexBuffers() { return vertex_buffers; };
-		std::shared_ptr<IndexBuffer> GetIndexBuffers() { return index_buffer; }
+		uint32_t GetIndexBufferSize() const { return index_size; }
 
-		void AddVertexBuffer(std::shared_ptr<VertexBuffer> vertex_buf);
-		void SetIndexBuffer(std::shared_ptr<IndexBuffer> index_buf) { index_buffer = index_buf; }
+		void AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertex_buf);
+		void SetIndexBufferSize(uint32_t index_buf) { index_size = index_buf; }
 
 		uint32_t GetId() const { return vertex_array_buffer_id; }
 	private:
@@ -25,7 +25,7 @@ namespace Pixel {
 
 		std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers;
 
-		std::shared_ptr<IndexBuffer> index_buffer;
+		uint32_t index_size = 0;
 	};
 }
 

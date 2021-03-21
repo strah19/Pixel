@@ -28,4 +28,12 @@ namespace Pixel {
 		}
 		return nullptr;
 	}
+
+	std::shared_ptr<IndexBuffer> IndexBuffer::CreateIndexBuffer(uint32_t size) {
+		switch (RendererAPI::GetAPI()) {
+		case RenderAPI::OpenGL: return std::make_shared<OpenGLIndexBuffer>(size);
+		case RenderAPI::None: return nullptr;
+		}
+		return nullptr;
+	}
 }

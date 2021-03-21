@@ -5,6 +5,7 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/Texture.h"
 #include "Camera/Camera.h"
+#include "Models/Mesh.h"
 
 namespace Pixel {
 	class Renderer {
@@ -14,7 +15,7 @@ namespace Pixel {
 		static void BeginScene(Camera& camera);
 		static void EndScene();
 
-		static void Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<Shader>& shader);		
+		static void Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<IndexBuffer>& index_buffer, std::shared_ptr<Shader>& shader);		
 
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });

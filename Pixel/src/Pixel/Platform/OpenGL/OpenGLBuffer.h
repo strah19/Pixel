@@ -26,7 +26,9 @@ namespace Pixel {
 	class OpenGLIndexBuffer : public IndexBuffer {
 	public:
 		OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
+		OpenGLIndexBuffer(uint32_t size);
 		virtual ~OpenGLIndexBuffer();
+		void SetData(uint32_t* data, uint32_t size);
 
 		void Bind();
 		void UnBind();

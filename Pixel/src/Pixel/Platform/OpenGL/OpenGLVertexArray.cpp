@@ -29,11 +29,10 @@ namespace Pixel {
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer> vertex_buf) {
+	void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertex_buf) {
 		uint32_t stride = vertex_buf->GetLayout()->Calculate();
 
 		vertex_buf->Bind();
-		index_buffer->Bind();
 		Bind();
 
 		for (auto& elements : vertex_buf->GetLayout()->GetLayout()) {

@@ -7,6 +7,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "Camera/Camera.h"
+
 namespace Pixel {
 	class Model {
 	public:
@@ -21,7 +22,6 @@ namespace Pixel {
 		std::string path;
 		std::vector<Mesh> meshes;
 		std::vector<MeshTexture> textures_loaded;
-		
 	};
 }
 

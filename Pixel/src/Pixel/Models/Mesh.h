@@ -29,6 +29,7 @@ namespace Pixel {
 	private:
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
+		std::shared_ptr<IndexBuffer> index_buffer; 
 	};
 }
 

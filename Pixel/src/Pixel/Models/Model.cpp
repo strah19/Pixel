@@ -16,7 +16,7 @@ namespace Pixel {
         shader->UnBind();
     }
 
-	void Model::LoadModel(const std::string& file_path) {
+    void Model::LoadModel(const std::string& file_path) {
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(file_path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -27,7 +27,7 @@ namespace Pixel {
 
         path = path.substr(0, path.find_last_of('/'));
         ProcessNode(scene->mRootNode, scene);
-	}
+    }
 
     void Model::ProcessNode(aiNode* node, const aiScene* scene) {
         for (uint32_t i = 0; i < node->mNumMeshes; i++) {
@@ -86,7 +86,7 @@ namespace Pixel {
                 aiTextureType_SPECULAR, "texture_specular");
             textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         }
-
+        
         return Mesh(vertices, indices, textures);
     }
 
@@ -98,11 +98,11 @@ namespace Pixel {
             bool skip = false;
             for (uint32_t j = 0; j < textures_loaded.size(); j++) {
                 if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
-                    textures.push_back(textures_loaded[j]);      
+                    textures.push_back(textures_loaded[j]);
                     skip = true;
                     break;
                 }
-            } 
+            }
             if (!skip) {
                 MeshTexture texture;
                 std::string filename = std::string(str.C_Str());

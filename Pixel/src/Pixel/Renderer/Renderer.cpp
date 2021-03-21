@@ -24,10 +24,15 @@ namespace Pixel {
 	struct RendererData {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
+		std::shared_ptr<IndexBuffer> index_buffer;
 		std::shared_ptr<Shader> shader;
 
 		Vertex* vertices_base = nullptr;
 		Vertex* vertices_ptr = nullptr;
+
+		uint32_t* index_base = nullptr;
+		uint32_t* index_ptr = nullptr;
+		uint32_t index_offset = 0;
 
 		glm::vec4 quad_positions[4];
 		uint32_t texture_slot_index = 0;
@@ -51,22 +56,10 @@ namespace Pixel {
 
 		renderer_data.vertex_buffer->SetLayout(layout);
 
-		uint32_t indices[MAX_INDEX_COUNT];
-		uint32_t offset = 0;
-		for (int i = 0; i < MAX_INDEX_COUNT; i += 6) {
-			indices[i + 0] = 0 + offset;
-			indices[i + 1] = 1 + offset;
-			indices[i + 2] = 2 + offset;
-
-			indices[i + 3] = 2 + offset;
-			indices[i + 4] = 3 + offset;
-			indices[i + 5] = 0 + offset;
-			offset += 4;
-		}
-
 		renderer_data.vertices_base = new Vertex[MAX_VERTEX_COUNT];
-
-		renderer_data.vertex_array->SetIndexBuffer(IndexBuffer::CreateIndexBuffer(indices, sizeof(indices)));
+		renderer_data.index_base = new uint32_t[MAX_INDEX_COUNT];
+		renderer_data.index_buffer = IndexBuffer::CreateIndexBuffer(MAX_INDEX_COUNT * sizeof(uint32_t));
+		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
 
 		renderer_data.shader = Shader::CreateShader();
@@ -86,7 +79,7 @@ namespace Pixel {
 		glUniform1iv(loc, MAX_TEXTURE_SLOTS, sampler);
 
 		renderer_data.vertex_array->UnBind();
-		renderer_data.vertex_array->GetIndexBuffers()->UnBind();
+		renderer_data.index_buffer->UnBind();
 		renderer_data.vertex_buffer->UnBind();
 		renderer_data.shader->UnBind();
 	}
@@ -107,6 +100,8 @@ namespace Pixel {
 		renderer_data.shader->SetMat4f("proj_view", renderer_data.proj_view);
 		renderer_data.texture_slot_index = 0;
 		renderer_data.num_of_quads_in_batch = 0;
+		renderer_data.index_ptr = renderer_data.index_base;
+		renderer_data.index_offset = 0;
 	}
 
 	void Renderer::Render() {
@@ -116,17 +111,20 @@ namespace Pixel {
 			return;		
 
 		renderer_data.vertex_buffer->SetData(renderer_data.vertices_base, size);
+		uint32_t index_size = (uint32_t)((uint8_t*)renderer_data.index_ptr - (uint8_t*)renderer_data.index_base);
+		renderer_data.index_buffer->SetData(renderer_data.index_base, index_size);
+		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 
 		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) {
 			renderer_data.textures[i]->get()->Bind(i);
 		}
 
 		renderer_data.vertex_array->Bind();
-		renderer_data.vertex_array->GetIndexBuffers()->Bind();
+		renderer_data.index_buffer->Bind();
 		renderer_data.vertex_buffer->Bind();
 		RendererCommand::DrawVertexArray(renderer_data.vertex_array);
 		renderer_data.vertex_array->UnBind();
-		renderer_data.vertex_array->GetIndexBuffers()->UnBind();
+		renderer_data.index_buffer->UnBind();
 		renderer_data.vertex_buffer->UnBind();
 
 		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) {
@@ -141,17 +139,33 @@ namespace Pixel {
 
 	Renderer::~Renderer() {
 		delete[] renderer_data.vertices_base;
+		delete[] renderer_data.index_base;
 	}
 
-	void Renderer::Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<Shader>& shader) {
+	void Renderer::Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<IndexBuffer>& index_buffer, std::shared_ptr<Shader>& shader) {
 		shader->Bind();
 		vertex_array->Bind();
-		vertex_array->GetIndexBuffers()->Bind();
+		index_buffer->Bind();
 
 		Pixel::RendererCommand::DrawVertexArray(vertex_array);
 	}
 
 	void Renderer::DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id) {
+		*renderer_data.index_ptr = 0 + renderer_data.index_offset;
+		renderer_data.index_ptr++;
+		*renderer_data.index_ptr = 1 + renderer_data.index_offset;
+		renderer_data.index_ptr++;
+		*renderer_data.index_ptr = 2 + renderer_data.index_offset;
+		renderer_data.index_ptr++;
+
+		*renderer_data.index_ptr = 2 + renderer_data.index_offset;
+		renderer_data.index_ptr++;
+		*renderer_data.index_ptr = 3 + renderer_data.index_offset;
+		renderer_data.index_ptr++;
+		*renderer_data.index_ptr = 0 + renderer_data.index_offset;
+		renderer_data.index_ptr++;
+		renderer_data.index_offset += 4;
+
 		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
 			renderer_data.vertices_ptr->position = translation * renderer_data.quad_positions[i];
 			renderer_data.vertices_ptr->color = color;
@@ -165,45 +179,45 @@ namespace Pixel {
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		DrawQuad(model, color, -1.0f);
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		DrawQuad(model, color, CalculateTextureIndex(texture));
 	}
 
 	void Renderer::DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
 		DrawQuad(model, color, -1.0f);
 	}
 
 	void Renderer::DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
 		DrawQuad(model, color, CalculateTextureIndex(texture));
 	}
 
 	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		DrawQuad(model, color, -1.0f);
 	}
 
 	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		DrawQuad(model, color, CalculateTextureIndex(texture));
 	}
 
 	void Renderer::DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		model = glm::rotate(model, glm::radians(rotation), rotation_orientation);
 		DrawQuad(model, color, -1.0f);
 	}
 
 	void Renderer::DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x + (size.x / 2), position.y + (size.y / 2), position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		model = glm::rotate(model, glm::radians(rotation), rotation_orientation);
 		DrawQuad(model, color, CalculateTextureIndex(texture));
 	}

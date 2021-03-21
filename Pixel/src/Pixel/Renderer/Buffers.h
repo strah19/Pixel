@@ -92,8 +92,10 @@ namespace Pixel {
 		virtual void UnBind() = 0;
 		virtual uint32_t GetId() const = 0;
 		virtual uint32_t GetCount() const = 0;
+		virtual void SetData(uint32_t* data, uint32_t size) = 0;
 
 		static std::shared_ptr<IndexBuffer> CreateIndexBuffer(uint32_t* indices, uint32_t size);
+		static std::shared_ptr<IndexBuffer> CreateIndexBuffer(uint32_t size);
 	};
 }
 

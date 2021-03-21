@@ -10,6 +10,9 @@
     <Filter Include="Events">
       <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Gui">
+      <UniqueIdentifier>{6AF0870B-D6F9-877C-5F75-9E7CCB7D937C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Models">
       <UniqueIdentifier>{096F8DC3-F510-B899-DECB-CBEDCA0C3FEA}</UniqueIdentifier>
     </Filter>
