@@ -22,6 +22,10 @@ namespace Pixel {
 		std::string path;
 		std::vector<Mesh> meshes;
 		std::vector<MeshTexture> textures_loaded;
+
+		std::shared_ptr<VertexArray> vertex_array;
+		std::shared_ptr<VertexBuffer> vertex_buffer;
+		std::shared_ptr<IndexBuffer> index_buffer;
 	};
 }
 

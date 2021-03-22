@@ -13,15 +13,13 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Pixel/vendor/GLFW/include"
-IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include"
+IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include" 
 IncludeDir["stb_image"] = "Pixel/vendor/stb_image"
 IncludeDir["glm"] = "Pixel/vendor/glm"
-IncludeDir["imgui"] = "Pixel/vendor/imgui"
 IncludeDir["assimp"] = "Pixel/vendor/assimp-lib/include"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
-include "Pixel/vendor/imgui"
 
 project "Pixel"
 	location "Pixel"
@@ -39,7 +37,7 @@ project "Pixel"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
 	}
 
 	includedirs
@@ -49,8 +47,7 @@ project "Pixel"
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.imgui}",
-		"%{IncludeDir.assimp}"
+		"%{IncludeDir.assimp}",
 	}
 
 	defines
@@ -66,12 +63,11 @@ project "Pixel"
 		"GLAD",
 		"opengl32.lib",
 		"assimp-vc142-mtd.lib",
-		"ImGui"
 	}
 
 	libdirs 
 	{
-		"Pixel/vendor/assimp-lib/lib"
+		"Pixel/vendor/assimp-lib/lib",
 	}
 
 	filter "system:windows"

@@ -9,6 +9,10 @@
 #include <GLFW/glfw3.h>
 #include "Models/Model.h"
 
+//#include "ImGui/imgui.h"
+//#include "imgui_impl_glfw.h"
+//#include "imgui_impl_opengl3.h"
+
 namespace Pixel {
 	Application* Application::instance = nullptr;
 	static Model test_model;
@@ -28,7 +32,17 @@ namespace Pixel {
 
 		model_shader = Shader::CreateShader();
 		model_shader->Init("shaders/model_shader.glsl");
-		test_model.Init("obj/mars/planet.obj");
+		test_model.Init("obj/backpack/backpack.obj");
+		/*
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		// Setup Platform/Renderer bindings
+		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(window->GetNativeWindow()), true);
+		ImGui_ImplOpenGL3_Init("#version 450");
+		// Setup Dear ImGui style
+		ImGui::StyleColorsDark();
+		*/
 	}
 
 	Application::~Application() { }
@@ -41,9 +55,9 @@ namespace Pixel {
 			camera.Update();
 			
 			Pixel::Renderer::BeginScene(camera.GetCamera());
-			Pixel::Renderer::DrawQuad({ 0.5, 0.5 }, { 1, 1 }, { 1.0, 1.0, 0.0, 1.0 });	
 			Pixel::Renderer::EndScene();
 
+			model_shader->Bind();
 			test_model.Draw(model_shader, camera.GetCamera());
 
 			window->Update();

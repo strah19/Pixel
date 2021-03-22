@@ -27,9 +27,7 @@ namespace Pixel {
 		void Draw(std::shared_ptr<Shader>& shader);
 		Mesh(std::vector<MeshVertex>& vertices, std::vector<uint32_t>& indices, std::vector<MeshTexture>& textures);
 	private:
-		std::shared_ptr<VertexArray> vertex_array;
-		std::shared_ptr<VertexBuffer> vertex_buffer;
-		std::shared_ptr<IndexBuffer> index_buffer; 
+
 	};
 }
 
