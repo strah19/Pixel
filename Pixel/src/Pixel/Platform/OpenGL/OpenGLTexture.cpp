@@ -5,6 +5,8 @@
 #include <stb_image.h>
 
 namespace Pixel {
+	static uint32_t current_texture_id = 0;
+
 	OpenGLTexture::OpenGLTexture(const char* file_path) {
 		path = file_path;
 		stbi_set_flip_vertically_on_load(1);
@@ -63,7 +65,10 @@ namespace Pixel {
 	}
 
 	void OpenGLTexture::Bind(uint32_t slot) {
-		glBindTextureUnit(slot, texture_id);
+		if (current_texture_id != texture_id) {
+			glBindTextureUnit(slot, texture_id);
+			current_texture_id = texture_id;
+		}
 	}
 
 	void OpenGLTexture::UnBind() {

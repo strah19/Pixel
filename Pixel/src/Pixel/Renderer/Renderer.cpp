@@ -7,39 +7,36 @@
 #include <gtc/matrix_transform.hpp>
 
 namespace Pixel {
-	struct Vertex {
-		glm::vec3 position;
-		glm::vec4 color;
-		glm::vec2 texture_coordinates;
-		float texture_id;
-	};
-
 	constexpr size_t MAX_QUAD_COUNT = 1000;
 	constexpr size_t QUAD_VERTEX_COUNT = 4;
 	constexpr size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * QUAD_VERTEX_COUNT;
 	constexpr size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
 	constexpr size_t MAX_TEXTURE_SLOTS = 32;
 	constexpr glm::vec2 TEX_COORDS[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+	constexpr glm::vec4 QUAD_POSITIONS[4] = {
+		{ -0.5f, -0.5f, 0.0f, 1.0f },
+		{ 0.5f, -0.5f, 0.0f, 1.0f },
+		{ 0.5f,  0.5f, 0.0f, 1.0f }, 
+		{ -0.5f,  0.5f, 0.0f, 1.0f }
+	};
 
 	struct RendererData {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
 		std::shared_ptr<IndexBuffer> index_buffer;
-		std::shared_ptr<Shader> shader;
-
-		Vertex* vertices_base = nullptr;
-		Vertex* vertices_ptr = nullptr;
-
-		uint32_t* index_base = nullptr;
-		uint32_t* index_ptr = nullptr;
+		std::shared_ptr<Shader>* current_shader = nullptr;
+		std::shared_ptr<Shader> default_shader;
+		bool init_default_shader = false;
+		
 		uint32_t index_offset = 0;
 
-		glm::vec4 quad_positions[4];
 		uint32_t texture_slot_index = 0;
 		std::shared_ptr<Texture>* textures[MAX_TEXTURE_SLOTS];
-		glm::mat4 proj_view;
+		glm::mat4 proj_view = glm::mat4(1.0f);
 
-		int num_of_quads_in_batch = 0;
+		uint32_t num_of_vertices_in_batch = 0;
+
+		std::vector<RenderMesh> meshes;
 	};
 
 	static RendererData renderer_data;
@@ -56,90 +53,66 @@ namespace Pixel {
 
 		renderer_data.vertex_buffer->SetLayout(layout);
 
-		renderer_data.vertices_base = new Vertex[MAX_VERTEX_COUNT];
-		renderer_data.index_base = new uint32_t[MAX_INDEX_COUNT];
 		renderer_data.index_buffer = IndexBuffer::CreateIndexBuffer(MAX_INDEX_COUNT * sizeof(uint32_t));
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
+	}
 
-		renderer_data.shader = Shader::CreateShader();
-		renderer_data.shader->Init("shaders/shader.glsl");
+	void Renderer::InitDefaultShader() {
+		renderer_data.default_shader = Shader::CreateShader();
+		renderer_data.default_shader->Init("shaders/shader.glsl");
 
-		renderer_data.quad_positions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		renderer_data.quad_positions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
-		renderer_data.quad_positions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
-		renderer_data.quad_positions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
-
-		renderer_data.shader->Bind();
-		auto loc = renderer_data.shader->GetUniformLocation("ourTexture");
+		renderer_data.default_shader->Bind();
+		auto loc = renderer_data.default_shader->GetUniformLocation("ourTexture");
 		int sampler[MAX_TEXTURE_SLOTS];
 		for (int i = 0; i < MAX_TEXTURE_SLOTS; i++) {
 			sampler[i] = i;
 		}
 		glUniform1iv(loc, MAX_TEXTURE_SLOTS, sampler);
-
-		renderer_data.vertex_array->UnBind();
-		renderer_data.index_buffer->UnBind();
-		renderer_data.vertex_buffer->UnBind();
-		renderer_data.shader->UnBind();
+		renderer_data.init_default_shader = true;
 	}
 
 	void Renderer::BeginScene(Camera& camera) {
 		renderer_data.proj_view = camera.GetProjection() * camera.GetView();
+		renderer_data.current_shader = (renderer_data.init_default_shader) ? &renderer_data.default_shader : nullptr;
 		StartBatch();
 	}
 
 	void Renderer::EndScene() {
 		Render();
-		renderer_data.shader->UnBind();
 	}
 
 	void Renderer::StartBatch() {
-		renderer_data.vertices_ptr = renderer_data.vertices_base;
-		renderer_data.shader->Bind();
-		renderer_data.shader->SetMat4f("proj_view", renderer_data.proj_view);
 		renderer_data.texture_slot_index = 0;
-		renderer_data.num_of_quads_in_batch = 0;
-		renderer_data.index_ptr = renderer_data.index_base;
+		renderer_data.num_of_vertices_in_batch = 0;
 		renderer_data.index_offset = 0;
+		renderer_data.meshes.clear();
 	}
 
 	void Renderer::Render() {
-		uint32_t size = (uint32_t)((uint8_t*)renderer_data.vertices_ptr - (uint8_t*)renderer_data.vertices_base);
-
-		if (size == 0) 
-			return;		
-
-		renderer_data.vertex_buffer->SetData(renderer_data.vertices_base, size);
-		uint32_t index_size = (uint32_t)((uint8_t*)renderer_data.index_ptr - (uint8_t*)renderer_data.index_base);
-		renderer_data.index_buffer->SetData(renderer_data.index_base, index_size);
-		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
-
-		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) {
-			renderer_data.textures[i]->get()->Bind(i);
-		}
-
 		renderer_data.vertex_array->Bind();
 		renderer_data.index_buffer->Bind();
 		renderer_data.vertex_buffer->Bind();
-		RendererCommand::DrawVertexArray(renderer_data.vertex_array);
-		renderer_data.vertex_array->UnBind();
-		renderer_data.index_buffer->UnBind();
-		renderer_data.vertex_buffer->UnBind();
 
-		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) {
-			renderer_data.textures[i]->get()->UnBind();
+		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) 
+			renderer_data.textures[i]->get()->Bind(i);
+
+		for (auto& mesh : renderer_data.meshes) {
+			renderer_data.current_shader = mesh.shader;
+			if (renderer_data.current_shader) {
+				renderer_data.current_shader->get()->Bind();
+				renderer_data.current_shader->get()->SetMat4f("proj_view", renderer_data.proj_view);
+				renderer_data.vertex_buffer->SetData(&mesh.vertex_buffer_data[0], (uint32_t)mesh.vertex_buffer_data.size() * sizeof(Vertex));
+				renderer_data.index_buffer->SetData(&mesh.indices[0], (uint32_t)mesh.indices.size() * sizeof(uint32_t));
+				renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
+				RendererCommand::DrawVertexArray(renderer_data.vertex_array);
+			}
 		}
 	}
 
 	void Renderer::NewBatch() {
 		Render();
 		StartBatch();
-	}
-
-	Renderer::~Renderer() {
-		delete[] renderer_data.vertices_base;
-		delete[] renderer_data.index_base;
 	}
 
 	void Renderer::Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<IndexBuffer>& index_buffer, std::shared_ptr<Shader>& shader) {
@@ -151,31 +124,43 @@ namespace Pixel {
 	}
 
 	void Renderer::DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id) {
-		*renderer_data.index_ptr = 0 + renderer_data.index_offset;
-		renderer_data.index_ptr++;
-		*renderer_data.index_ptr = 1 + renderer_data.index_offset;
-		renderer_data.index_ptr++;
-		*renderer_data.index_ptr = 2 + renderer_data.index_offset;
-		renderer_data.index_ptr++;
-
-		*renderer_data.index_ptr = 2 + renderer_data.index_offset;
-		renderer_data.index_ptr++;
-		*renderer_data.index_ptr = 3 + renderer_data.index_offset;
-		renderer_data.index_ptr++;
-		*renderer_data.index_ptr = 0 + renderer_data.index_offset;
-		renderer_data.index_ptr++;
-		renderer_data.index_offset += 4;
-
-		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
-			renderer_data.vertices_ptr->position = translation * renderer_data.quad_positions[i];
-			renderer_data.vertices_ptr->color = color;
-			renderer_data.vertices_ptr->texture_coordinates = TEX_COORDS[i];
-			renderer_data.vertices_ptr->texture_id = texture_id;
-			renderer_data.vertices_ptr++;
+		RenderMesh* current_mesh = nullptr;
+		if (!renderer_data.meshes.empty()) {
+			for (auto& mesh : renderer_data.meshes)
+				if (mesh.shader == renderer_data.current_shader) {
+					current_mesh = &mesh;
+					break;
+				}
 		}
-		renderer_data.num_of_quads_in_batch++;
-		if (renderer_data.num_of_quads_in_batch == MAX_QUAD_COUNT)
+		if (!current_mesh) {
+			renderer_data.meshes.push_back(RenderMesh());
+			current_mesh = &renderer_data.meshes.back();
+			current_mesh->shader = renderer_data.current_shader;
+		}
+
+		current_mesh->indices.push_back(0 + renderer_data.index_offset);
+		current_mesh->indices.push_back(1 + renderer_data.index_offset);
+		current_mesh->indices.push_back(2 + renderer_data.index_offset);
+		current_mesh->indices.push_back(2 + renderer_data.index_offset);
+		current_mesh->indices.push_back(3 + renderer_data.index_offset);
+		current_mesh->indices.push_back(0 + renderer_data.index_offset);
+		renderer_data.index_offset += 4;
+		
+		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
+			Vertex vertex;
+			vertex.position = translation * QUAD_POSITIONS[i];
+			vertex.color = color;
+			vertex.texture_coordinates = TEX_COORDS[i];
+			vertex.texture_id = texture_id;
+			current_mesh->vertex_buffer_data.push_back(vertex);
+			renderer_data.num_of_vertices_in_batch++;
+		}
+		if (renderer_data.num_of_vertices_in_batch == MAX_VERTEX_COUNT)
 			NewBatch();
+	}
+
+	void Renderer::SetShader(std::shared_ptr<Shader>* shader) {
+		renderer_data.current_shader = shader;
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {

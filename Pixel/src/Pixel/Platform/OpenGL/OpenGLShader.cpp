@@ -7,12 +7,17 @@
 #include <sstream>
 
 namespace Pixel {
+	static uint32_t current_shader_binded = 0;
+
 	OpenGLShader::~OpenGLShader() {
 		glDeleteProgram(shader_id);
 	}
 
 	void OpenGLShader::Bind() {
-		glUseProgram(shader_id);
+		if (shader_id != current_shader_binded) {
+			glUseProgram(shader_id);
+			current_shader_binded = shader_id;
+		}
 	}
 
 	void OpenGLShader::UnBind() {

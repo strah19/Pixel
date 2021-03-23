@@ -68,10 +68,6 @@ namespace Pixel {
         index_buffer->Bind();
         vertex_buffer->Bind();
         Pixel::RendererCommand::DrawVertexArray(vertex_array);
-        vertex_array->UnBind();
-        index_buffer->UnBind();
-        vertex_buffer->UnBind();
-        shader->UnBind();
     }
 
     void Model::LoadModel(const std::string& file_path) {

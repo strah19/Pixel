@@ -24,6 +24,7 @@ namespace Pixel {
 		instance = this;
 		Pixel::RendererCommand::Init();
 		Pixel::Renderer::Init();
+		Pixel::Renderer::InitDefaultShader();
 
 		camera = PerspectiveCameraController(glm::vec2(1280.0f, 720.0f));
 
@@ -32,7 +33,7 @@ namespace Pixel {
 
 		model_shader = Shader::CreateShader();
 		model_shader->Init("shaders/model_shader.glsl");
-		test_model.Init("obj/backpack/backpack.obj");
+		test_model.Init("obj/mars/planet.obj");
 		/*
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -55,9 +56,13 @@ namespace Pixel {
 			camera.Update();
 			
 			Pixel::Renderer::BeginScene(camera.GetCamera());
+
+			for (int i = 0; i < 20; i++) 
+				for(int j = 0; j < 20; j++)
+					Pixel::Renderer::DrawQuad({ i, j, 0 }, { 3, 3 }, { 1.0, 1.0, 0.0, 1.0 });
+
 			Pixel::Renderer::EndScene();
 
-			model_shader->Bind();
 			test_model.Draw(model_shader, camera.GetCamera());
 
 			window->Update();

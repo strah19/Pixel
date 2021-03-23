@@ -3,6 +3,9 @@
 #include <glad/glad.h>
 
 namespace Pixel {
+	static uint32_t current_index_buffer_id = 0;
+	static uint32_t current_vertex_buffer_id = 0;
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
 		glGenBuffers(1, &vertex_buffer_id);
 		Bind();
@@ -20,7 +23,10 @@ namespace Pixel {
 	}
 
 	void OpenGLVertexBuffer::Bind() {
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
+		if (current_vertex_buffer_id != vertex_buffer_id) {
+			glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id);
+			current_index_buffer_id = vertex_buffer_id;
+		}
 	}
 
 	void OpenGLVertexBuffer::UnBind() {
@@ -57,7 +63,10 @@ namespace Pixel {
 	}
 
 	void OpenGLIndexBuffer::Bind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id);
+		if (current_index_buffer_id != index_buffer_id) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id);
+			current_index_buffer_id = index_buffer_id;
+		}
 	}
 
 	void OpenGLIndexBuffer::UnBind() {

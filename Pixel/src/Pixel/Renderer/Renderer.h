@@ -8,10 +8,23 @@
 #include "Models/Mesh.h"
 
 namespace Pixel {
+	struct Vertex {
+		glm::vec3 position;
+		glm::vec4 color;
+		glm::vec2 texture_coordinates;
+		float texture_id;
+	};
+
+	struct RenderMesh {
+		std::vector<Vertex> vertex_buffer_data;
+		std::vector<uint32_t> indices;
+		std::shared_ptr<Shader>* shader = nullptr;
+	};
+
 	class Renderer {
 	public:
-		~Renderer();
 		static void Init();
+		static void InitDefaultShader();
 		static void BeginScene(Camera& camera);
 		static void EndScene();
 
@@ -30,6 +43,7 @@ namespace Pixel {
 		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
 
 		static void DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id);
+		static void SetShader(std::shared_ptr<Shader>* shader);
 	private:
 		static void StartBatch();
 		static void Render();

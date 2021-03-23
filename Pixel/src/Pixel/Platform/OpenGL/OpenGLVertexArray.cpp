@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 
 namespace Pixel {
+	static uint32_t current_vertex_array_id = 0;
+
 	static GLenum VertexShaderTypeToOpenGL(VertexShaderType type) {
 		switch (type) {
 		case VertexShaderType::Float: return GL_FLOAT;
@@ -14,7 +16,6 @@ namespace Pixel {
 
 	OpenGLVertexArray::OpenGLVertexArray() {
 		glGenVertexArrays(1, &vertex_array_buffer_id);
-		Bind();
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray() {
@@ -22,7 +23,10 @@ namespace Pixel {
 	}
 
 	void OpenGLVertexArray::Bind(){
-		glBindVertexArray(vertex_array_buffer_id);
+		if (current_vertex_array_id != vertex_array_buffer_id) {
+			glBindVertexArray(vertex_array_buffer_id);
+			current_vertex_array_id = vertex_array_buffer_id;
+		}
 	}
 
 	void OpenGLVertexArray::UnBind(){
