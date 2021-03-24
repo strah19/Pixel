@@ -31,6 +31,7 @@ namespace Pixel {
 
 	void OpenGLVertexBuffer::UnBind() {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		current_index_buffer_id = 0;
 	}
 
 	void OpenGLVertexBuffer::SetData(void* data, uint32_t size) {
@@ -71,5 +72,6 @@ namespace Pixel {
 
 	void OpenGLIndexBuffer::UnBind() {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		current_index_buffer_id = 0;
 	}
 }

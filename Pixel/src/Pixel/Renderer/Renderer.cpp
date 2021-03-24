@@ -16,7 +16,7 @@ namespace Pixel {
 	constexpr glm::vec4 QUAD_POSITIONS[4] = {
 		{ -0.5f, -0.5f, 0.0f, 1.0f },
 		{ 0.5f, -0.5f, 0.0f, 1.0f },
-		{ 0.5f,  0.5f, 0.0f, 1.0f }, 
+		{ 0.5f,  0.5f, 0.0f, 1.0f },
 		{ -0.5f,  0.5f, 0.0f, 1.0f }
 	};
 
@@ -24,10 +24,10 @@ namespace Pixel {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
 		std::shared_ptr<IndexBuffer> index_buffer;
-		std::shared_ptr<Shader>* current_shader = nullptr;
+		std::shared_ptr<Shader>* current_shader;
 		std::shared_ptr<Shader> default_shader;
 		bool init_default_shader = false;
-		
+
 		uint32_t index_offset = 0;
 
 		uint32_t texture_slot_index = 0;
@@ -62,14 +62,18 @@ namespace Pixel {
 		renderer_data.default_shader = Shader::CreateShader();
 		renderer_data.default_shader->Init("shaders/shader.glsl");
 
-		renderer_data.default_shader->Bind();
-		auto loc = renderer_data.default_shader->GetUniformLocation("ourTexture");
+		InitRendererShader(renderer_data.default_shader.get());
+		renderer_data.init_default_shader = true;
+	}
+
+	void Renderer::InitRendererShader(Shader* shader) {
+		shader->Bind();
+		auto loc = shader->GetUniformLocation("ourTexture");
 		int sampler[MAX_TEXTURE_SLOTS];
 		for (int i = 0; i < MAX_TEXTURE_SLOTS; i++) {
 			sampler[i] = i;
 		}
 		glUniform1iv(loc, MAX_TEXTURE_SLOTS, sampler);
-		renderer_data.init_default_shader = true;
 	}
 
 	void Renderer::BeginScene(Camera& camera) {
@@ -94,19 +98,20 @@ namespace Pixel {
 		renderer_data.index_buffer->Bind();
 		renderer_data.vertex_buffer->Bind();
 
-		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) 
+		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++)
 			renderer_data.textures[i]->get()->Bind(i);
-
+		
 		for (auto& mesh : renderer_data.meshes) {
-			renderer_data.current_shader = mesh.shader;
-			if (renderer_data.current_shader) {
-				renderer_data.current_shader->get()->Bind();
-				renderer_data.current_shader->get()->SetMat4f("proj_view", renderer_data.proj_view);
-				renderer_data.vertex_buffer->SetData(&mesh.vertex_buffer_data[0], (uint32_t)mesh.vertex_buffer_data.size() * sizeof(Vertex));
-				renderer_data.index_buffer->SetData(&mesh.indices[0], (uint32_t)mesh.indices.size() * sizeof(uint32_t));
-				renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
-				RendererCommand::DrawVertexArray(renderer_data.vertex_array);
-			}
+			std::shared_ptr<Shader>* shader = mesh.shader;
+			shader->get()->Bind();
+			shader->get()->SetMat4f("proj_view", renderer_data.proj_view);
+
+			renderer_data.vertex_buffer->SetData(&mesh.vertex_buffer_data[0], (uint32_t)mesh.vertex_buffer_data.size() * sizeof(Vertex));
+			renderer_data.index_buffer->SetData(&mesh.indices[0], (uint32_t)mesh.indices.size() * sizeof(uint32_t));
+
+			renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
+
+			RendererCommand::DrawVertexArray(renderer_data.vertex_array);	
 		}
 	}
 
@@ -136,6 +141,7 @@ namespace Pixel {
 			renderer_data.meshes.push_back(RenderMesh());
 			current_mesh = &renderer_data.meshes.back();
 			current_mesh->shader = renderer_data.current_shader;
+			renderer_data.index_offset = 0;
 		}
 
 		current_mesh->indices.push_back(0 + renderer_data.index_offset);
@@ -145,7 +151,7 @@ namespace Pixel {
 		current_mesh->indices.push_back(3 + renderer_data.index_offset);
 		current_mesh->indices.push_back(0 + renderer_data.index_offset);
 		renderer_data.index_offset += 4;
-		
+
 		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
 			Vertex vertex;
 			vertex.position = translation * QUAD_POSITIONS[i];
@@ -161,6 +167,10 @@ namespace Pixel {
 
 	void Renderer::SetShader(std::shared_ptr<Shader>* shader) {
 		renderer_data.current_shader = shader;
+	}
+
+	void Renderer::SetShaderToDefualt() {
+		renderer_data.current_shader = &renderer_data.default_shader;
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
@@ -210,13 +220,13 @@ namespace Pixel {
 	float Renderer::CalculateTextureIndex(std::shared_ptr<Texture>& texture) {
 		float texture_id = -1.0f;
 
-		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++) 
-			if (*renderer_data.textures[i] == texture) 
+		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++)
+			if (*renderer_data.textures[i] == texture)
 				texture_id = (float)i;
 
 		if (texture_id == -1.0f) {
 			renderer_data.textures[renderer_data.texture_slot_index] = &texture;
-			texture_id = (float) renderer_data.texture_slot_index;
+			texture_id = (float)renderer_data.texture_slot_index;
 			renderer_data.texture_slot_index++;
 
 			if (renderer_data.texture_slot_index == MAX_TEXTURE_SLOTS)

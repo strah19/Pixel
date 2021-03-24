@@ -73,7 +73,7 @@ namespace Pixel {
 
 	void OpenGLTexture::UnBind() {
 		glBindTexture(GL_TEXTURE_2D, 0);
+		current_texture_id = 0;
 	}
-
 }
 

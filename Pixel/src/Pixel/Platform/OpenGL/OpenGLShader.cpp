@@ -22,6 +22,7 @@ namespace Pixel {
 
 	void OpenGLShader::UnBind() {
 		glUseProgram(0);
+		current_shader_binded = 0;
 	}
 
 	void OpenGLShader::Init(const std::string& file_path) {

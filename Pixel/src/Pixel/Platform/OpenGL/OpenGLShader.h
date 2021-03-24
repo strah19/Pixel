@@ -18,6 +18,7 @@ namespace Pixel {
 		void SetMat4f(const std::string& name, const glm::mat4& mat4);
 
 		uint32_t GetUniformLocation(const std::string& name);
+		uint32_t GetId() const { return shader_id; }
 	private:
 		uint32_t shader_id;
 		ShaderSources ParseShader(const std::string& path);

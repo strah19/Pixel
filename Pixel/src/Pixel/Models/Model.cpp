@@ -10,14 +10,14 @@ namespace Pixel {
 
         uint32_t vertices_size = 0;
         uint32_t indices_size = 0;
-        std::vector<MeshVertex> vertices;
+        std::vector<ModelMeshVertex> vertices;
         std::vector<uint32_t> indices;
         for (size_t i = 0; i < meshes.size(); i++) {
-            Mesh* past_mesh = nullptr;
+            ModelMesh* past_mesh = nullptr;
             if (i > 0)
                 past_mesh = &meshes[i - 1];
-            vertices_size += meshes[i].vertices.size();
-            indices_size += meshes[i].indices.size();
+            vertices_size += (uint32_t) meshes[i].vertices.size();
+            indices_size += (uint32_t) meshes[i].indices.size();
 
             vertices.insert(vertices.end(), meshes[i].vertices.begin(), meshes[i].vertices.end());
             if(past_mesh == nullptr)
@@ -31,8 +31,8 @@ namespace Pixel {
             }
         }
 
-        vertex_buffer = VertexBuffer::CreateVertexBuffer((uint32_t)(vertices_size * sizeof(MeshVertex)));
-        vertex_buffer->SetData(&vertices[0], (uint32_t)(vertices.size() * sizeof(MeshVertex)));
+        vertex_buffer = VertexBuffer::CreateVertexBuffer((uint32_t)(vertices_size * sizeof(ModelMeshVertex)));
+        vertex_buffer->SetData(&vertices[0], (uint32_t)(vertices.size() * sizeof(ModelMeshVertex)));
 
         VertexBufferLayout layout;
         layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float)); //Position
@@ -94,13 +94,13 @@ namespace Pixel {
         }
     }
 
-    Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
-        std::vector<MeshVertex> vertices;
+    ModelMesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
+        std::vector<ModelMeshVertex> vertices;
         std::vector<uint32_t> indices;
-        std::vector<MeshTexture> textures;
+        std::vector<ModelMeshTexture> textures;
 
         for (uint32_t i = 0; i < mesh->mNumVertices; i++) {
-            MeshVertex vertex;
+            ModelMeshVertex vertex;
 
             glm::vec3 vector;
             vector.x = mesh->mVertices[i].x;
@@ -133,19 +133,19 @@ namespace Pixel {
 
         if (mesh->mMaterialIndex >= 0) {
             aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            std::vector<MeshTexture> diffuseMaps = LoadMaterialTextures(material,
+            std::vector<ModelMeshTexture> diffuseMaps = LoadMaterialTextures(material,
                 aiTextureType_DIFFUSE, "texture_diffuse");
             textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-            std::vector<MeshTexture> specularMaps = LoadMaterialTextures(material,
+            std::vector<ModelMeshTexture> specularMaps = LoadMaterialTextures(material,
                 aiTextureType_SPECULAR, "texture_specular");
             textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         }
         
-        return Mesh(vertices, indices, textures);
+        return ModelMesh(vertices, indices, textures);
     }
 
-    std::vector<MeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& type_name) {
-        std::vector<MeshTexture> textures;
+    std::vector<ModelMeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& type_name) {
+        std::vector<ModelMeshTexture> textures;
         for (uint32_t i = 0; i < mat->GetTextureCount(type); i++) {
             aiString str;
             mat->GetTexture(type, i, &str);
@@ -158,7 +158,7 @@ namespace Pixel {
                 }
             }
             if (!skip) {
-                MeshTexture texture;
+                ModelMeshTexture texture;
                 std::string filename = std::string(str.C_Str());
                 filename = path + '/' + filename;
                 texture.texture = Texture::CreateTexture(filename.c_str());

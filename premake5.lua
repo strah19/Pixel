@@ -108,7 +108,8 @@ project "Sandbox"
 	{
 		"Pixel/src/Pixel",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.imgui}"
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.assimp}"
 	}
 
 	links

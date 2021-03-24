@@ -8,14 +8,6 @@
 #include "Events/WindowEvents.h"
 #include "Events/MouseEvents.h"
 
-#include "Renderer/VertexArray.h"
-#include "Renderer/Shader.h"
-#include "Renderer/Renderer.h"
-#include "Renderer/Texture.h"
-#include "Camera/OrthoCamera.h"
-#include "Camera/OrthoCameraController.h"
-#include "Camera/PerspectiveCameraController.h"
-
 int main(int argc, char** argv);
 
 namespace Pixel {
@@ -26,6 +18,8 @@ namespace Pixel {
 
 		void Run();
 		virtual void UserDefEvent(Event& event) { }
+		virtual void OnUpdate(float delta) { }
+		virtual void OnDestroy() { }
 		
 		static Application* GetApp() { return instance; }
 		Window* GetWindow() { return window.get(); }
@@ -33,15 +27,12 @@ namespace Pixel {
 		bool is_running;
 		std::unique_ptr<Window> window;
 
+		float delta = 0.0f;
+		float old_time_since_start = 0.0f;
+
 		bool OnClose(const QuitEvent& event);
 		bool OnResize(const ResizeEvent& event);
 		void OnEvent(Event& event);
-
-		std::shared_ptr<Texture> texture1;
-		std::shared_ptr<Texture> texture2;
-		PerspectiveCameraController camera;
-
-		std::shared_ptr<Shader> model_shader;
 
 		static Application* instance; 
 	};

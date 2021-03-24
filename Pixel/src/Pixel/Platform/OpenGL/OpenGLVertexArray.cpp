@@ -31,6 +31,7 @@ namespace Pixel {
 
 	void OpenGLVertexArray::UnBind(){
 		glBindVertexArray(0);
+		current_vertex_array_id = 0;
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertex_buf) {

@@ -6,28 +6,24 @@
 #include "Renderer/Texture.h"
 
 namespace Pixel {
-	struct MeshVertex {
+	struct ModelMeshVertex {
 		glm::vec3 position;
 		glm::vec3 normal;
 		glm::vec2 tex_coords;
 	};
 
-	struct MeshTexture {
+	struct ModelMeshTexture {
 		std::shared_ptr<Texture> texture;
 		std::string texture_type;
 		std::string path;
 	};
 
-	class Mesh {
-	public:
-		std::vector<MeshVertex> vertices;
-		std::vector<MeshTexture> textures;
+	struct ModelMesh {
+		std::vector<ModelMeshVertex> vertices;
+		std::vector<ModelMeshTexture> textures;
 		std::vector<uint32_t> indices;
 
-		void Draw(std::shared_ptr<Shader>& shader);
-		Mesh(std::vector<MeshVertex>& vertices, std::vector<uint32_t>& indices, std::vector<MeshTexture>& textures);
-	private:
-
+		ModelMesh(std::vector<ModelMeshVertex>& vertices, std::vector<uint32_t>& indices, std::vector<ModelMeshTexture>& textures);
 	};
 }
 
