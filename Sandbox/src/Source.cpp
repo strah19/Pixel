@@ -23,18 +23,16 @@ public:
 		Pixel::RendererCommand::SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 		camera.Update();
 		Pixel::Renderer::BeginScene(camera.GetCamera());
-		/*
-		Pixel::Renderer::DrawQuad({ 2, 0, 0 }, { 1, 1 }, light); //light Source.
-
+		
+		Pixel::Renderer::DrawCube({ 2, 0, 0 }, { 1, 1 }, light);
 
 		Pixel::Renderer::SetShader(&light_shader);
 		Pixel::Renderer::AddUniformsToShader([&](Pixel::Shader* shader) {
 			shader->SetVec3f("lightColor", glm::vec3(light));
 
 		});
-		Pixel::Renderer::DrawQuad({ 0, 0, 0 }, { 1, 1 }, { 1.0f, 0.5f, 0.31f, 1.0 });
-		*/
-		Pixel::Renderer::DrawCube({ 2, 0, 0 }, { 1, 1 }, light);
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1 }, { 1.0f, 0.5f, 0.31f, 1.0 });
+		
 		Pixel::Renderer::EndScene();
 	}
 

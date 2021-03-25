@@ -79,6 +79,7 @@ namespace Pixel {
 		stream.close();
 		return { ss[0].str(), ss[1].str() };
 	}
+
 	unsigned int OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 	{
 		unsigned int program = glCreateProgram();
@@ -110,5 +111,9 @@ namespace Pixel {
 
 	void OpenGLShader::SetVec3f(const std::string& name, const glm::vec3& vec3) {
 		glUniform3f(GetUniformLocation(name), vec3.x, vec3.y, vec3.z);
+	}
+
+	void OpenGLShader::SetIntArray(const std::string& name, int* array) {
+		glUniform1iv(GetUniformLocation(name), sizeof(array) / sizeof(int), array);
 	}
 }

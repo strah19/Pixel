@@ -19,17 +19,37 @@ namespace Pixel {
 		{ 0.5f,  0.5f, 0.0f, 1.0f },
 		{ -0.5f,  0.5f, 0.0f, 1.0f }
 	};
-	constexpr size_t CUBE_VERTEX_COUNT = 8;
+	constexpr size_t CUBE_VERTEX_COUNT = 24;
 	constexpr glm::vec3 CUBE_POSITIONS[CUBE_VERTEX_COUNT] = {
-		{-1.0, -1.0,  1.0},
-		{1.0, -1.0,  1.0},
-		{1.0,  1.0,  1.0},
-		{-1.0,  1.0,  1.0},
+		{ -0.5f, -0.5f, 0.0f },
+		{ 0.5f, -0.5f, 0.0f },
+		{ 0.5f,  0.5f, 0.0f },
+		{ -0.5f,  0.5f, 0.0f },
 
-		{-1.0, -1.0, -1.0},
-		{1.0, -1.0, -1.0},
-		{1.0,  1.0, -1.0},
-		{-1.0,  1.0, -1.0}
+		{ -0.5f, -0.5f, -1.0f },
+		{ 0.5f, -0.5f, -1.0f },
+		{ 0.5f,  0.5f, -1.0f },
+		{ -0.5f,  0.5f, -1.0f },
+
+		{ -0.5f, -0.5f, -1.0f },
+		{ -0.5f, -0.5f, 0.0f },
+		{ -0.5f,  0.5f, 0.0f },
+		{ -0.5f,  0.5f, -1.0f },
+
+		{ 0.5f, -0.5f, -1.0f },
+		{ 0.5f, -0.5f, 0.0f },
+		{ 0.5f,  0.5f, 0.0f },
+		{ 0.5f,  0.5f, -1.0f },
+
+		{ -0.5f, 0.5f, -1.0f },
+		{ 0.5f, 0.5f, -1.0f },
+		{ 0.5f,  0.5f, 0.0f },
+		{ -0.5f,  0.5f, 0.0f },
+
+		{ -0.5f, -0.5f, -1.0f },
+		{ 0.5f, -0.5f, -1.0f },
+		{ 0.5f,  -0.5f, 0.0f },
+		{ -0.5f,  -0.5f, 0.0f }
 	};
 
 	struct RendererData {
@@ -81,12 +101,11 @@ namespace Pixel {
 
 	void Renderer::InitRendererShader(Shader* shader) {
 		shader->Bind();
-		auto loc = shader->GetUniformLocation("ourTexture");
 		int sampler[MAX_TEXTURE_SLOTS];
 		for (int i = 0; i < MAX_TEXTURE_SLOTS; i++) {
 			sampler[i] = i;
 		}
-		glUniform1iv(loc, MAX_TEXTURE_SLOTS, sampler);
+		shader->SetIntArray("ourTexture", sampler);
 	}
 
 	void Renderer::BeginScene(Camera& camera) {
@@ -226,7 +245,7 @@ namespace Pixel {
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		RenderMesh* current_mesh = FindMesh();
 
-		for (uint32_t i = 0; i < 36; i += 6)
+		for (uint32_t i = 0; i < 6; i++)
 		{
 			current_mesh->indices.push_back(0 + renderer_data.index_offset);
 			current_mesh->indices.push_back(1 + renderer_data.index_offset);

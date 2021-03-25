@@ -27,6 +27,7 @@ namespace Pixel {
 		virtual void Set1f(const std::string& name, float& value) = 0;
 		virtual void SetMat4f(const std::string& name, const glm::mat4& mat4) = 0;
 		virtual void SetVec3f(const std::string& name, const glm::vec3& vec3) = 0;
+		virtual void SetIntArray(const std::string& name, int* array) = 0;
 
 		virtual uint32_t GetId() const = 0;
 		virtual uint32_t GetUniformLocation(const std::string& name) = 0;
