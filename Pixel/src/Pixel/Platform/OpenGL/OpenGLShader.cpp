@@ -107,4 +107,8 @@ namespace Pixel {
 	void OpenGLShader::SetMat4f(const std::string& name, const glm::mat4& mat4) {
 		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(mat4));
 	}
+
+	void OpenGLShader::SetVec3f(const std::string& name, const glm::vec3& vec3) {
+		glUniform3f(GetUniformLocation(name), vec3.x, vec3.y, vec3.z);
+	}
 }

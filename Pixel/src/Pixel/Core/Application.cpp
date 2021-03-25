@@ -19,6 +19,10 @@ namespace Pixel {
 		OnDestroy();
 	}
 
+	float Application::GetTick() {
+		return (float) glfwGetTime();
+	}
+
 	void Application::Run() {
 		while (is_running) {
 			float time_since_start = (float) glfwGetTime();

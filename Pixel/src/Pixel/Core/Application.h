@@ -20,7 +20,9 @@ namespace Pixel {
 		virtual void UserDefEvent(Event& event) { }
 		virtual void OnUpdate(float delta) { }
 		virtual void OnDestroy() { }
-		
+
+
+		static float GetTick();
 		static Application* GetApp() { return instance; }
 		Window* GetWindow() { return window.get(); }
 	private:

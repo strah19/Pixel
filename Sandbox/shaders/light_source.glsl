@@ -27,19 +27,13 @@ in vec2 TexCoord;
 in flat float index;
 
 uniform sampler2D ourTexture[32];
+uniform vec3 lightColor;
 
 void main()
 {
-	if(index != -1.0){
-		if(outColor == vec4(-1, -1, -1, -1)){
-			FragColor = texture(ourTexture[int(index)], TexCoord);
-		}
-		else{
-			FragColor = texture(ourTexture[int(index)], TexCoord) * outColor;
-		}
-	}
-	else {
-		FragColor = outColor;
-	}
-		FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+	float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * lightColor;
+
+    vec3 result = ambient * outColor.xyz;
+    FragColor = vec4(result, 1.0);
 }

@@ -1,8 +1,6 @@
 #include <iostream>
 #include <Pixel.h>
 
-using namespace Pixel;
-
 class Sandbox : public Pixel::Application {
 public:
 	Sandbox() {
@@ -10,27 +8,33 @@ public:
 		Pixel::Renderer::Init();
 		Pixel::Renderer::InitDefaultShader();
 
-		camera = PerspectiveCameraController(glm::vec2(1280.0f, 720.0f));
+		camera = Pixel::PerspectiveCameraController(glm::vec2(1280.0f, 720.0f));
 
-		texture1 = Texture::CreateTexture("texture1.jpg");
-		texture2 = Texture::CreateTexture("awesomeface.png");;
+		texture1 = Pixel::Texture::CreateTexture("texture1.jpg");
+		texture2 = Pixel::Texture::CreateTexture("awesomeface.png");;
 
-		circle_shader = Shader::CreateShader();
-		circle_shader->Init("shaders/colored_circle_shader.glsl");
-		Renderer::InitRendererShader(circle_shader.get());
+		light_shader = Pixel::Shader::CreateShader();
+		light_shader->Init("shaders/light_source.glsl");
+		Pixel::Renderer::InitRendererShader(light_shader.get());
 	}
 
 	void OnUpdate(float delta) {
 		Pixel::RendererCommand::Clear();
 		Pixel::RendererCommand::SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-
 		camera.Update();
 		Pixel::Renderer::BeginScene(camera.GetCamera());
+		/*
+		Pixel::Renderer::DrawQuad({ 2, 0, 0 }, { 1, 1 }, light); //light Source.
 
-		Pixel::Renderer::DrawQuad({ 2, 0, 0 }, { 1, 1 }, { 0.0, 1.0, 0.0, 1.0 });
-		Pixel::Renderer::DrawQuad({ 0, 0, 0 }, { 1, 1 }, { 0.0, 1.0, 0.0, 1.0 });
-		Pixel::Renderer::DrawQuad({ 3, 0, 0 }, { 1, 1 }, { 0.0, 1.0, 0.0, 1.0 });
 
+		Pixel::Renderer::SetShader(&light_shader);
+		Pixel::Renderer::AddUniformsToShader([&](Pixel::Shader* shader) {
+			shader->SetVec3f("lightColor", glm::vec3(light));
+
+		});
+		Pixel::Renderer::DrawQuad({ 0, 0, 0 }, { 1, 1 }, { 1.0f, 0.5f, 0.31f, 1.0 });
+		*/
+		Pixel::Renderer::DrawCube({ 2, 0, 0 }, { 1, 1 }, light);
 		Pixel::Renderer::EndScene();
 	}
 
@@ -39,10 +43,12 @@ public:
 		camera.OnEvent(event);
 	}
 private:
-	std::shared_ptr<Texture> texture1;
-	std::shared_ptr<Texture> texture2;
-	PerspectiveCameraController camera;
-	std::shared_ptr<Shader> circle_shader;
+	glm::vec4 light = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	std::shared_ptr<Pixel::Texture> texture1;
+	std::shared_ptr<Pixel::Texture> texture2;
+	Pixel::PerspectiveCameraController camera;
+	std::shared_ptr<Pixel::Shader> light_shader;
 };
 
 Pixel::Application* Pixel::CreateApplication()
