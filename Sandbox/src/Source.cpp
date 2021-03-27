@@ -21,6 +21,8 @@ public:
 	void OnUpdate(float delta) {
 		Pixel::RendererCommand::Clear();
 		Pixel::RendererCommand::SetClearColor(0.4f, 0.5f, 0.55f, 1.0f);
+		Pixel::ImGuiLayer::Begin();
+
 		camera.Update();
 		Pixel::Renderer::BeginScene(camera.GetCamera());
 		Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
@@ -33,9 +35,14 @@ public:
 
 		});
 		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 10, 1, 10 }, { 1.0f, 0.5f, 0.31f, 1.0 });
-
 		
 		Pixel::Renderer::EndScene();
+
+		ImGui::Begin("Demo window");
+		ImGui::Button("Hello!");
+		ImGui::End();
+
+		Pixel::ImGuiLayer::End();
 	}
 
 	void UserDefEvent(Pixel::Event& event) {
@@ -43,7 +50,7 @@ public:
 		camera.OnEvent(event);
 	}
 private:
-	glm::vec4 light = { 0.0f, 5.0f, 1.0f, 1.0f };
+	glm::vec4 light = { 0.9f, 0.7f, 0.7f, 1.0f };
 	glm::vec3 light_source = { -5.0f, 1.0f, -5.0f };
 	std::shared_ptr<Pixel::Texture> texture1;
 	std::shared_ptr<Pixel::Texture> texture2;

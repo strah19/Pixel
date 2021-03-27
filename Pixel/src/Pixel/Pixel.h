@@ -28,4 +28,6 @@
 #include "Renderer/Texture.h"
 #include "Renderer/VertexArray.h"
 
+#include "ImGui/ImGuiLayer.h"
+
 #endif // !PIXEL_H

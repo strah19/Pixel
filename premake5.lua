@@ -17,9 +17,11 @@ IncludeDir["GLAD"] = "Pixel/vendor/GLAD/include"
 IncludeDir["stb_image"] = "Pixel/vendor/stb_image"
 IncludeDir["glm"] = "Pixel/vendor/glm"
 IncludeDir["assimp"] = "Pixel/vendor/assimp-lib/include"
+IncludeDir["imgui"] = "Pixel/vendor/imgui"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
+include "Pixel/vendor/imgui"
 
 project "Pixel"
 	location "Pixel"
@@ -48,6 +50,7 @@ project "Pixel"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.assimp}",
+		"%{IncludeDir.imgui}"
 	}
 
 	defines
@@ -63,6 +66,7 @@ project "Pixel"
 		"GLAD",
 		"opengl32.lib",
 		"assimp-vc142-mtd.lib",
+		"ImGui"
 	}
 
 	libdirs 

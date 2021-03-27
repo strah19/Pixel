@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "Renderer/RendererCommands.h"
 
+#include "ImGui/ImGuiLayer.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -13,9 +15,12 @@ namespace Pixel {
 		window = Window::CreateWindow({ name, width, height });
 		window->SetEventCallback(PIXEL_BIND_EVENT(OnEvent));
 		instance = this;
+
+		ImGuiLayer::Init();
 	}
 
 	Application::~Application() { 
+		ImGuiLayer::Destroy();
 		OnDestroy();
 	}
 
@@ -28,6 +33,7 @@ namespace Pixel {
 			float time_since_start = (float) glfwGetTime();
 			delta = time_since_start - old_time_since_start;
 			old_time_since_start = time_since_start;
+
 			OnUpdate(delta);
 
 			window->Update();

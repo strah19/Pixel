@@ -10,6 +10,9 @@
     <Filter Include="Events">
       <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Models">
       <UniqueIdentifier>{096F8DC3-F510-B899-DECB-CBEDCA0C3FEA}</UniqueIdentifier>
     </Filter>
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\WindowEvents.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\ImGui\ImGuiLayer.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Models\Mesh.h">
       <Filter>Models</Filter>
@@ -150,6 +156,12 @@
     </ClCompile>
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp">
       <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\ImGui\ImGuiBuild.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\ImGui\ImGuiLayer.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Models\Mesh.cpp">
       <Filter>Models</Filter>
