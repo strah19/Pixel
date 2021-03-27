@@ -13,6 +13,7 @@ namespace Pixel {
 		glm::vec4 color;
 		glm::vec2 texture_coordinates;
 		float texture_id;
+		glm::vec3 normals = glm::vec3(0, 0, 0);
 	};
 
 	struct RenderMesh {
@@ -40,13 +41,13 @@ namespace Pixel {
 		static void DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
 
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
+		static void DrawQuad(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
+		static void DrawQuad(const glm::vec3& position, const glm::vec3& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
 
-		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec4& color);
-		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
+		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec3& size, const glm::vec4& color);
+		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec3& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
 
-		static void DrawCube(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
 
 		static void DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id);
 		static void SetShader(std::shared_ptr<Shader>* shader);

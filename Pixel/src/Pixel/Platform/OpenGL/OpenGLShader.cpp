@@ -45,7 +45,7 @@ namespace Pixel {
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* message = (char*)malloc(length * sizeof(char));
 			glGetShaderInfoLog(id, length, &length, message);
-			std::cout << "Failed to compile shader " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
+			std::cout << "SHADER::" << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") << "::FAILED::" << message << std::endl;
 			glDeleteShader(id);
 			return 0;
 		}

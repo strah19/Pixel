@@ -20,18 +20,20 @@ public:
 
 	void OnUpdate(float delta) {
 		Pixel::RendererCommand::Clear();
-		Pixel::RendererCommand::SetClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+		Pixel::RendererCommand::SetClearColor(0.4f, 0.5f, 0.55f, 1.0f);
 		camera.Update();
 		Pixel::Renderer::BeginScene(camera.GetCamera());
-		
-		Pixel::Renderer::DrawCube({ 2, 0, 0 }, { 1, 1 }, light);
+		Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
 
 		Pixel::Renderer::SetShader(&light_shader);
 		Pixel::Renderer::AddUniformsToShader([&](Pixel::Shader* shader) {
 			shader->SetVec3f("lightColor", glm::vec3(light));
+			shader->SetVec3f("lightPos", light_source);
+			shader->SetVec3f("viewPos", camera.GetCamera().GetPosition());
 
 		});
-		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1 }, { 1.0f, 0.5f, 0.31f, 1.0 });
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 10, 1, 10 }, { 1.0f, 0.5f, 0.31f, 1.0 });
+
 		
 		Pixel::Renderer::EndScene();
 	}
@@ -41,8 +43,8 @@ public:
 		camera.OnEvent(event);
 	}
 private:
-	glm::vec4 light = { 1.0f, 1.0f, 1.0f, 1.0f };
-
+	glm::vec4 light = { 0.0f, 5.0f, 1.0f, 1.0f };
+	glm::vec3 light_source = { -5.0f, 1.0f, -5.0f };
 	std::shared_ptr<Pixel::Texture> texture1;
 	std::shared_ptr<Pixel::Texture> texture2;
 	Pixel::PerspectiveCameraController camera;
