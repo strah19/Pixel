@@ -9,6 +9,7 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 #include "Core/KeyCodes.h"
+#include "Core/Logger.h"
 
 #include "Camera/Camera.h"
 #include "Camera/OrthoCamera.h"
@@ -27,6 +28,7 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
 #include "Renderer/VertexArray.h"
+#include "Renderer/InstanceRenderer.h"
 
 #include "ImGui/ImGuiLayer.h"
 

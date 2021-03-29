@@ -16,6 +16,10 @@ public:
 		light_shader = Pixel::Shader::CreateShader();
 		light_shader->Init("shaders/light_source.glsl");
 		Pixel::Renderer::InitRendererShader(light_shader.get());
+
+		log.Init("%l");
+		Pixel::SetLogFormat(&log);
+		Pixel::Log("%s", "Hello World");
 	}
 
 	void OnUpdate(float delta) {
@@ -25,6 +29,7 @@ public:
 
 		camera.Update();
 		Pixel::Renderer::BeginScene(camera.GetCamera());
+		
 		Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
 
 		Pixel::Renderer::SetShader(&light_shader);
@@ -35,12 +40,9 @@ public:
 
 		});
 		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 10, 1, 10 }, { 1.0f, 0.5f, 0.31f, 1.0 });
-		
+
 		Pixel::Renderer::EndScene();
 
-		ImGui::Begin("Demo window");
-		ImGui::Button("Hello!");
-		ImGui::End();
 
 		Pixel::ImGuiLayer::End();
 	}
@@ -56,6 +58,8 @@ private:
 	std::shared_ptr<Pixel::Texture> texture2;
 	Pixel::PerspectiveCameraController camera;
 	std::shared_ptr<Pixel::Shader> light_shader;
+
+	Pixel::LogFormat log;
 };
 
 Pixel::Application* Pixel::CreateApplication()
