@@ -4,7 +4,7 @@
 #include <memory>
 #include "Renderer/VertexArray.h"
 
-namespace Pixel {
+namespace Pixel {	
 	enum class RenderAPI {
 		OpenGL, None
 	};

@@ -49,6 +49,8 @@ namespace Pixel {
 			return false;
 
 		native_window = glfwCreateWindow(data.properties.width, data.properties.height, data.properties.title.c_str(), NULL, NULL);
+		
+
 		glfw_window_count++;
 
 		glfwSetWindowUserPointer(native_window, &data);

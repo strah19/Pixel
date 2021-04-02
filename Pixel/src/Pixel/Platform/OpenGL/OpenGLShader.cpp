@@ -1,5 +1,6 @@
 #include "pixelpch.h"
 #include "OpenGLShader.h"
+#include "Renderer/RendererAPI.h"
 
 #include <glad/glad.h>
 #include <gtc/type_ptr.hpp>
@@ -98,7 +99,7 @@ namespace Pixel {
 	}
 
 	void OpenGLShader::Set1f(const std::string& name, float& value) {
-		glUniform1f(GetUniformLocation(name), value);
+		ProgramSet1f(shader_id, name, value);
 	}
 
 	uint32_t OpenGLShader::GetUniformLocation(const std::string& name) {
@@ -115,5 +116,47 @@ namespace Pixel {
 
 	void OpenGLShader::SetIntArray(const std::string& name, int* array) {
 		glUniform1iv(GetUniformLocation(name), sizeof(array) / sizeof(int), array);
+	}
+
+	void ProgramSet1f(uint32_t id, const std::string& name, float& value) {
+		glProgramUniform1f(id, ProgramGetUniformLocation(id, name), value);
+	}
+
+	void ProgramSetMat4f(uint32_t id, const std::string& name, const glm::mat4& mat4) {
+		glProgramUniformMatrix4fv(id, ProgramGetUniformLocation(id, name), 1, GL_FALSE, glm::value_ptr(mat4));
+	}
+
+	void ProgramSetVec3f(uint32_t id, const std::string& name, const glm::vec3& vec3) {
+		glProgramUniform3f(id, ProgramGetUniformLocation(id, name), vec3.x, vec3.y, vec3.z);
+	}
+
+	void ProgramSetIntArray(uint32_t id, const std::string& name, int* array) {
+		glProgramUniform1iv(id, ProgramGetUniformLocation(id, name), sizeof(array) / sizeof(int), array);
+	}
+
+	uint32_t ProgramGetUniformLocation(uint32_t id, const std::string& name) {
+		return (glGetUniformLocation(id, name.c_str()));
+	}
+
+	std::vector<std::string> GetUniformNames(uint32_t id) {
+		GLint i;
+		GLint count;
+
+		GLint size;
+		GLenum type;
+
+		const GLsizei bufSize = 16;
+		GLchar name[bufSize];
+		GLsizei length;
+		std::vector<std::string> names;
+
+		glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count);
+
+		for (i = 0; i < count; i++) {
+			glGetActiveUniform(id, (GLuint)i, bufSize, &length, &size, &type, name);
+			names.push_back(name);
+		}
+
+		return names;
 	}
 }

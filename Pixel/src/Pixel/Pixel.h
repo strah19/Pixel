@@ -29,6 +29,7 @@
 #include "Renderer/Texture.h"
 #include "Renderer/VertexArray.h"
 #include "Renderer/InstanceRenderer.h"
+#include "Renderer/FrameBuffer.h"
 
 #include "ImGui/ImGuiLayer.h"
 

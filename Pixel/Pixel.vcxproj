@@ -143,6 +143,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\CinderFileSystem\CFSFile.h" />
+    <ClInclude Include="src\CinderFileSystem\CinderFileSys.h" />
+    <ClInclude Include="src\CinderFileSystem\CinderStructure.h" />
     <ClInclude Include="src\Pixel\Camera\Camera.h" />
     <ClInclude Include="src\Pixel\Camera\OrthoCamera.h" />
     <ClInclude Include="src\Pixel\Camera\OrthoCameraController.h" />
@@ -164,6 +167,7 @@
     <ClInclude Include="src\Pixel\Pixel.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLTexture.h" />
@@ -181,8 +185,11 @@
     <ClInclude Include="src\Pixel\Renderer\Texture.h" />
     <ClInclude Include="src\Pixel\Renderer\VertexArray.h" />
     <ClInclude Include="src\Pixel\pixelpch.h" />
+    <ClInclude Include="src\Pixel\Spritesheet\Spritesheet.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CinderFileSystem\CFSFile.cpp" />
+    <ClCompile Include="src\CinderFileSystem\CinderStructure.cpp" />
     <ClCompile Include="src\Pixel\Camera\Camera.cpp" />
     <ClCompile Include="src\Pixel\Camera\OrthoCamera.cpp" />
     <ClCompile Include="src\Pixel\Camera\OrthoCameraController.cpp" />
@@ -197,6 +204,7 @@
     <ClCompile Include="src\Pixel\Models\Model.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLTexture.cpp" />
@@ -204,6 +212,7 @@
     <ClCompile Include="src\Pixel\Platform\Windows.cpp" />
     <ClCompile Include="src\Pixel\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\InstanceRenderer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererAPI.cpp" />
@@ -215,6 +224,7 @@
     <ClCompile Include="src\Pixel\pixelpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Pixel\Spritesheet\Spritesheet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">

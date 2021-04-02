@@ -24,5 +24,6 @@
     <None Include="shaders\shader.glsl" />
     <None Include="shaders\model_shader.glsl" />
     <None Include="shaders\light_source.glsl" />
+    <None Include="shaders\fake_lighting.glsl" />
   </ItemGroup>
 </Project>

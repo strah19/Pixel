@@ -6,8 +6,7 @@
 #include <glm.hpp>
 
 namespace Pixel {
-	struct ShaderSources
-	{
+	struct ShaderSources {
 		std::string vertex;
 		std::string fragment;
 	};
@@ -33,6 +32,13 @@ namespace Pixel {
 		virtual uint32_t GetUniformLocation(const std::string& name) = 0;
 	private:
 	};
+
+	void ProgramSet1f(uint32_t id, const std::string& name, float& value);
+	void ProgramSetMat4f(uint32_t id, const std::string& name, const glm::mat4& mat4);
+	void ProgramSetVec3f(uint32_t id, const std::string& name, const glm::vec3& vec3);
+	void ProgramSetIntArray(uint32_t id, const std::string& name, int* array);
+	uint32_t ProgramGetUniformLocation(uint32_t id, const std::string& name);
+	std::vector<std::string> GetUniformNames(uint32_t id);
 }
 
 #endif // !SHADER_H
