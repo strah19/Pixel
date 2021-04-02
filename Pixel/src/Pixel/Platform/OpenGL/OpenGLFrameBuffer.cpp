@@ -1,6 +1,7 @@
 #include "pixelpch.h"
 #include "OpenGLFrameBuffer.h"
 #include <glad/glad.h>
+#include "Core/Logger.h"
 
 namespace Pixel {
 	OpenGLFrameBuffer::OpenGLFrameBuffer(uint32_t width, uint32_t height) {
@@ -31,7 +32,7 @@ namespace Pixel {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth_stencil_attachment, 0);
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+			PIXEL_LOG_WARNING("::FRAMEBUFFER::Framebuffer is not complete!");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		UnBind();

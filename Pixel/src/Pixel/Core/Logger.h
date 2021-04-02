@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
 namespace Pixel {
 	class LogCommand {
@@ -62,6 +63,42 @@ namespace Pixel {
 		static LogCommand* __stdcall Create() { return new NewLineLogCommand(); }
 	};
 
+	enum ColorCode {
+		FG_RED = 31,
+		FG_GREEN = 32,
+		FG_BLUE = 34,
+		FG_YELLOW = 33,
+		FG_DEFAULT = 39,
+
+		BG_RED = 41,
+		BG_GREEN = 42,
+		BG_BLUE = 44,
+		BG_DEFAULT = 49
+	};
+
+	class ColorController {
+	public:
+		ColorController() : code(FG_DEFAULT) { }
+
+		inline void SetColor(ColorCode code) { this->code = code; }
+
+		friend std::ostream& operator<<(std::ostream& os, const ColorController& controller) {
+			return os << "\033[" << controller.code << "m";
+		}
+	private:
+		ColorCode code;
+	};
+
+	class ColorLogCommand : public LogCommand {
+	public:
+		ColorLogCommand() { }
+		void RunCommand(va_list& args, const char* input) override;
+		void ProcessArgs(va_list& args) override;
+		static LogCommand* __stdcall Create() { return new ColorLogCommand(); }
+	private:
+		ColorController color_controller;
+	};
+
 	class LogFormat {
 	public:
 		void Init(const char* format, ...);
@@ -72,9 +109,28 @@ namespace Pixel {
 		std::string output;
 	};
 
+	class Logger {
+	public:
+		void SetLogFormat(LogFormat* log_format);
+		void Log(const char* fmt, ...); 
+	private:
+		LogFormat* formatter;
+	};
+
 	void InitializeLoggingSystem();
-	void SetLogFormat(LogFormat* log_format);
-	void Log(const char* fmt, ...);
+
+	class LogImpl {
+	public:
+		static void Init();
+
+		static Pixel::Logger& GetLogError();
+		static Pixel::Logger& GetLogWarning();
+		static Pixel::Logger& GetLogDef();
+	};
 }
+
+#define PIXEL_LOG_ERROR(...) Pixel::LogImpl::GetLogError().Log(__VA_ARGS__);
+#define PIXEL_LOG_WARNING(...) Pixel::LogImpl::GetLogWarning().Log(__VA_ARGS__);
+#define PIXEL_LOG(...) Pixel::LogImpl::GetLogDef().Log(__VA_ARGS__);
 
 #endif // !LOGGER_H

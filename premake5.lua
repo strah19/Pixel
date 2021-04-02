@@ -71,7 +71,7 @@ project "Pixel"
 
 	libdirs 
 	{
-		"Pixel/vendor/assimp-lib/lib",
+		"Pixel/vendor/assimp-lib/lib"
 	}
 
 	filter "system:windows"
@@ -113,7 +113,7 @@ project "Sandbox"
 		"Pixel/src/Pixel",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.assimp}"
+		"%{IncludeDir.assimp}",
 	}
 
 	links

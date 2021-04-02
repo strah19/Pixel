@@ -1,6 +1,7 @@
 #include "pixelpch.h"
 #include "OpenGLShader.h"
 #include "Renderer/RendererAPI.h"
+#include "Core/Logger.h"
 
 #include <glad/glad.h>
 #include <gtc/type_ptr.hpp>
@@ -46,7 +47,7 @@ namespace Pixel {
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* message = (char*)malloc(length * sizeof(char));
 			glGetShaderInfoLog(id, length, &length, message);
-			std::cout << "SHADER::" << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") << "::FAILED::" << message << std::endl;
+			PIXEL_LOG_ERROR("SHADER::%s::FAILED::%s", (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT"), message);
 			glDeleteShader(id);
 			return 0;
 		}

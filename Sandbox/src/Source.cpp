@@ -23,13 +23,6 @@ public:
 		two_d_light_shader->Init("shaders/fake_lighting.glsl");
 		Pixel::Renderer::InitRendererShader(two_d_light_shader.get());
 
-		Pixel::InitializeLoggingSystem();
-		Pixel::LogFormat format;
-		format.Init("[{ts}]::{s}::{l}::{s}\n", "Pixel", "ERROR");
-		Pixel::SetLogFormat(&format);
-		Pixel::Log("%s", "Hello World");
-		Pixel::Log("SUP%s", "World");
-
 		framebuf = Pixel::FrameBuffer::Create(1280, 720);
 	}
 
@@ -64,8 +57,6 @@ public:
         static bool opt_padding = false;
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-        // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-        // because it would be confusing to have two docking targets within each others.
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         if (opt_fullscreen)
         {
@@ -83,16 +74,9 @@ public:
             dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
         }
 
-        // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
-        // and handle the pass-thru hole, so we ask Begin() to not render a background.
         if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
             window_flags |= ImGuiWindowFlags_NoBackground;
 
-        // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-        // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-        // all active windows docked into it will lose their parent and become undocked.
-        // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-        // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
         if (!opt_padding)
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
         ImGui::Begin("DockSpace Demo", NULL, window_flags);
@@ -102,7 +86,6 @@ public:
         if (opt_fullscreen)
             ImGui::PopStyleVar(2);
 
-        // DockSpace
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
@@ -113,14 +96,9 @@ public:
         ImGui::End();
 
 		ImGui::Begin("Display");
-
 		{
-			// Using a Child allow to fill all the space of the window.
-			// It also alows customization
 			ImGui::BeginChild("GameRender");
-			// Get the size of the child (i.e. the whole draw size of the windows).
 			ImVec2 wsize = ImGui::GetWindowSize();
-			// Because I use the texture from OpenGL, I need to invert the V from the UV.
 			uint32_t tex = framebuf->GetColorAttachment();
 			ImGui::Image((void*)tex, wsize, ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::EndChild();
@@ -132,6 +110,9 @@ public:
 		ImGui::End();
 
 		ImGui::Begin("Scene Hierarchy");
+		ImGui::End();
+
+		ImGui::Begin("Log");
 		ImGui::End();
 
 		ImGui::Begin("Console");

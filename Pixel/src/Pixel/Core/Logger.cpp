@@ -2,10 +2,9 @@
 #include "Logger.h"
 #include <cstdarg>
 #include <ctime>
+#include <sstream>
 
 namespace Pixel {
-    static LogFormat* formatter = nullptr;
-
     void TimestampLogCommand::RunCommand(va_list& args, const char* input) {
         const std::time_t now = std::time(nullptr); 
         const std::tm calendar_time = *std::localtime(std::addressof(now));
@@ -62,6 +61,29 @@ namespace Pixel {
 
     void NewLineLogCommand::ProcessArgs(va_list& args) { }
 
+    const std::pair<std::string, ColorCode> COLORS[] = {
+        std::make_pair("{cR}", ColorCode::FG_RED),
+        std::make_pair("{cDef}", ColorCode::FG_DEFAULT),
+        std::make_pair("{cB}", ColorCode::FG_BLUE),
+        std::make_pair("{cG}", ColorCode::FG_GREEN),
+        std::make_pair("{cY}", ColorCode::FG_YELLOW),
+    };
+
+    void ColorLogCommand::RunCommand(va_list& args, const char* input) {
+        for (auto& color : COLORS) {
+            if (color.first == command_name) {
+                color_controller.SetColor(color.second);
+                break;
+            }
+        }
+
+        std::stringstream ss;
+        ss << color_controller;
+        command_output = ss.str();
+    }
+
+    void ColorLogCommand::ProcessArgs(va_list& args) { }
+
     static std::map<std::string, CreateLogCommandFn> COMMANDS;
 
     void InitCommands();
@@ -75,6 +97,9 @@ namespace Pixel {
         COMMANDS["{s}"] = UserDefinedStringCommand::Create;
         COMMANDS["{l}"] = UserLogCommand::Create;
         COMMANDS["\n"] = NewLineLogCommand::Create;
+
+        for(auto& color : COLORS)
+            COMMANDS[color.first] = ColorLogCommand::Create;
     }
 
     void FindAllOccurances(std::vector<size_t>& vec, std::string data, std::string to_search) {
@@ -110,7 +135,7 @@ namespace Pixel {
                     pos_test->SetPosition(pos_test->GetPosition() - command->GetCommand().size());
         }
 
-        for (auto& command : commands)
+        for (auto& command : commands) 
             command->GetResetingPosition();
 
         output = input;
@@ -118,11 +143,11 @@ namespace Pixel {
         va_end(args);
 	}
 
-    void SetLogFormat(LogFormat* log_format) {
+    void Logger::SetLogFormat(LogFormat* log_format) {
         formatter = log_format;
     }
 
-    void Log(const char* fmt, ...) {
+    void Logger::Log(const char* fmt, ...) {
         if (formatter) {
             va_list args;
             va_start(args, fmt);
@@ -140,4 +165,32 @@ namespace Pixel {
             va_end(args);
         }
     }
+
+    static Pixel::Logger error_log;
+    static Pixel::LogFormat error_format;
+
+    static Pixel::Logger warning_log;
+    static Pixel::LogFormat warning_format;
+
+    static Pixel::Logger def_log;
+    static Pixel::LogFormat def_format;
+
+    void LogImpl::Init() {
+        Pixel::InitializeLoggingSystem();
+
+        error_format.Init("{cR}[{ts}]::{s}::{s}::{l}\n", "Pixel", "ERROR");
+        error_log.SetLogFormat(&error_format);
+
+        warning_format.Init("{cY}[{ts}]::{s}::{s}::{l}\n", "Pixel", "WARNING");
+        warning_log.SetLogFormat(&warning_format);
+
+        def_format.Init("{cDef}[{ts}]::{s}::{l}\n", "Pixel");
+        def_log.SetLogFormat(&def_format);
+    }
+
+    Logger& LogImpl::GetLogError() { return error_log; }
+
+    Pixel::Logger& LogImpl::GetLogWarning() { return warning_log; }
+
+    Pixel::Logger& LogImpl::GetLogDef() { return def_log; }
 }

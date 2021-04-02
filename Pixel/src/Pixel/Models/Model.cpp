@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "Renderer/RendererCommands.h"
 #include <glad/glad.h>
+#include "Core/Logger.h"
 
 namespace Pixel {
     void Model::Init(const char* file_path) {
@@ -75,7 +76,7 @@ namespace Pixel {
         const aiScene* scene = import.ReadFile(file_path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+            PIXEL_LOG_ERROR("::ASSIMP::%s", import.GetErrorString());
             return;
         }
 

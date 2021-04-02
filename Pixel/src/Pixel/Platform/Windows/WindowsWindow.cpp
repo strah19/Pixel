@@ -5,6 +5,7 @@
 #include "Events/WindowEvents.h"
 #include "Events/MouseEvents.h"
 #include "Events/KeyboardEvents.h"
+#include "Core/Logger.h"
 
 namespace Pixel {
 	static uint32_t glfw_window_count = 0;
@@ -49,7 +50,7 @@ namespace Pixel {
 			return false;
 
 		native_window = glfwCreateWindow(data.properties.width, data.properties.height, data.properties.title.c_str(), NULL, NULL);
-		
+		PIXEL_LOG("Window Created::%s::%d::%d", data.properties.title.c_str(), data.properties.width, data.properties.height);
 
 		glfw_window_count++;
 

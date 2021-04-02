@@ -1,236 +1,278 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Camera">
-      <UniqueIdentifier>{CE7141AB-BA13-6C81-A3CE-7FD58F0FF3D1}</UniqueIdentifier>
+    <Filter Include="CinderFileSystem">
+      <UniqueIdentifier>{FF0FDEC8-EB08-FD1A-143B-E29F0093DC26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core">
-      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    <Filter Include="Pixel">
+      <UniqueIdentifier>{2748E20D-935C-0ABF-5CDE-AD1EC8B106F0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
+    <Filter Include="Pixel\Camera">
+      <UniqueIdentifier>{BF4ADCA2-ABAD-6B47-5433-A4FD407537CA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{C0FF640D-2C14-8DBE-F595-301E616989EF}</UniqueIdentifier>
+    <Filter Include="Pixel\Core">
+      <UniqueIdentifier>{DF9C015D-CB54-43AA-345C-1C062033DE9A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Models">
-      <UniqueIdentifier>{096F8DC3-F510-B899-DECB-CBEDCA0C3FEA}</UniqueIdentifier>
+    <Filter Include="Pixel\Events">
+      <UniqueIdentifier>{2B62FEA8-17C5-8D4D-C04A-C603AC8C59D0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    <Filter Include="Pixel\ImGui">
+      <UniqueIdentifier>{91FE9FFD-FDB3-18F3-86A8-12CAF25C0FF7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\OpenGL">
-      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
+    <Filter Include="Pixel\Models">
+      <UniqueIdentifier>{FA4728BB-E6AA-B75F-8F30-F0157B7283E2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Windows">
-      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    <Filter Include="Pixel\Platform">
+      <UniqueIdentifier>{5BA03DFE-476E-3104-3002-A22A1C6F0D69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer">
-      <UniqueIdentifier>{7CCE658F-689B-C09A-91B4-AE427DE0F528}</UniqueIdentifier>
+    <Filter Include="Pixel\Platform\OpenGL">
+      <UniqueIdentifier>{2FF56CFA-9B61-28F5-6455-C052D0804A5D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pixel\Platform\Windows">
+      <UniqueIdentifier>{957527A0-816F-50F2-6ADC-E6025675B65E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pixel\Renderer">
+      <UniqueIdentifier>{ADA71AD9-9975-0EDF-8209-7F056E76EA43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pixel\Scripting">
+      <UniqueIdentifier>{E959C3D8-55E5-309D-5EF6-B391CA008D9D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pixel\Spritesheet">
+      <UniqueIdentifier>{2618285D-922E-26F3-DBA5-B11447FBF67A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CinderFileSystem\CFSFile.h">
+      <Filter>CinderFileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CinderFileSystem\CinderFileSys.h">
+      <Filter>CinderFileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CinderFileSystem\CinderStructure.h">
+      <Filter>CinderFileSystem</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pixel\Camera\Camera.h">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Camera\OrthoCamera.h">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Camera\OrthoCameraController.h">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Camera\PerspectiveCamera.h">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Camera\PerspectiveCameraController.h">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\Application.h">
-      <Filter>Core</Filter>
+      <Filter>Pixel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\EntryPoint.h">
-      <Filter>Core</Filter>
+      <Filter>Pixel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\KeyCodes.h">
-      <Filter>Core</Filter>
+      <Filter>Pixel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\PlatformDetection.h">
-      <Filter>Core</Filter>
+      <Filter>Pixel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\EventHandler.h">
-      <Filter>Events</Filter>
+      <Filter>Pixel\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\Events.h">
-      <Filter>Events</Filter>
+      <Filter>Pixel\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\KeyboardEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Pixel\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\MouseEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Pixel\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\WindowEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Pixel\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\ImGui\ImGuiLayer.h">
-      <Filter>ImGui</Filter>
+      <Filter>Pixel\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Models\Mesh.h">
-      <Filter>Models</Filter>
+      <Filter>Pixel\Models</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Models\Model.h">
-      <Filter>Models</Filter>
+      <Filter>Pixel\Models</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\Pixel.h" />
+    <ClInclude Include="src\Pixel\Pixel.h">
+      <Filter>Pixel</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLContext.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.h">
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLShader.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLTexture.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLVertexArray.h">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\Window.h">
-      <Filter>Platform</Filter>
+      <Filter>Pixel\Platform</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\Windows\WindowsWindow.h">
-      <Filter>Platform\Windows</Filter>
+      <Filter>Pixel\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\Buffers.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\FrameBuffer.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Renderer\InstanceRenderer.h">
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\Renderer.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\RendererAPI.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\RendererCommands.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\RendererContext.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\Shader.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\Texture.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\VertexArray.h">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\pixelpch.h" />
-    <ClInclude Include="src\Pixel\Renderer\InstanceRenderer.h" />
+    <ClInclude Include="src\Pixel\Spritesheet\Spritesheet.h">
+      <Filter>Pixel\Spritesheet</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\pixelpch.h">
+      <Filter>Pixel</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pixel\Core\Logger.h" />
-    <ClInclude Include="src\CinderFileSystem\CFSFile.h" />
-    <ClInclude Include="src\CinderFileSystem\CinderFileSys.h" />
-    <ClInclude Include="src\CinderFileSystem\CinderStructure.h" />
-    <ClInclude Include="src\Pixel\Spritesheet\Spritesheet.h" />
-    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
+      <Filter>CinderFileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CinderFileSystem\CinderStructure.cpp">
+      <Filter>CinderFileSystem</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pixel\Camera\Camera.cpp">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Camera\OrthoCamera.cpp">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Camera\OrthoCameraController.cpp">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Camera\PerspectiveCamera.cpp">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Camera\PerspectiveCameraController.cpp">
-      <Filter>Camera</Filter>
+      <Filter>Pixel\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Core\Application.cpp">
-      <Filter>Core</Filter>
+      <Filter>Pixel\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp">
-      <Filter>Events</Filter>
+      <Filter>Pixel\Events</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\ImGui\ImGuiBuild.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Pixel\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\ImGui\ImGuiLayer.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Pixel\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Models\Mesh.cpp">
-      <Filter>Models</Filter>
+      <Filter>Pixel\Models</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Models\Model.cpp">
-      <Filter>Models</Filter>
+      <Filter>Pixel\Models</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLContext.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.cpp">
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLRendererAPI.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLShader.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLTexture.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLVertexArray.cpp">
-      <Filter>Platform\OpenGL</Filter>
+      <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\Windows.cpp">
-      <Filter>Platform</Filter>
+      <Filter>Pixel\Platform</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\Windows\WindowsWindow.cpp">
-      <Filter>Platform\Windows</Filter>
+      <Filter>Pixel\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Buffer.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Renderer\FrameBuffer.cpp">
+      <Filter>Pixel\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Renderer\InstanceRenderer.cpp">
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Renderer.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\RendererAPI.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\RendererCommands.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\RendererContext.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Shader.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Texture.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\VertexArray.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>Pixel\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pixel\pixelpch.cpp" />
-    <ClCompile Include="src\Pixel\Renderer\InstanceRenderer.cpp" />
+    <ClCompile Include="src\Pixel\Spritesheet\Spritesheet.cpp">
+      <Filter>Pixel\Spritesheet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\pixelpch.cpp">
+      <Filter>Pixel</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pixel\Core\Logger.cpp" />
-    <ClCompile Include="src\CinderFileSystem\CFSFile.cpp" />
-    <ClCompile Include="src\CinderFileSystem\CinderStructure.cpp" />
-    <ClCompile Include="src\Pixel\Spritesheet\Spritesheet.cpp" />
-    <ClCompile Include="src\Pixel\Renderer\FrameBuffer.cpp" />
-    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
   </ItemGroup>
 </Project>
