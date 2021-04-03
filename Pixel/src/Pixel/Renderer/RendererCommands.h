@@ -13,7 +13,8 @@ namespace Pixel {
 		static void Clear();
 		static void SetClearColor(float r, float g, float b, float a);
 		static void DrawVertexArray(std::shared_ptr<VertexArray> vertex_array); 
-	};
+		static void DrawVertexArrayInstanced(std::shared_ptr<VertexArray> vertex_array, uint32_t instance_count);
+		};
 }
 
 #endif // !RENDERER_COMMANDS_H

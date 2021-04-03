@@ -169,6 +169,7 @@
       <Filter>Pixel</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\Logger.h" />
+    <ClInclude Include="src\Pixel\Renderer\Material.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
@@ -274,5 +275,6 @@
       <Filter>Pixel</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Core\Logger.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\Material.cpp" />
   </ItemGroup>
 </Project>

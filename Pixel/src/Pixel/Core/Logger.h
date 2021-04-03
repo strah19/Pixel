@@ -68,7 +68,7 @@ namespace Pixel {
 		FG_GREEN = 32,
 		FG_BLUE = 34,
 		FG_YELLOW = 33,
-		FG_DEFAULT = 39,
+		FG_DEFAULT = 37,
 
 		BG_RED = 41,
 		BG_GREEN = 42,

@@ -20,6 +20,7 @@ namespace Pixel {
 		{ 0.5f,  0.5f, 0.0f, 1.0f },
 		{ -0.5f,  0.5f, 0.0f, 1.0f }
 	};
+
 	constexpr size_t CUBE_VERTEX_COUNT = 24;
 	constexpr glm::vec3 CUBE_POSITIONS[CUBE_VERTEX_COUNT] = {
 		{ -0.5f, -0.5f, 0.0f },
@@ -51,38 +52,6 @@ namespace Pixel {
 		{ 0.5f, -0.5f, -1.0f },
 		{ 0.5f,  -0.5f, 0.0f },
 		{ -0.5f,  -0.5f, 0.0f }
-	};
-
-	constexpr glm::vec3 CUBE_NORMALS[CUBE_VERTEX_COUNT] = {
-		{ 0.0f, 0.0f, 1.0f },
-		{ 0.0f, 0.0f, 1.0f },
-		{ 0.0f, 0.0f, 1.0f },
-		{ 0.0f, 0.0f, 1.0f },
-
-		{ 0.0f, 0.0f, -1.0f },
-		{ 0.0f, 0.0f, -1.0f },
-		{ 0.0f, 0.0f, -1.0f },
-		{ 0.0f, 0.0f, -1.0f },
-
-		{ -1.0f, 0.0f, 0.0f },
-		{ -1.0f, 0.0f, 0.0f },
-		{ -1.0f, 0.0f, 0.0f },
-		{ -1.0f, 0.0f, 0.0f },
-
-		{ 1.0f, 0.0f, 0.0f },
-		{ 1.0f, 0.0f, 0.0f },
-		{ 1.0f, 0.0f, 0.0f },
-		{ 1.0f, 0.0f, 0.0f },
-
-		{ 0.0f, 1.0f, 0.0f },
-		{ 0.0f, 1.0f, 0.0f },
-		{ 0.0f, 1.0f, 0.0f },
-		{ 0.0f, 1.0f, 0.0f },
-
-		{ 0.0f, -1.0f, 0.0f },
-		{ 0.0f, -1.0f, 0.0f },
-		{ 0.0f, -1.0f, 0.0f },
-		{ 0.0f, -1.0f, 0.0f },
 	};
 
 	struct RendererData {
@@ -232,33 +201,6 @@ namespace Pixel {
 		renderer_data.current_shader = &renderer_data.default_shader;
 	}
 
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		DrawQuad(model, color, -1.0f, TEX_COORDS);
-	}
-
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		DrawQuad(model, color, CalculateTextureIndex(texture), TEX_COORDS);
-	}
-
-	void Renderer::DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
-		DrawQuad(model, color, -1.0f, TEX_COORDS);
-	}
-
-	void Renderer::DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
-		DrawQuad(model, color, CalculateTextureIndex(texture), TEX_COORDS);
-	}
-
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, glm::vec2 tex_coords[], const glm::vec4& color) {
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, 0.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		DrawQuad(model, color, -1.0f, tex_coords);
-	}
-
 	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		DrawQuad(model, color, -1.0f, TEX_COORDS);
@@ -269,9 +211,14 @@ namespace Pixel {
 		DrawQuad(model, color, CalculateTextureIndex(texture), TEX_COORDS);
 	}
 
-	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, glm::vec2 tex_coords[], const glm::vec4& color) {
+	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2 tex_coords[], const glm::vec4& color) {
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		DrawQuad(model, color, -1.0f, tex_coords);
+	}
+
+	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec2 tex_coords[], const glm::vec4& color) {
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		DrawQuad(model, color, CalculateTextureIndex(texture), tex_coords);
 	}
 
 	void Renderer::DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec4& color) {
@@ -284,6 +231,34 @@ namespace Pixel {
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		model = glm::rotate(model, glm::radians(rotation), rotation_orientation);
 		DrawQuad(model, color, CalculateTextureIndex(texture), TEX_COORDS);
+	}
+
+	void Renderer::DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec2 tex_coords[], const glm::vec4& color) {
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		model = glm::rotate(model, glm::radians(rotation), rotation_orientation);
+		DrawQuad(model, color, -1.0f, tex_coords);
+	}
+
+	void Renderer::DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec2 tex_coords[], std::shared_ptr<Texture>& texture, const glm::vec4& color) {
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		model = glm::rotate(model, glm::radians(rotation), rotation_orientation);
+		DrawQuad(model, color, CalculateTextureIndex(texture), tex_coords);
+	}
+
+	void Renderer::AddMesh(RenderMesh& mesh) {
+		bool need_new_mesh = true;
+		for (auto& in_mesh : renderer_data.meshes) {
+			if (in_mesh.shader == mesh.shader) {
+				need_new_mesh = false;
+				in_mesh.indices.insert(in_mesh.indices.end(), mesh.indices.begin(), mesh.indices.end());
+				in_mesh.vertex_buffer_data.insert(in_mesh.vertex_buffer_data.end(), mesh.vertex_buffer_data.begin(), mesh.vertex_buffer_data.end());
+			}
+		}
+
+		if (need_new_mesh) {
+			renderer_data.meshes.push_back(mesh);
+			renderer_data.current_shader = mesh.shader;
+		}
 	}
 
 	void Renderer::DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color) {
@@ -308,7 +283,6 @@ namespace Pixel {
 			vertex.color = color;
 			vertex.texture_coordinates = { 0, 0 };
 			vertex.texture_id = -1.0f;
-			vertex.normals = glm::vec4(CUBE_NORMALS[i].x, CUBE_NORMALS[i].y, CUBE_NORMALS[i].z, 1.0f);
 
 			current_mesh->vertex_buffer_data.push_back(vertex);
 			

@@ -23,4 +23,8 @@ namespace Pixel {
 	void RendererCommand::DrawVertexArray(std::shared_ptr<VertexArray> vertex_array) {
 		renderer_api->DrawVertexArray(vertex_array);
 	}
+
+	void RendererCommand::DrawVertexArrayInstanced(std::shared_ptr<VertexArray> vertex_array, uint32_t instance_count) {
+		renderer_api->DrawVertexArrayInstanced(vertex_array, instance_count);
+	}
 }

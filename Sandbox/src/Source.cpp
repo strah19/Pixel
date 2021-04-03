@@ -12,7 +12,7 @@ public:
 
 		camera = Pixel::PerspectiveCameraController(glm::vec2(1280.0f, 720.0f));
 
-		texture1 = Pixel::Texture::CreateTexture("texture1.jpg");
+		texture1 = Pixel::Texture::CreateTexture("Dungeon_Tileset.png");
 		texture2 = Pixel::Texture::CreateTexture("awesomeface.png");;
 
 		light_shader = Pixel::Shader::CreateShader();
@@ -24,6 +24,9 @@ public:
 		Pixel::Renderer::InitRendererShader(two_d_light_shader.get());
 
 		framebuf = Pixel::FrameBuffer::Create(1280, 720);
+
+		s.Init(texture1);
+		
 	}
 
 	void OnUpdate(float delta) {
@@ -31,12 +34,11 @@ public:
 		Pixel::RendererCommand::Clear();
 		Pixel::RendererCommand::SetClearColor(0.4f, 0.5f, 0.55f, 1.0f);
 
-		camera.Update();
 		Pixel::Renderer::BeginScene(camera.GetCamera());
 		
-		Pixel::Renderer::DrawQuad({ -1.0f, -1.0f, -0.5f }, { 5.0f, 5.0f }, { 1.0, 0.0, 0.4, 1.0 });
-		Pixel::Renderer::SetShader(&two_d_light_shader);
-		Pixel::Renderer::DrawQuad({ -1.0f, -1.0f, 0.0f }, { 20.0f, 20.0f }, LIGHT_UV_COORDS, { 0.7, 0.5, 0.0, 1.0 });
+		Pixel::Renderer::DrawQuad({ -1.0f, -1.0f, -0.5f }, { 5.0f, 5.0f }, texture1, s.FindRectSprite({ 0, 0 }, { 16, 16 }), { 0.7, 0.5, 0.0, 1.0 });
+	//	Pixel::Renderer::SetShader(&two_d_light_shader);
+		//Pixel::Renderer::DrawQuad({ -1.0f, -1.0f, 0.0f }, { 20.0f, 20.0f }, LIGHT_UV_COORDS, { 0.7, 0.5, 0.0, 1.0 });
 
 		//Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
 
@@ -97,12 +99,17 @@ public:
 
 		ImGui::Begin("Display");
 		{
+			bool focused = ImGui::IsWindowFocused();
+			if (focused)
+				camera.Update();
+
 			ImGui::BeginChild("GameRender");
 			ImVec2 wsize = ImGui::GetWindowSize();
 			uint32_t tex = framebuf->GetColorAttachment();
 			ImGui::Image((void*)tex, wsize, ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::EndChild();
 		}
+
 
 		ImGui::End();
 
@@ -134,6 +141,7 @@ private:
 	std::shared_ptr<Pixel::Shader> light_shader;
 	std::shared_ptr<Pixel::Shader> two_d_light_shader;
 	std::shared_ptr<Pixel::FrameBuffer> framebuf;
+	Pixel::Spritesheet s;
 };
 
 Pixel::Application* Pixel::CreateApplication()

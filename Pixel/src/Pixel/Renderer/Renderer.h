@@ -22,46 +22,40 @@ namespace Pixel {
 		std::shared_ptr<Shader>* shader = nullptr;
 	};
 
-	struct RenderTexture {
-		std::shared_ptr<Texture>* texture;
-		glm::vec2 tex_coords[];
-	};
-
 	class Renderer {
 	public:
 		static void Init();
+
 		static void InitDefaultShader();
 		static void SetShaderToDefualt();
 		static void InitRendererShader(Shader* shader);
+		static void SetShader(std::shared_ptr<Shader>* shader);
+		static uint32_t GetShaderId();
+
 		static void BeginScene(Camera& camera);
 		static void EndScene();
 
 		static void Submit(std::shared_ptr<VertexArray>& vertex_array, std::shared_ptr<IndexBuffer>& index_buffer, std::shared_ptr<Shader>& shader);
 
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, glm::vec2 tex_coords[], const glm::vec4& color = { -1, -1, -1, -1 });
-
-		static void DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color);
-		static void DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
-
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, glm::vec2 tex_coords[], const glm::vec4& color = { -1, -1, -1, -1 });
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec2 tex_coords[], const glm::vec4& color = { -1, -1, -1, -1 });
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec2 tex_coords[], const glm::vec4& color = { -1, -1, -1, -1 });
 
 		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
+		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec2 tex_coords[], std::shared_ptr<Texture>& texture, const glm::vec4& color = { -1, -1, -1, -1 });
+		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec3& rotation_orientation, const glm::vec2& size, const glm::vec2 tex_coords[], const glm::vec4& color = { -1, -1, -1, -1 });
 
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
 
 		static void DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]);
-
-		static void SetShader(std::shared_ptr<Shader>* shader);
-		static uint32_t GetShaderId();
+		static void AddMesh(RenderMesh& mesh);
 	private:
 		static void StartBatch();
 		static void Render();
 		static void NewBatch();
+
 		static float CalculateTextureIndex(std::shared_ptr<Texture>& texture);
 		static RenderMesh* FindMesh();
 	};

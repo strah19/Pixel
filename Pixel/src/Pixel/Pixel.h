@@ -31,6 +31,8 @@
 #include "Renderer/InstanceRenderer.h"
 #include "Renderer/FrameBuffer.h"
 
+#include "Spritesheet/Spritesheet.h"
+
 #include "ImGui/ImGuiLayer.h"
 
 #endif // !PIXEL_H
