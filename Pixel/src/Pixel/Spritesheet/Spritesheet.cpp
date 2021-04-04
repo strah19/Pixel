@@ -18,7 +18,7 @@ namespace Pixel {
 		return 0;
 	}
 
-	glm::vec2* Spritesheet::FindRectSprite(const glm::vec2& pixel_point, const glm::vec2& sprite_size) {
+	glm::vec2* Spritesheet::CalculateRectCoordinates(const glm::vec2& pixel_point, const glm::vec2& sprite_size) {
 		float y_coord = texture->GetHeight() - (pixel_point.y + sprite_size.y);
 
 		glm::vec2 pixel_coordinates[] = {
@@ -35,5 +35,9 @@ namespace Pixel {
 		}
 
 		return rect_coordinates;
+	}
+
+	glm::vec2* Spritesheet::FetchRectCoordinatesWithDivision(const glm::vec2& pixel_point) {
+		return CalculateRectCoordinates(pixel_point, sprite_size);
 	}
 }

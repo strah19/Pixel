@@ -11,20 +11,24 @@ namespace Pixel {
 	}
 
 	void OrthoCameraController::Update() {
-		camera.SetPosition(camera_pos);
-		if (EventHandler::KeyPressed(PIXEL_KEY_D))
-			camera_pos.x += camera_speed.x;
-		if (EventHandler::KeyPressed(PIXEL_KEY_A))
-			camera_pos.x -= camera_speed.x;
-		if (EventHandler::KeyPressed(PIXEL_KEY_W))
-			camera_pos.y += camera_speed.y;
-		if (EventHandler::KeyPressed(PIXEL_KEY_S))
-			camera_pos.y -= camera_speed.y;
+		if (!freeze) {
+			camera.SetPosition(camera_pos);
+			if (EventHandler::KeyPressed(PIXEL_KEY_D))
+				camera_pos.x += camera_speed.x;
+			if (EventHandler::KeyPressed(PIXEL_KEY_A))
+				camera_pos.x -= camera_speed.x;
+			if (EventHandler::KeyPressed(PIXEL_KEY_W))
+				camera_pos.y += camera_speed.y;
+			if (EventHandler::KeyPressed(PIXEL_KEY_S))
+				camera_pos.y -= camera_speed.y;
+		}
 	}
 
 	void OrthoCameraController::OnEvent(Event& event) {
 		EventDispatcher dispatcher(&event);
-		dispatcher.Dispatch<MouseWheelEvent>(PIXEL_BIND_EVENT(MouseWheelHandler));
+		if (!freeze) {
+			dispatcher.Dispatch<MouseWheelEvent>(PIXEL_BIND_EVENT(MouseWheelHandler));
+		}
 		dispatcher.Dispatch<ResizeEvent>(PIXEL_BIND_EVENT(WindowResizeHandler));
 	}
 

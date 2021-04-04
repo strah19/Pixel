@@ -26,7 +26,7 @@ public:
 		framebuf = Pixel::FrameBuffer::Create(1280, 720);
 
 		s.Init(texture1);
-		
+		s.Divide({ 16, 16 });
 	}
 
 	void OnUpdate(float delta) {
@@ -34,26 +34,7 @@ public:
 		Pixel::RendererCommand::Clear();
 		Pixel::RendererCommand::SetClearColor(0.4f, 0.5f, 0.55f, 1.0f);
 
-		Pixel::Renderer::BeginScene(camera.GetCamera());
-		
-		Pixel::Renderer::DrawQuad({ -1.0f, -1.0f, -0.5f }, { 5.0f, 5.0f }, texture1, s.FindRectSprite({ 0, 0 }, { 16, 16 }), { 0.7, 0.5, 0.0, 1.0 });
-	//	Pixel::Renderer::SetShader(&two_d_light_shader);
-		//Pixel::Renderer::DrawQuad({ -1.0f, -1.0f, 0.0f }, { 20.0f, 20.0f }, LIGHT_UV_COORDS, { 0.7, 0.5, 0.0, 1.0 });
-
-		//Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
-
-		//Pixel::Renderer::SetShader(&light_shader);
-
-		//Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "lightColor", glm::vec3(light));
-		//Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "lightPos", light_source);
-		//Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "viewPos", camera.GetCamera().GetPosition());
-
-		//Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 10, 1, 10 }, { 1.0f, 0.5f, 0.31f, 1.0 });
-
-		Pixel::Renderer::EndScene();
-		framebuf->UnBind();
-
-		Pixel::ImGuiLayer::Begin();
+			Pixel::ImGuiLayer::Begin();
 
         static bool opt_fullscreen = true;
         static bool opt_padding = false;
@@ -125,7 +106,34 @@ public:
 		ImGui::Begin("Console");
 		ImGui::End();
 
+
+		Pixel::Renderer::BeginScene(camera.GetCamera());
+		
+		Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
+
+		Pixel::Renderer::SetShader(&light_shader);
+
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "lightColor", glm::vec3(light));
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "lightPos", light_source);
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "viewPos", camera.GetCamera().GetPosition());
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "material.ambient", { 1.0f, 0.5f, 0.31f });
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "material.specular", { 0.5f, 0.5f, 0.5f });
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "material.diffuse", { 1.0f, 0.5f, 0.31f });
+
+		float shin = 32;
+		Pixel::ProgramSet1f(Pixel::Renderer::GetShaderId(), "material.shininess", shin);
+
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "light.ambient", { 0.2f, 0.2f, 0.2f });
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "light.diffuse", { 0.5f, 0.5f, 0.5f }); 
+		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "light.specular", { 1.0f, 1.0f, 1.0f });
+
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 10, 1, 10 }, { 1.0f, 0.5f, 0.31f, 1.0 });
+
+		Pixel::Renderer::EndScene();
+		framebuf->UnBind();
+
 		Pixel::ImGuiLayer::End();
+
 	}
 
 	void UserDefEvent(Pixel::Event& event) {
@@ -133,7 +141,7 @@ public:
 		camera.OnEvent(event);
 	}
 private:
-	glm::vec4 light = { 0.9f, 0.7f, 0.7f, 1.0f };
+	glm::vec4 light = { 0.3f, 0.7f, 0.7f, 1.0f };
 	glm::vec3 light_source = { -5.0f, 1.0f, -5.0f };
 	std::shared_ptr<Pixel::Texture> texture1;
 	std::shared_ptr<Pixel::Texture> texture2;

@@ -14,6 +14,7 @@ namespace Pixel {
 		OrthoCamera& GetCamera() { return camera; }
 		void OnEvent(Event& event);
 		void Update();
+		void SetFreeze(bool f) { freeze = f; }
 	private:
 		bool MouseWheelHandler(MouseWheelEvent& mousewheel);
 		bool WindowResizeHandler(ResizeEvent& resize);
@@ -24,6 +25,7 @@ namespace Pixel {
 		float zoom = -1.0f;
 		glm::vec3 camera_pos = { 0, 0, 0 };
 		glm::vec2 camera_speed = glm::vec2(0.2f, 0.2f);
+		bool freeze = false;
 	};
 }
 

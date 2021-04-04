@@ -15,7 +15,7 @@ namespace Pixel {
 		PerspectiveCamera& GetCamera() { return camera; }
 		void OnEvent(Event& event);
 		void Update();
-		void SetCameraMode(bool mode) { in_camera_mode = mode; }
+		void SetFreeze(bool f);
 	private:
 		bool MouseWheelHandler(MouseWheelEvent& mousewheel);
 		bool KeyboardHandler(KeyboardEvents& keyboard);
@@ -36,6 +36,7 @@ namespace Pixel {
 		glm::vec3 camera_front = glm::vec3(0.0f, 0.0f, -1.0f);
 
 		bool in_camera_mode = false;
+		bool freeze = false;
 	};
 }
 

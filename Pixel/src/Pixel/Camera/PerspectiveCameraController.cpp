@@ -18,49 +18,53 @@ namespace Pixel {
 	}
 
 	void PerspectiveCameraController::Update() {
-		if(latest_camera_position != camera_pos)
-			camera.SetPosition(camera_pos);
-		camera.SetMatrixView(glm::lookAt(camera_pos, camera_pos + camera_front, camera_up));
+		if (!freeze) {
+			if (latest_camera_position != camera_pos)
+				camera.SetPosition(camera_pos);
+			camera.SetMatrixView(glm::lookAt(camera_pos, camera_pos + camera_front, camera_up));
 
-		latest_camera_position = camera_pos;
+			latest_camera_position = camera_pos;
 
-		if (EventHandler::KeyPressed(PIXEL_KEY_D))
-			camera_pos += glm::normalize(glm::cross(camera_front, camera_up)) * CAMERA_SPEED;
-		if (EventHandler::KeyPressed(PIXEL_KEY_A))
-			camera_pos -= glm::normalize(glm::cross(camera_front, camera_up)) * CAMERA_SPEED;
-		if (EventHandler::KeyPressed(PIXEL_KEY_W))
-			camera_pos += CAMERA_SPEED * camera_front;
-		if (EventHandler::KeyPressed(PIXEL_KEY_S))
-			camera_pos -= CAMERA_SPEED * camera_front;
+				if (EventHandler::KeyPressed(PIXEL_KEY_D))
+				camera_pos += glm::normalize(glm::cross(camera_front, camera_up)) * CAMERA_SPEED;
+				if (EventHandler::KeyPressed(PIXEL_KEY_A))
+					camera_pos -= glm::normalize(glm::cross(camera_front, camera_up)) * CAMERA_SPEED;
+				if (EventHandler::KeyPressed(PIXEL_KEY_W))
+					camera_pos += CAMERA_SPEED * camera_front;
+				if (EventHandler::KeyPressed(PIXEL_KEY_S))
+					camera_pos -= CAMERA_SPEED * camera_front;
 
-		float xoffset = EventHandler::GetMouseCoordinates().x - last_mouse_position.x;
-		float yoffset = last_mouse_position.y - EventHandler::GetMouseCoordinates().y;
-		last_mouse_position = EventHandler::GetMouseCoordinates();
+			float xoffset = EventHandler::GetMouseCoordinates().x - last_mouse_position.x;
+			float yoffset = last_mouse_position.y - EventHandler::GetMouseCoordinates().y;
+			last_mouse_position = EventHandler::GetMouseCoordinates();
 
-		const float sensitivity = 0.1f;
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
+			const float sensitivity = 0.1f;
+			xoffset *= sensitivity;
+			yoffset *= sensitivity;
 
-		yaw += xoffset;
-		pitch += yoffset;
+			yaw += xoffset;
+			pitch += yoffset;
 
-		if (pitch > 89.0f)
-			pitch = 89.0f;
-		if (pitch < -89.0f)
-			pitch = -89.0f;
+			if (pitch > 89.0f)
+				pitch = 89.0f;
+			if (pitch < -89.0f)
+				pitch = -89.0f;
 
-		glm::vec3 direction;
-		direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-		direction.y = sin(glm::radians(pitch));
-		direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		camera_front = glm::normalize(direction);
+			glm::vec3 direction;
+			direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+			direction.y = sin(glm::radians(pitch));
+			direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+			camera_front = glm::normalize(direction);
+		}
 	}
 
 	void PerspectiveCameraController::OnEvent(Event& event) {
 		EventDispatcher dispatcher(&event);
-		dispatcher.Dispatch<MouseWheelEvent>(PIXEL_BIND_EVENT(MouseWheelHandler));
+		if (!freeze) {
+			dispatcher.Dispatch<KeyboardEvents>(PIXEL_BIND_EVENT(KeyboardHandler));
+			dispatcher.Dispatch<MouseWheelEvent>(PIXEL_BIND_EVENT(MouseWheelHandler));
+		}
 		dispatcher.Dispatch<ResizeEvent>(PIXEL_BIND_EVENT(WindowResizeHandler));
-		dispatcher.Dispatch<KeyboardEvents>(PIXEL_BIND_EVENT(KeyboardHandler));
 	}
 
 	bool PerspectiveCameraController::MouseWheelHandler(MouseWheelEvent& mousewheel) {
@@ -77,6 +81,13 @@ namespace Pixel {
 		aspect_ratio = (float)resize.width / (float)resize.height;
 		camera.SetProjection(glm::radians(fov), aspect_ratio);
 		return true;
+	}
+
+	void PerspectiveCameraController::SetFreeze(bool f) {
+		freeze = f;
+
+		if(freeze)
+			glfwSetInputMode(static_cast<GLFWwindow*>(Application::GetApp()->GetWindow()->GetNativeWindow()), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
 	bool PerspectiveCameraController::KeyboardHandler(KeyboardEvents& keyboard) {

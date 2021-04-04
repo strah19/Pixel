@@ -16,6 +16,18 @@ namespace Pixel {
 		glm::vec3 normals = glm::vec3(0, 0, 0);
 	};
 
+	struct Material {
+		glm::vec3 ambient = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 diffuse = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 specular = { 0.0f, 0.0f, 0.0f };
+		float shininess = 0.0f;
+
+		Material(const glm::vec3 ambient, const glm::vec3 diffuse, const glm::vec3 specular, float shininess) 
+			: ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess) { }
+
+		Material() = default;
+	};
+
 	struct RenderMesh {
 		std::vector<Vertex> vertex_buffer_data;
 		std::vector<uint32_t> indices;
@@ -30,6 +42,7 @@ namespace Pixel {
 		static void SetShaderToDefualt();
 		static void InitRendererShader(Shader* shader);
 		static void SetShader(std::shared_ptr<Shader>* shader);
+
 		static uint32_t GetShaderId();
 
 		static void BeginScene(Camera& camera);

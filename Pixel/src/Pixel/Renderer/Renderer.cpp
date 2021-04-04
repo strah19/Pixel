@@ -14,7 +14,7 @@ namespace Pixel {
 	constexpr size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
 	constexpr size_t MAX_TEXTURE_SLOTS = 32;
 	constexpr glm::vec2 TEX_COORDS[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
-	constexpr glm::vec4 QUAD_POSITIONS[4] = {
+	constexpr glm::vec4 QUAD_POSITIONS[QUAD_VERTEX_COUNT] = {
 		{ -0.5f, -0.5f, 0.0f, 1.0f },
 		{ 0.5f, -0.5f, 0.0f, 1.0f },
 		{ 0.5f,  0.5f, 0.0f, 1.0f },
@@ -23,36 +23,33 @@ namespace Pixel {
 
 	constexpr size_t CUBE_VERTEX_COUNT = 24;
 	constexpr glm::vec3 CUBE_POSITIONS[CUBE_VERTEX_COUNT] = {
-		{ -0.5f, -0.5f, 0.0f },
-		{ 0.5f, -0.5f, 0.0f },
-		{ 0.5f,  0.5f, 0.0f },
-		{ -0.5f,  0.5f, 0.0f },
+		{ -0.5f, -0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f },{ 0.5f,  0.5f, 0.0f }, { -0.5f,  0.5f, 0.0f }, 
+		
+		{ -0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, -1.0f }, { 0.5f,  0.5f, -1.0f }, { -0.5f,  0.5f, -1.0f },
 
-		{ -0.5f, -0.5f, -1.0f },
-		{ 0.5f, -0.5f, -1.0f },
-		{ 0.5f,  0.5f, -1.0f },
-		{ -0.5f,  0.5f, -1.0f },
+		{ -0.5f, -0.5f, -1.0f }, { -0.5f, -0.5f, 0.0f }, { -0.5f,  0.5f, 0.0f }, { -0.5f,  0.5f, -1.0f },
 
-		{ -0.5f, -0.5f, -1.0f },
-		{ -0.5f, -0.5f, 0.0f },
-		{ -0.5f,  0.5f, 0.0f },
-		{ -0.5f,  0.5f, -1.0f },
+		{ 0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, 0.0f }, { 0.5f,  0.5f, 0.0f }, { 0.5f,  0.5f, -1.0f },
 
-		{ 0.5f, -0.5f, -1.0f },
-		{ 0.5f, -0.5f, 0.0f },
-		{ 0.5f,  0.5f, 0.0f },
-		{ 0.5f,  0.5f, -1.0f },
+		{ -0.5f, 0.5f, -1.0f }, { 0.5f, 0.5f, -1.0f }, { 0.5f,  0.5f, 0.0f }, { -0.5f,  0.5f, 0.0f },
 
-		{ -0.5f, 0.5f, -1.0f },
-		{ 0.5f, 0.5f, -1.0f },
-		{ 0.5f,  0.5f, 0.0f },
-		{ -0.5f,  0.5f, 0.0f },
-
-		{ -0.5f, -0.5f, -1.0f },
-		{ 0.5f, -0.5f, -1.0f },
-		{ 0.5f,  -0.5f, 0.0f },
-		{ -0.5f,  -0.5f, 0.0f }
+		{ -0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, -1.0f }, { 0.5f,  -0.5f, 0.0f }, { -0.5f,  -0.5f, 0.0f }
 	};
+
+	void CalculateVertexNormalsOfMeshAsRects(RenderMesh& mesh) {
+		size_t count = 3;
+		for (size_t i = 0; i < mesh.vertex_buffer_data.size(); i++) {
+			if (i != 0 && i % count == 0) {
+				glm::vec3 norm = glm::cross((mesh.vertex_buffer_data[i - 2].position - mesh.vertex_buffer_data[i - 3].position), (mesh.vertex_buffer_data[i - 1].position - mesh.vertex_buffer_data[i - 3].position));
+				norm = glm::normalize(norm);
+				mesh.vertex_buffer_data[i].normals = norm;
+				mesh.vertex_buffer_data[i - 1].normals = norm;
+				mesh.vertex_buffer_data[i - 2].normals = norm;
+				mesh.vertex_buffer_data[i - 3].normals = norm;
+				count += 4;
+			}
+		}
+	}
 
 	struct RendererData {
 		std::shared_ptr<VertexArray> vertex_array;
@@ -187,7 +184,7 @@ namespace Pixel {
 
 			renderer_data.num_of_vertices_in_batch++;
 		}
-
+		CalculateVertexNormalsOfMeshAsRects(*current_mesh);
 
 		if (renderer_data.num_of_vertices_in_batch == MAX_VERTEX_COUNT)
 			NewBatch();
@@ -288,7 +285,7 @@ namespace Pixel {
 			
 			renderer_data.num_of_vertices_in_batch++;
 		}
-
+		CalculateVertexNormalsOfMeshAsRects(*current_mesh);
 
 		if (renderer_data.num_of_vertices_in_batch == MAX_VERTEX_COUNT)
 			NewBatch();
