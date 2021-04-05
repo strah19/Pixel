@@ -170,6 +170,8 @@
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\Logger.h" />
     <ClInclude Include="src\Pixel\Renderer\Material.h" />
+    <ClInclude Include="src\Pixel\Lighting\Material.h" />
+    <ClInclude Include="src\Pixel\Lighting\Light.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
@@ -276,5 +278,7 @@
     </ClCompile>
     <ClCompile Include="src\Pixel\Core\Logger.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Material.cpp" />
+    <ClCompile Include="src\Pixel\Lighting\Light.cpp" />
+    <ClCompile Include="src\Pixel\Lighting\Material.cpp" />
   </ItemGroup>
 </Project>

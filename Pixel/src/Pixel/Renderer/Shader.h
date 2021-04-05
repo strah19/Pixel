@@ -23,7 +23,7 @@ namespace Pixel {
 		static std::shared_ptr<Shader> CreateShader();
 
 		/* Uniforms go here! */
-		virtual void Set1f(const std::string& name, float& value) = 0;
+		virtual void Set1f(const std::string& name, float value) = 0;
 		virtual void SetMat4f(const std::string& name, const glm::mat4& mat4) = 0;
 		virtual void SetVec3f(const std::string& name, const glm::vec3& vec3) = 0;
 		virtual void SetIntArray(const std::string& name, int* array) = 0;
@@ -33,7 +33,7 @@ namespace Pixel {
 	private:
 	};
 
-	void ProgramSet1f(uint32_t id, const std::string& name, float& value);
+	void ProgramSet1f(uint32_t id, const std::string& name, float value);
 	void ProgramSetMat4f(uint32_t id, const std::string& name, const glm::mat4& mat4);
 	void ProgramSetVec3f(uint32_t id, const std::string& name, const glm::vec3& vec3);
 	void ProgramSetIntArray(uint32_t id, const std::string& name, int* array);

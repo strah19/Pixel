@@ -99,7 +99,7 @@ namespace Pixel {
 		return program;
 	}
 
-	void OpenGLShader::Set1f(const std::string& name, float& value) {
+	void OpenGLShader::Set1f(const std::string& name, float value) {
 		ProgramSet1f(shader_id, name, value);
 	}
 
@@ -119,7 +119,7 @@ namespace Pixel {
 		glUniform1iv(GetUniformLocation(name), sizeof(array) / sizeof(int), array);
 	}
 
-	void ProgramSet1f(uint32_t id, const std::string& name, float& value) {
+	void ProgramSet1f(uint32_t id, const std::string& name, float value) {
 		glProgramUniform1f(id, ProgramGetUniformLocation(id, name), value);
 	}
 

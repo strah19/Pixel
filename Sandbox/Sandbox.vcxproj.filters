@@ -20,10 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\instance_shader.glsl" />
-    <None Include="shaders\shader.glsl" />
-    <None Include="shaders\model_shader.glsl" />
-    <None Include="shaders\light_source.glsl" />
-    <None Include="shaders\fake_lighting.glsl" />
+    <None Include="shaders\light_texture.glsl" />
   </ItemGroup>
 </Project>

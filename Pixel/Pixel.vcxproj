@@ -162,6 +162,8 @@
     <ClInclude Include="src\Pixel\Events\MouseEvents.h" />
     <ClInclude Include="src\Pixel\Events\WindowEvents.h" />
     <ClInclude Include="src\Pixel\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Pixel\Lighting\Light.h" />
+    <ClInclude Include="src\Pixel\Lighting\Material.h" />
     <ClInclude Include="src\Pixel\Models\Mesh.h" />
     <ClInclude Include="src\Pixel\Models\Model.h" />
     <ClInclude Include="src\Pixel\Pixel.h" />
@@ -201,6 +203,8 @@
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp" />
     <ClCompile Include="src\Pixel\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Pixel\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Pixel\Lighting\Light.cpp" />
+    <ClCompile Include="src\Pixel\Lighting\Material.cpp" />
     <ClCompile Include="src\Pixel\Models\Mesh.cpp" />
     <ClCompile Include="src\Pixel\Models\Model.cpp" />
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLBuffer.cpp" />

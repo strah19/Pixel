@@ -8,15 +8,14 @@ public:
 	Sandbox() {
 		Pixel::RendererCommand::Init();
 		Pixel::Renderer::Init();
-		Pixel::Renderer::InitDefaultShader();
 
 		camera = Pixel::PerspectiveCameraController(glm::vec2(1280.0f, 720.0f));
 
-		texture1 = Pixel::Texture::CreateTexture("Dungeon_Tileset.png");
-		texture2 = Pixel::Texture::CreateTexture("awesomeface.png");;
+		texture1 = Pixel::Texture::CreateTexture("container_diffuse.png");
+		texture2 = Pixel::Texture::CreateTexture("container_specular.png");;
 
 		light_shader = Pixel::Shader::CreateShader();
-		light_shader->Init("shaders/light_source.glsl");
+		light_shader->Init("shaders/light_texture.glsl");
 		Pixel::Renderer::InitRendererShader(light_shader.get());
 
 		two_d_light_shader = Pixel::Shader::CreateShader();
@@ -108,9 +107,41 @@ public:
 
 
 		Pixel::Renderer::BeginScene(camera.GetCamera());
-		
+
 		Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
 
+		Pixel::Renderer::SetShader(&light_shader);
+		m.diffuse = &texture1;
+		m.specular = &texture2;
+		m.initialized = true;
+		m.shininess = 64;
+		m.light_source.ambient = { 0.2f, 0.2f, 0.2f };
+		m.light_source.diffuse = { 0.5f, 0.5f, 0.5f };
+		m.light_source.specular = { 1.0f, 1.0f, 1.0f };
+		m.light_source.position = light_source;
+		m.light_source.view_pos = camera.GetCamera().GetPosition();
+		Pixel::Renderer::SetMaterial(&m);
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
+		Pixel::Renderer::DrawCube({ 3, 0, 0 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
+
+		/*
+		Pixel::Renderer::SetShader(&light_shader);
+		m.ambient = { 0.0215,	0.1745,	0.0215 };
+		m.diffuse = { 0.07568,	0.61424,	0.07568 };
+		m.specular = { 0.633,	0.727811,	0.633 };
+		m.shininess = 0.6;
+		m.initialized = true;
+		m.light_source.ambient = { 0.2f, 0.2f, 0.2f };
+		m.light_source.diffuse = { 0.5f, 0.5f, 0.5f };
+		m.light_source.specular = { 1.0f, 1.0f, 1.0f };
+		m.light_source.position = light_source;
+		m.light_source.view_pos = camera.GetCamera().GetPosition();
+
+		Pixel::Renderer::SetMaterial(&m);
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
+		Pixel::Renderer::DrawCube({ 3, 0, 0 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
+
+		
 		Pixel::Renderer::SetShader(&light_shader);
 
 		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "lightColor", glm::vec3(light));
@@ -127,8 +158,8 @@ public:
 		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "light.diffuse", { 0.5f, 0.5f, 0.5f }); 
 		Pixel::ProgramSetVec3f(Pixel::Renderer::GetShaderId(), "light.specular", { 1.0f, 1.0f, 1.0f });
 
-		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 10, 1, 10 }, { 1.0f, 0.5f, 0.31f, 1.0 });
-
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 10, 1, 10 }, texture1, { 1.0f, 0.5f, 0.31f, 1.0 });
+		*/
 		Pixel::Renderer::EndScene();
 		framebuf->UnBind();
 
@@ -141,8 +172,8 @@ public:
 		camera.OnEvent(event);
 	}
 private:
-	glm::vec4 light = { 0.3f, 0.7f, 0.7f, 1.0f };
-	glm::vec3 light_source = { -5.0f, 1.0f, -5.0f };
+	glm::vec4 light = { 1, 1, 1, 1 };
+	glm::vec3 light_source = { -3.0f, 1.0f, -3.0f };
 	std::shared_ptr<Pixel::Texture> texture1;
 	std::shared_ptr<Pixel::Texture> texture2;
 	Pixel::PerspectiveCameraController camera;
@@ -150,6 +181,7 @@ private:
 	std::shared_ptr<Pixel::Shader> two_d_light_shader;
 	std::shared_ptr<Pixel::FrameBuffer> framebuf;
 	Pixel::Spritesheet s;
+	Pixel::TextureMaterial m;
 };
 
 Pixel::Application* Pixel::CreateApplication()

@@ -8,35 +8,12 @@
 #include <gtc/matrix_transform.hpp>
 
 namespace Pixel {
-	constexpr size_t MAX_QUAD_COUNT = 1000;
-	constexpr size_t QUAD_VERTEX_COUNT = 4;
-	constexpr size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * QUAD_VERTEX_COUNT;
-	constexpr size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
-	constexpr size_t MAX_TEXTURE_SLOTS = 32;
-	constexpr glm::vec2 TEX_COORDS[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
-	constexpr glm::vec4 QUAD_POSITIONS[QUAD_VERTEX_COUNT] = {
-		{ -0.5f, -0.5f, 0.0f, 1.0f },
-		{ 0.5f, -0.5f, 0.0f, 1.0f },
-		{ 0.5f,  0.5f, 0.0f, 1.0f },
-		{ -0.5f,  0.5f, 0.0f, 1.0f }
-	};
+	glm::vec3 CalculateVertexNormals(const glm::vec3 triangle[]) {
+		glm::vec3 norm = glm::cross((triangle[1] - triangle[0]), (triangle[2] - triangle[0]));
+		return glm::normalize(norm);
+	}
 
-	constexpr size_t CUBE_VERTEX_COUNT = 24;
-	constexpr glm::vec3 CUBE_POSITIONS[CUBE_VERTEX_COUNT] = {
-		{ -0.5f, -0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f },{ 0.5f,  0.5f, 0.0f }, { -0.5f,  0.5f, 0.0f }, 
-		
-		{ -0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, -1.0f }, { 0.5f,  0.5f, -1.0f }, { -0.5f,  0.5f, -1.0f },
-
-		{ -0.5f, -0.5f, -1.0f }, { -0.5f, -0.5f, 0.0f }, { -0.5f,  0.5f, 0.0f }, { -0.5f,  0.5f, -1.0f },
-
-		{ 0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, 0.0f }, { 0.5f,  0.5f, 0.0f }, { 0.5f,  0.5f, -1.0f },
-
-		{ -0.5f, 0.5f, -1.0f }, { 0.5f, 0.5f, -1.0f }, { 0.5f,  0.5f, 0.0f }, { -0.5f,  0.5f, 0.0f },
-
-		{ -0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, -1.0f }, { 0.5f,  -0.5f, 0.0f }, { -0.5f,  -0.5f, 0.0f }
-	};
-
-	void CalculateVertexNormalsOfMeshAsRects(RenderMesh& mesh) {
+	void CalculateVertexNormalsAsRects(RenderMesh& mesh) {
 		size_t count = 3;
 		for (size_t i = 0; i < mesh.vertex_buffer_data.size(); i++) {
 			if (i != 0 && i % count == 0) {
@@ -57,8 +34,7 @@ namespace Pixel {
 		std::shared_ptr<IndexBuffer> index_buffer;
 		std::shared_ptr<Shader>* current_shader;
 		std::shared_ptr<Shader> default_shader;
-
-		bool init_default_shader = false;
+		Material* material;
 
 		uint32_t index_offset = 0;
 
@@ -89,6 +65,8 @@ namespace Pixel {
 		renderer_data.index_buffer = IndexBuffer::CreateIndexBuffer(MAX_INDEX_COUNT * sizeof(uint32_t));
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
+
+		InitDefaultShader();
 	}
 
 	void Renderer::InitDefaultShader() {
@@ -96,7 +74,6 @@ namespace Pixel {
 		renderer_data.default_shader->Init("shaders/shader.glsl");
 
 		InitRendererShader(renderer_data.default_shader.get());
-		renderer_data.init_default_shader = true;
 	}
 
 	void Renderer::InitRendererShader(Shader* shader) {
@@ -110,7 +87,8 @@ namespace Pixel {
 
 	void Renderer::BeginScene(Camera& camera) {
 		renderer_data.proj_view = camera.GetProjection() * camera.GetView();
-		renderer_data.current_shader = (renderer_data.init_default_shader) ? &renderer_data.default_shader : nullptr;
+		renderer_data.current_shader = &renderer_data.default_shader;
+		renderer_data.material = nullptr;
 		StartBatch();
 	}
 
@@ -140,6 +118,8 @@ namespace Pixel {
 			std::shared_ptr<Shader>* shader = mesh.shader;
 			shader->get()->Bind();
 			shader->get()->SetMat4f("proj_view", renderer_data.proj_view);
+			if(mesh.material)
+				mesh.material->PassToShader(shader, renderer_data.texture_slot_index);
 
 			renderer_data.vertex_buffer->SetData(&mesh.vertex_buffer_data[0], (uint32_t)mesh.vertex_buffer_data.size() * sizeof(Vertex));
 			renderer_data.index_buffer->SetData(&mesh.indices[0], (uint32_t)mesh.indices.size() * sizeof(uint32_t));
@@ -184,7 +164,7 @@ namespace Pixel {
 
 			renderer_data.num_of_vertices_in_batch++;
 		}
-		CalculateVertexNormalsOfMeshAsRects(*current_mesh);
+		CalculateVertexNormalsAsRects(*current_mesh);
 
 		if (renderer_data.num_of_vertices_in_batch == MAX_VERTEX_COUNT)
 			NewBatch();
@@ -192,6 +172,10 @@ namespace Pixel {
 
 	void Renderer::SetShader(std::shared_ptr<Shader>* shader) {
 		renderer_data.current_shader = shader;
+	}
+
+	void Renderer::SetMaterial(Material* material) {
+		renderer_data.material = material;
 	}
 
 	void Renderer::SetShaderToDefualt() {
@@ -245,7 +229,7 @@ namespace Pixel {
 	void Renderer::AddMesh(RenderMesh& mesh) {
 		bool need_new_mesh = true;
 		for (auto& in_mesh : renderer_data.meshes) {
-			if (in_mesh.shader == mesh.shader) {
+			if (in_mesh.shader == mesh.shader || in_mesh.material == mesh.material) {
 				need_new_mesh = false;
 				in_mesh.indices.insert(in_mesh.indices.end(), mesh.indices.begin(), mesh.indices.end());
 				in_mesh.vertex_buffer_data.insert(in_mesh.vertex_buffer_data.end(), mesh.vertex_buffer_data.begin(), mesh.vertex_buffer_data.end());
@@ -255,13 +239,22 @@ namespace Pixel {
 		if (need_new_mesh) {
 			renderer_data.meshes.push_back(mesh);
 			renderer_data.current_shader = mesh.shader;
+			renderer_data.material = mesh.material;
 		}
 	}
 
 	void Renderer::DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color) {
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
-		RenderMesh* current_mesh = FindMesh();
+		DrawCube(model, color, -1.0f, TEX_COORDS);
+	}
 
+	void Renderer::DrawCube(const glm::vec3& position, const glm::vec3& size, std::shared_ptr<Texture>& texture, const glm::vec4& color) {
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { position.x, position.y, position.z }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
+		DrawCube(model, color, CalculateTextureIndex(texture), TEX_COORDS);
+	}
+
+	void Renderer::DrawCube(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]) {
+		RenderMesh* current_mesh = FindMesh();
 		for (uint32_t i = 0; i < 6; i++)
 		{
 			current_mesh->indices.push_back(0 + renderer_data.index_offset);
@@ -276,16 +269,16 @@ namespace Pixel {
 
 		for (size_t i = 0; i < CUBE_VERTEX_COUNT; i++) {
 			Vertex vertex;
-			vertex.position = model * glm::vec4(CUBE_POSITIONS[i].x, CUBE_POSITIONS[i].y, CUBE_POSITIONS[i].z, 1.0f);
+			vertex.position = translation * glm::vec4(CUBE_POSITIONS[i].x, CUBE_POSITIONS[i].y, CUBE_POSITIONS[i].z, 1.0f);
 			vertex.color = color;
-			vertex.texture_coordinates = { 0, 0 };
-			vertex.texture_id = -1.0f;
+			vertex.texture_coordinates = tex_coords[i % 4];
+			vertex.texture_id = texture_id;
 
 			current_mesh->vertex_buffer_data.push_back(vertex);
-			
+
 			renderer_data.num_of_vertices_in_batch++;
 		}
-		CalculateVertexNormalsOfMeshAsRects(*current_mesh);
+		CalculateVertexNormalsAsRects(*current_mesh);
 
 		if (renderer_data.num_of_vertices_in_batch == MAX_VERTEX_COUNT)
 			NewBatch();
@@ -314,7 +307,7 @@ namespace Pixel {
 		 RenderMesh* current_mesh = nullptr;
 		 if (!renderer_data.meshes.empty()) {
 			 for (auto& mesh : renderer_data.meshes)
-				 if (mesh.shader == renderer_data.current_shader) {
+				 if (mesh.shader == renderer_data.current_shader || mesh.material == renderer_data.material) {
 					 current_mesh = &mesh;
 					 break;
 				 }
@@ -323,6 +316,7 @@ namespace Pixel {
 			 renderer_data.meshes.push_back(RenderMesh());
 			 current_mesh = &renderer_data.meshes.back();
 			 current_mesh->shader = renderer_data.current_shader;
+			 current_mesh->material = renderer_data.material;
 			 renderer_data.index_offset = 0;
 		 }
 

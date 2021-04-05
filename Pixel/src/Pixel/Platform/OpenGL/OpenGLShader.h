@@ -14,7 +14,7 @@ namespace Pixel {
 		void Init(const std::string& file_path);
 
 		/* Uniforms go here! */
-		void Set1f(const std::string& name, float& value);
+		void Set1f(const std::string& name, float value);
 		void SetMat4f(const std::string& name, const glm::mat4& mat4);
 		void SetVec3f(const std::string& name, const glm::vec3& vec3);
 		void SetIntArray(const std::string& name, int* array);
