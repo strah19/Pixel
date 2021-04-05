@@ -38,6 +38,25 @@ namespace Pixel {
 		uint32_t index_buffer_id;
 		uint32_t count = 0;
 	};
+
+	class OpenGLUniformBuffer : public UniformBuffer {
+	public:
+		OpenGLUniformBuffer(uint32_t size);
+		virtual ~OpenGLUniformBuffer();
+
+		uint32_t GetUniformBlockId(uint32_t shader_id, const std::string& block_name);
+		void BindToBindPoint();
+		void BindToShader(uint32_t shader_id, const std::string& block_name);
+
+		void Bind();
+		void UnBind();
+		uint32_t GetId() const;
+		void SetData(void* data, uint32_t size);
+	private:
+		uint32_t uniform_buffer_id;
+		uint32_t uniform_buffer_point;
+		uint32_t size_of_buffer;
+	};
 }
 
 #endif // !OPENGL_BUFFER_H

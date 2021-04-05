@@ -36,4 +36,12 @@ namespace Pixel {
 		}
 		return nullptr;
 	}
+
+	std::shared_ptr<UniformBuffer> UniformBuffer::CreateUnifromBuffer(uint32_t size) {
+		switch (RendererAPI::GetAPI()) {
+		case RenderAPI::OpenGL: return std::make_shared<OpenGLUniformBuffer>(size);
+		case RenderAPI::None: return nullptr;
+		}
+		return nullptr;
+	}
 }

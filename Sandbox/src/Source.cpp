@@ -19,7 +19,7 @@ public:
 		Pixel::Renderer::InitRendererShader(light_shader.get());
 
 		two_d_light_shader = Pixel::Shader::CreateShader();
-		two_d_light_shader->Init("shaders/fake_lighting.glsl");
+		two_d_light_shader->Init("shaders/uniform_block_test.glsl");
 		Pixel::Renderer::InitRendererShader(two_d_light_shader.get());
 
 		framebuf = Pixel::FrameBuffer::Create(1280, 720);
@@ -94,6 +94,13 @@ public:
 		ImGui::End();
 
 		ImGui::Begin("Properties");
+		/*
+		ImGui::SliderFloat("Shininess", &m.shininess, -10.0f, 10.0f); 
+		ImGui::SliderFloat3("Specular", &m.light_source.specular.x, 0.0f, 20.0f);
+		ImGui::SliderFloat3("Diffuse", &m.light_source.diffuse.x, 0.0f, 20.0f);
+		ImGui::SliderFloat3("Ambient", &m.light_source.ambient.x, 0.0f, 20.0f);
+		*/
+
 		ImGui::End();
 
 		ImGui::Begin("Scene Hierarchy");
@@ -107,24 +114,20 @@ public:
 
 
 		Pixel::Renderer::BeginScene(camera.GetCamera());
-
-		Pixel::Renderer::DrawCube(light_source, { 1, 1, 1 }, light);
-
+		//Pixel::Renderer::SetShader(&two_d_light_shader);
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1, 1 }, light);
+		
+		/*
 		Pixel::Renderer::SetShader(&light_shader);
 		m.diffuse = &texture1;
 		m.specular = &texture2;
 		m.initialized = true;
-		m.shininess = 64;
-		m.light_source.ambient = { 0.2f, 0.2f, 0.2f };
-		m.light_source.diffuse = { 0.5f, 0.5f, 0.5f };
-		m.light_source.specular = { 1.0f, 1.0f, 1.0f };
 		m.light_source.position = light_source;
 		m.light_source.view_pos = camera.GetCamera().GetPosition();
 		Pixel::Renderer::SetMaterial(&m);
-		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
-		Pixel::Renderer::DrawCube({ 3, 0, 0 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
-
-		/*
+		Pixel::Renderer::DrawCube({ 0, 0, 10 }, { 20, 1, 20 }, { 1, 0, 0, 1 });
+		
+		
 		Pixel::Renderer::SetShader(&light_shader);
 		m.ambient = { 0.0215,	0.1745,	0.0215 };
 		m.diffuse = { 0.07568,	0.61424,	0.07568 };
@@ -173,7 +176,7 @@ public:
 	}
 private:
 	glm::vec4 light = { 1, 1, 1, 1 };
-	glm::vec3 light_source = { -3.0f, 1.0f, -3.0f };
+	glm::vec3 light_source = { 0.0f, 3.0f, 0.0f };
 	std::shared_ptr<Pixel::Texture> texture1;
 	std::shared_ptr<Pixel::Texture> texture2;
 	Pixel::PerspectiveCameraController camera;

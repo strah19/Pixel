@@ -6,7 +6,10 @@ layout(location = 2) in vec2 aTexCoord;
 layout(location = 3) in float tex_index;
 layout(location = 4) in vec3 aNormal;
 
-uniform mat4 proj_view;
+layout(std140) uniform GlobalMatrices
+{
+    mat4 proj_view;
+};
 
 out flat vec4 outColor;
 out vec2 TexCoord;

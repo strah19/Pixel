@@ -2,8 +2,6 @@
 #include "Renderer.h"
 #include "Renderer/RendererCommands.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <array>
 #include <gtc/matrix_transform.hpp>
 
@@ -32,6 +30,7 @@ namespace Pixel {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
 		std::shared_ptr<IndexBuffer> index_buffer;
+		std::shared_ptr<UniformBuffer> uniform_buffer;
 		std::shared_ptr<Shader>* current_shader;
 		std::shared_ptr<Shader> default_shader;
 		Material* material;
@@ -65,6 +64,8 @@ namespace Pixel {
 		renderer_data.index_buffer = IndexBuffer::CreateIndexBuffer(MAX_INDEX_COUNT * sizeof(uint32_t));
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
+		
+		renderer_data.uniform_buffer = UniformBuffer::CreateUnifromBuffer(sizeof(glm::mat4));
 
 		InitDefaultShader();
 	}
@@ -111,13 +112,18 @@ namespace Pixel {
 		renderer_data.vertex_array->Bind();
 		renderer_data.index_buffer->Bind();
 		renderer_data.vertex_buffer->Bind();
+		renderer_data.uniform_buffer->Bind();
+
+		renderer_data.uniform_buffer->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4));
 
 		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++)
 			renderer_data.textures[i]->get()->Bind(i);
+
 		for (auto& mesh : renderer_data.meshes) {
 			std::shared_ptr<Shader>* shader = mesh.shader;
 			shader->get()->Bind();
-			shader->get()->SetMat4f("proj_view", renderer_data.proj_view);
+			renderer_data.uniform_buffer->BindToShader(shader->get()->GetId(), "GlobalMatrices");
+
 			if(mesh.material)
 				mesh.material->PassToShader(shader, renderer_data.texture_slot_index);
 

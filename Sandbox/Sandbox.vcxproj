@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\light_texture.glsl" />
+    <None Include="shaders\uniform_block_test.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

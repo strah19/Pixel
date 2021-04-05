@@ -97,6 +97,22 @@ namespace Pixel {
 		static std::shared_ptr<IndexBuffer> CreateIndexBuffer(uint32_t* indices, uint32_t size);
 		static std::shared_ptr<IndexBuffer> CreateIndexBuffer(uint32_t size);
 	};
+
+	class UniformBuffer {
+	public:
+		virtual void Bind() = 0;
+		virtual void UnBind() = 0;
+		virtual uint32_t GetId() const = 0;
+		virtual void SetData(void* data, uint32_t size) = 0;
+
+		virtual uint32_t GetUniformBlockId(uint32_t shader_id, const std::string& block_name) = 0;
+		virtual void BindToBindPoint() = 0;
+		virtual void BindToShader(uint32_t shader_id, const std::string& block_name) = 0;
+
+		static std::shared_ptr<UniformBuffer> CreateUnifromBuffer(uint32_t size);
+	private:
+
+	};
 }
 
 #endif // !BUFFER_H
