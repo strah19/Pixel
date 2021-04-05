@@ -9,7 +9,6 @@ public:
 	Sandbox() {
 		Pixel::RendererCommand::Init();
 		Pixel::Renderer::Init();
-		Pixel::Renderer::InitDefaultShader();
 	}
 
 	void OnUpdate(float delta) {
