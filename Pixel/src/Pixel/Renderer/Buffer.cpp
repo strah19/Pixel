@@ -44,4 +44,12 @@ namespace Pixel {
 		}
 		return nullptr;
 	}
+
+	std::shared_ptr<IndirectDrawBuffer> IndirectDrawBuffer::CreateIndirectDrawBuffer(uint32_t size) {
+		switch (RendererAPI::GetAPI()) {
+		case RenderAPI::OpenGL: return std::make_shared<OpenGLIndirectDrawBuffer>(size);
+		case RenderAPI::None: return nullptr;
+		}
+		return nullptr;
+	}
 }

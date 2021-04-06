@@ -4,6 +4,33 @@
 
 #include <array>
 #include <gtc/matrix_transform.hpp>
+#include <glad/glad.h>
+#include <chrono>
+
+class Timer
+{
+private:
+	// Type aliases to make accessing nested type easier
+	using clock_t = std::chrono::high_resolution_clock;
+	using second_t = std::chrono::duration<double, std::ratio<1> >;
+
+	std::chrono::time_point<clock_t> m_beg;
+
+public:
+	Timer() : m_beg(clock_t::now())
+	{
+	}
+
+	void reset()
+	{
+		m_beg = clock_t::now();
+	}
+
+	double elapsed() const
+	{
+		return std::chrono::duration_cast<second_t>(clock_t::now() - m_beg).count();
+	}
+};
 
 namespace Pixel {
 	glm::vec3 CalculateVertexNormals(const glm::vec3 triangle[]) {
@@ -26,11 +53,21 @@ namespace Pixel {
 		}
 	}
 
+	struct DrawElementsCommand
+	{
+		uint32_t vertexCount;
+		uint32_t instanceCount;
+		uint32_t firstIndex;
+		uint32_t baseVertex;
+		uint32_t baseInstance;
+	};
+
 	struct RendererData {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
 		std::shared_ptr<IndexBuffer> index_buffer;
 		std::shared_ptr<UniformBuffer> uniform_buffer;
+		std::shared_ptr<IndirectDrawBuffer> indirect_draw_buffer;
 		std::shared_ptr<Shader>* current_shader;
 		std::shared_ptr<Shader> default_shader;
 		Material* material;
@@ -44,7 +81,11 @@ namespace Pixel {
 		uint32_t num_of_vertices_in_batch = 0;
 
 		std::vector<RenderMesh> meshes;
+		DrawElementsCommand vDrawCommand[2];
+		uint32_t baseVert = 0;
 	};
+
+	size_t count = 0;
 
 	static RendererData renderer_data;
 
@@ -58,6 +99,7 @@ namespace Pixel {
 		layout.AddToBuffer(VertexBufferElement(2, false, VertexShaderType::Float));
 		layout.AddToBuffer(VertexBufferElement(1, false, VertexShaderType::Float));
 		layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float));
+		layout.AddToBuffer(VertexBufferElement(1, false, VertexShaderType::Float));
 
 		renderer_data.vertex_buffer->SetLayout(layout);
 
@@ -65,7 +107,8 @@ namespace Pixel {
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
 		
-		renderer_data.uniform_buffer = UniformBuffer::CreateUnifromBuffer(sizeof(glm::mat4));
+		renderer_data.uniform_buffer = UniformBuffer::CreateUnifromBuffer(sizeof(glm::mat4) * 2);
+		renderer_data.indirect_draw_buffer = IndirectDrawBuffer::CreateIndirectDrawBuffer(sizeof(renderer_data.vDrawCommand));
 
 		InitDefaultShader();
 	}
@@ -106,6 +149,8 @@ namespace Pixel {
 		renderer_data.num_of_vertices_in_batch = 0;
 		renderer_data.index_offset = 0;
 		renderer_data.meshes.clear();
+		renderer_data.baseVert = 0;
+		count = 0;
 	}
 
 	void Renderer::Render() {
@@ -113,8 +158,14 @@ namespace Pixel {
 		renderer_data.index_buffer->Bind();
 		renderer_data.vertex_buffer->Bind();
 		renderer_data.uniform_buffer->Bind();
+		renderer_data.indirect_draw_buffer->Bind();
 
-		renderer_data.uniform_buffer->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4));
+
+		uint32_t offset = 0;
+		for (int i = 0; i < 2; i++) {
+			renderer_data.uniform_buffer->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4), offset);
+			offset += sizeof(glm::mat4);
+		}
 
 		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++)
 			renderer_data.textures[i]->get()->Bind(i);
@@ -132,7 +183,12 @@ namespace Pixel {
 
 			renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 
-			RendererCommand::DrawVertexArray(renderer_data.vertex_array);	
+			renderer_data.indirect_draw_buffer->SetData(renderer_data.vDrawCommand, sizeof(renderer_data.vDrawCommand), 0);
+			glMultiDrawElementsIndirect(GL_TRIANGLES,
+				GL_UNSIGNED_INT,
+				(GLvoid*)0, 
+				count, 
+				0);
 		}
 	}
 
@@ -166,11 +222,23 @@ namespace Pixel {
 			vertex.color = color;
 			vertex.texture_coordinates = tex_coords[i];
 			vertex.texture_id = texture_id;
+			vertex.instance_id = count;
+
 			current_mesh->vertex_buffer_data.push_back(vertex);
 
 			renderer_data.num_of_vertices_in_batch++;
 		}
 		CalculateVertexNormalsAsRects(*current_mesh);
+
+		renderer_data.vDrawCommand[count].vertexCount = 12;
+		renderer_data.vDrawCommand[count].instanceCount = 2;
+		renderer_data.vDrawCommand[count].firstIndex = 0;
+		renderer_data.vDrawCommand[count].baseVertex = renderer_data.baseVert;
+		renderer_data.vDrawCommand[count].baseInstance = count;		
+		renderer_data.baseVert += 0;
+
+		count++;
+		
 
 		if (renderer_data.num_of_vertices_in_batch == MAX_VERTEX_COUNT)
 			NewBatch();

@@ -81,7 +81,7 @@ namespace Pixel {
 		glGenBuffers(1, &uniform_buffer_id);
 		uniform_buffer_point = uniform_buffer_point_latest++;
 		Bind();
-		glBufferData(GL_UNIFORM_BUFFER, size, NULL, GL_STREAM_DRAW);
+		AllocateData(size);
 		size_of_buffer = size;
 	}
 
@@ -104,9 +104,9 @@ namespace Pixel {
 		return uniform_buffer_id;
 	}
 
-	void OpenGLUniformBuffer::SetData(void* data, uint32_t size) {
+	void OpenGLUniformBuffer::SetData(void* data, uint32_t size, uint32_t offset) {
 		Bind();
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
+		glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
 	}
 
 	uint32_t OpenGLUniformBuffer::GetUniformBlockId(uint32_t shader_id, const std::string& block_name) {
@@ -114,14 +114,52 @@ namespace Pixel {
 	}
 
 	void OpenGLUniformBuffer::BindToShader(uint32_t shader_id, const std::string& block_name) {
-		glUniformBlockBinding(shader_id, GetUniformBlockId(shader_id, block_name),
-			uniform_buffer_point);
+		glUniformBlockBinding(shader_id, GetUniformBlockId(shader_id, block_name), uniform_buffer_point);
 
 		BindToBindPoint();
 	}
 
 	void OpenGLUniformBuffer::BindToBindPoint() {
-		glBindBufferRange(GL_UNIFORM_BUFFER, uniform_buffer_point,
-			uniform_buffer_id, 0, size_of_buffer);
+		glBindBufferRange(GL_UNIFORM_BUFFER, uniform_buffer_point, uniform_buffer_id, 0, size_of_buffer);
+	}
+
+	void OpenGLUniformBuffer::AllocateData(uint32_t size) {
+		glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	}
+
+	static uint32_t current_indirect_draw_buffer = 0;
+	OpenGLIndirectDrawBuffer::OpenGLIndirectDrawBuffer(uint32_t size) {
+		glGenBuffers(1, &indirect_buffer_id);
+		Bind();
+		AllocateData(size, nullptr);
+		size_of_buffer = size;
+	}
+
+	OpenGLIndirectDrawBuffer::~OpenGLIndirectDrawBuffer() {
+		glDeleteBuffers(1, &indirect_buffer_id);
+	}
+
+	void OpenGLIndirectDrawBuffer::Bind() {
+		if (current_indirect_draw_buffer != indirect_buffer_id) {
+			glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirect_buffer_id);
+			current_indirect_draw_buffer = indirect_buffer_id;
+		}
+	}
+
+	void OpenGLIndirectDrawBuffer::UnBind() {
+		glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
+	}
+
+	uint32_t OpenGLIndirectDrawBuffer::GetId() const {
+		return indirect_buffer_id;
+	}
+
+	void OpenGLIndirectDrawBuffer::SetData(void* data, uint32_t size, uint32_t offset) {
+		Bind();
+		glBufferSubData(GL_DRAW_INDIRECT_BUFFER, offset, size, data);
+	}
+
+	void OpenGLIndirectDrawBuffer::AllocateData(uint32_t size, void* data) {
+		glBufferData(GL_DRAW_INDIRECT_BUFFER, size, data, GL_DYNAMIC_DRAW);
 	}
 }

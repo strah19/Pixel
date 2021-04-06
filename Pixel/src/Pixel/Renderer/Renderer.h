@@ -36,6 +36,7 @@ namespace Pixel {
 		glm::vec4 color;
 		glm::vec2 texture_coordinates;
 		float texture_id;
+		float instance_id;
 		glm::vec3 normals = glm::vec3(0, 0, 0);
 	};
 

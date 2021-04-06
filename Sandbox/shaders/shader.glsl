@@ -6,10 +6,11 @@ layout (location = 1) in vec4 aColor;
 layout(location = 2) in vec2 aTexCoord;
 layout(location = 3) in float tex_index;
 layout(location = 4) in vec3 aNorm;
+layout(location = 5) in float id;
 
-layout(std140) uniform GlobalMatrices
+layout(std140) uniform GlobalMatrices 
 {
-    mat4 proj_view;
+    mat4 proj_view[];
 };
 
 out flat vec4 outColor;
@@ -19,7 +20,7 @@ out vec4 pos;
 
 void main()
 {
-	gl_Position = proj_view * vec4(aPos, 1.0);
+	gl_Position = proj_view[int(id)] * vec4(aPos, 1.0);
 	outColor = aColor;
 	TexCoord = aTexCoord;
 	index = tex_index;

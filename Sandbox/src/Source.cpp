@@ -115,7 +115,8 @@ public:
 
 		Pixel::Renderer::BeginScene(camera.GetCamera());
 		//Pixel::Renderer::SetShader(&two_d_light_shader);
-		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1, 1 }, light);
+		Pixel::Renderer::DrawQuad({ 0, 0, 0 }, { 1, 1 }, light);
+		Pixel::Renderer::DrawQuad({ 0, 3, 0 }, { 1, 1 }, { 1, 1, 0, 1 });
 		
 		/*
 		Pixel::Renderer::SetShader(&light_shader);

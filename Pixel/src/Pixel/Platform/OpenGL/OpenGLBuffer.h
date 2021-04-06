@@ -47,14 +47,30 @@ namespace Pixel {
 		uint32_t GetUniformBlockId(uint32_t shader_id, const std::string& block_name);
 		void BindToBindPoint();
 		void BindToShader(uint32_t shader_id, const std::string& block_name);
+		void AllocateData(uint32_t size);
 
 		void Bind();
 		void UnBind();
 		uint32_t GetId() const;
-		void SetData(void* data, uint32_t size);
+		void SetData(void* data, uint32_t size, uint32_t offset);
 	private:
 		uint32_t uniform_buffer_id;
 		uint32_t uniform_buffer_point;
+		uint32_t size_of_buffer;
+	};
+
+	class OpenGLIndirectDrawBuffer : public IndirectDrawBuffer {
+	public:
+		OpenGLIndirectDrawBuffer(uint32_t size);
+		virtual ~OpenGLIndirectDrawBuffer();
+
+		void Bind();
+		void UnBind();
+		uint32_t GetId() const;
+		void SetData(void* data, uint32_t size, uint32_t offset);
+		void AllocateData(uint32_t size, void* data);
+	private:
+		uint32_t indirect_buffer_id;
 		uint32_t size_of_buffer;
 	};
 }
