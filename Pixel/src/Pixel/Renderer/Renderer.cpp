@@ -55,11 +55,11 @@ namespace Pixel {
 
 	struct DrawElementsCommand
 	{
-		uint32_t vertexCount;
-		uint32_t instanceCount;
-		uint32_t firstIndex;
-		uint32_t baseVertex;
-		uint32_t baseInstance;
+		uint32_t vertexCount = 0;
+		uint32_t instanceCount = 0;
+		uint32_t firstIndex = 0;
+		uint32_t baseVertex = 0;
+		uint32_t baseInstance = 0;
 	};
 
 	struct RendererData {
@@ -81,11 +81,12 @@ namespace Pixel {
 		uint32_t num_of_vertices_in_batch = 0;
 
 		std::vector<RenderMesh> meshes;
-		DrawElementsCommand vDrawCommand[2];
-		uint32_t baseVert = 0;
-	};
 
-	size_t count = 0;
+		DrawElementsCommand draw_commands[MAX_DRAW_COMMANDS];
+		uint32_t base_vert = 0;
+		uint32_t instance_count = 0;
+		uint32_t draw_count = 0;
+	};
 
 	static RendererData renderer_data;
 
@@ -107,8 +108,8 @@ namespace Pixel {
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
 		
-		renderer_data.uniform_buffer = UniformBuffer::CreateUnifromBuffer(sizeof(glm::mat4) * 2);
-		renderer_data.indirect_draw_buffer = IndirectDrawBuffer::CreateIndirectDrawBuffer(sizeof(renderer_data.vDrawCommand));
+		renderer_data.uniform_buffer = UniformBuffer::CreateUnifromBuffer(sizeof(glm::mat4) * MAX_DRAW_COMMANDS);
+		renderer_data.indirect_draw_buffer = IndirectDrawBuffer::CreateIndirectDrawBuffer(sizeof(renderer_data.draw_commands));
 
 		InitDefaultShader();
 	}
@@ -149,8 +150,9 @@ namespace Pixel {
 		renderer_data.num_of_vertices_in_batch = 0;
 		renderer_data.index_offset = 0;
 		renderer_data.meshes.clear();
-		renderer_data.baseVert = 0;
-		count = 0;
+		renderer_data.base_vert = 0;
+		renderer_data.instance_count = 0;
+		renderer_data.draw_count = 0;
 	}
 
 	void Renderer::Render() {
@@ -161,8 +163,9 @@ namespace Pixel {
 		renderer_data.indirect_draw_buffer->Bind();
 
 
+		renderer_data.indirect_draw_buffer->SetData(renderer_data.draw_commands, sizeof(renderer_data.draw_commands), 0);
 		uint32_t offset = 0;
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < MAX_DRAW_COMMANDS; i++) {
 			renderer_data.uniform_buffer->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4), offset);
 			offset += sizeof(glm::mat4);
 		}
@@ -183,11 +186,10 @@ namespace Pixel {
 
 			renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 
-			renderer_data.indirect_draw_buffer->SetData(renderer_data.vDrawCommand, sizeof(renderer_data.vDrawCommand), 0);
 			glMultiDrawElementsIndirect(GL_TRIANGLES,
 				GL_UNSIGNED_INT,
 				(GLvoid*)0, 
-				count, 
+				renderer_data.draw_count + 1, 
 				0);
 		}
 	}
@@ -208,13 +210,7 @@ namespace Pixel {
 	void Renderer::DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]) {
 		RenderMesh* current_mesh = FindMesh();
 
-		current_mesh->indices.push_back(0 + renderer_data.index_offset);
-		current_mesh->indices.push_back(1 + renderer_data.index_offset);
-		current_mesh->indices.push_back(2 + renderer_data.index_offset);
-		current_mesh->indices.push_back(2 + renderer_data.index_offset);
-		current_mesh->indices.push_back(3 + renderer_data.index_offset);
-		current_mesh->indices.push_back(0 + renderer_data.index_offset);
-		renderer_data.index_offset += 4;
+		CalculateSquareIndices(current_mesh);
 
 		for (size_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
 			Vertex vertex;
@@ -222,7 +218,7 @@ namespace Pixel {
 			vertex.color = color;
 			vertex.texture_coordinates = tex_coords[i];
 			vertex.texture_id = texture_id;
-			vertex.instance_id = count;
+			vertex.instance_id = renderer_data.instance_count;
 
 			current_mesh->vertex_buffer_data.push_back(vertex);
 
@@ -230,18 +226,34 @@ namespace Pixel {
 		}
 		CalculateVertexNormalsAsRects(*current_mesh);
 
-		renderer_data.vDrawCommand[count].vertexCount = 12;
-		renderer_data.vDrawCommand[count].instanceCount = 2;
-		renderer_data.vDrawCommand[count].firstIndex = 0;
-		renderer_data.vDrawCommand[count].baseVertex = renderer_data.baseVert;
-		renderer_data.vDrawCommand[count].baseInstance = count;		
-		renderer_data.baseVert += 0;
-
-		count++;
-		
+		renderer_data.instance_count++;
+		MakeCommand(6, renderer_data.instance_count + 1);
 
 		if (renderer_data.num_of_vertices_in_batch == MAX_VERTEX_COUNT)
 			NewBatch();
+	}
+
+	void Renderer::CalculateSquareIndices(RenderMesh* current_mesh) {
+		current_mesh->indices.push_back(0 + renderer_data.index_offset);
+		current_mesh->indices.push_back(1 + renderer_data.index_offset);
+		current_mesh->indices.push_back(2 + renderer_data.index_offset);
+		current_mesh->indices.push_back(2 + renderer_data.index_offset);
+		current_mesh->indices.push_back(3 + renderer_data.index_offset);
+		current_mesh->indices.push_back(0 + renderer_data.index_offset);
+		renderer_data.index_offset += 4;
+	}
+
+	void Renderer::GoToNextDrawCommand(uint32_t base_vertex_update) {
+		renderer_data.draw_count++;
+		renderer_data.base_vert += base_vertex_update;
+	}
+
+	void Renderer::MakeCommand(uint32_t vertex_count, uint32_t max_instance) {
+		renderer_data.draw_commands[renderer_data.draw_count].vertexCount += vertex_count;
+		renderer_data.draw_commands[renderer_data.draw_count].instanceCount = max_instance;
+		renderer_data.draw_commands[renderer_data.draw_count].firstIndex = 0;
+		renderer_data.draw_commands[renderer_data.draw_count].baseVertex = renderer_data.base_vert;
+		renderer_data.draw_commands[renderer_data.draw_count].baseInstance = renderer_data.draw_count;
 	}
 
 	void Renderer::SetShader(std::shared_ptr<Shader>* shader) {
@@ -303,7 +315,7 @@ namespace Pixel {
 	void Renderer::AddMesh(RenderMesh& mesh) {
 		bool need_new_mesh = true;
 		for (auto& in_mesh : renderer_data.meshes) {
-			if (in_mesh.shader == mesh.shader || in_mesh.material == mesh.material) {
+			if (in_mesh.shader == mesh.shader) {
 				need_new_mesh = false;
 				in_mesh.indices.insert(in_mesh.indices.end(), mesh.indices.begin(), mesh.indices.end());
 				in_mesh.vertex_buffer_data.insert(in_mesh.vertex_buffer_data.end(), mesh.vertex_buffer_data.begin(), mesh.vertex_buffer_data.end());
@@ -330,16 +342,7 @@ namespace Pixel {
 	void Renderer::DrawCube(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]) {
 		RenderMesh* current_mesh = FindMesh();
 		for (uint32_t i = 0; i < 6; i++)
-		{
-			current_mesh->indices.push_back(0 + renderer_data.index_offset);
-			current_mesh->indices.push_back(1 + renderer_data.index_offset);
-			current_mesh->indices.push_back(2 + renderer_data.index_offset);
-			current_mesh->indices.push_back(2 + renderer_data.index_offset);
-			current_mesh->indices.push_back(3 + renderer_data.index_offset);
-			current_mesh->indices.push_back(0 + renderer_data.index_offset);
-
-			renderer_data.index_offset += 4;
-		}
+			CalculateSquareIndices(current_mesh);
 
 		for (size_t i = 0; i < CUBE_VERTEX_COUNT; i++) {
 			Vertex vertex;
@@ -381,7 +384,7 @@ namespace Pixel {
 		 RenderMesh* current_mesh = nullptr;
 		 if (!renderer_data.meshes.empty()) {
 			 for (auto& mesh : renderer_data.meshes)
-				 if (mesh.shader == renderer_data.current_shader || mesh.material == renderer_data.material) {
+				 if (mesh.shader == renderer_data.current_shader) {
 					 current_mesh = &mesh;
 					 break;
 				 }

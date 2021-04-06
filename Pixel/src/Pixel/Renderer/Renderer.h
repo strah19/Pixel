@@ -13,6 +13,7 @@ namespace Pixel {
 	constexpr size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * QUAD_VERTEX_COUNT;
 	constexpr size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
 	constexpr size_t MAX_TEXTURE_SLOTS = 32;
+	constexpr size_t MAX_DRAW_COMMANDS = 100;
 	constexpr glm::vec2 TEX_COORDS[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 	constexpr glm::vec4 QUAD_POSITIONS[QUAD_VERTEX_COUNT] = {
 		{ -0.5f, -0.5f, 0.0f, 1.0f },
@@ -87,10 +88,26 @@ namespace Pixel {
 
 		static float CalculateTextureIndex(std::shared_ptr<Texture>& texture);
 		static RenderMesh* FindMesh();
+		static void CalculateSquareIndices(RenderMesh* current_mesh);
+
+		static void GoToNextDrawCommand(uint32_t base_vertex_update);
+		static void MakeCommand(uint32_t vertex_count, uint32_t max_instance);
 	};
 
 	glm::vec3 CalculateVertexNormals(const glm::vec3 triangle[]);
 	void CalculateVertexNormalsAsRects(RenderMesh& mesh);
+
+	class DrawList {
+	public:
+
+	private:
+
+	};
+
+	class Render {
+	public:
+
+	};
 }
 
 #endif // !RENDERER_H

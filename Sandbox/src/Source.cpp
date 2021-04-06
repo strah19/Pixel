@@ -115,8 +115,15 @@ public:
 
 		Pixel::Renderer::BeginScene(camera.GetCamera());
 		//Pixel::Renderer::SetShader(&two_d_light_shader);
-		Pixel::Renderer::DrawQuad({ 0, 0, 0 }, { 1, 1 }, light);
-		Pixel::Renderer::DrawQuad({ 0, 3, 0 }, { 1, 1 }, { 1, 1, 0, 1 });
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				if((i + j) % 2 == 0)
+					Pixel::Renderer::DrawQuad({ i, j, 0 }, { 1, 1 }, light);
+				else 
+					Pixel::Renderer::DrawQuad({ i, j, 0 }, { 1, 1 }, { 1, 1, 0, 1 });
+			}
+		}
+
 		
 		/*
 		Pixel::Renderer::SetShader(&light_shader);
