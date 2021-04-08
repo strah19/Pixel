@@ -8,7 +8,7 @@ layout(location = 3) in float tex_index;
 layout(location = 4) in vec3 aNorm;
 layout(location = 5) in float id;
 
-layout(std140) uniform GlobalMatrices 
+layout(std430) buffer GlobalMatrices 
 {
     mat4 proj_view[];
 };

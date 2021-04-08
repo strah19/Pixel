@@ -30,4 +30,8 @@ namespace Pixel {
 	void OpenGLRendererAPI::DrawVertexArrayInstanced(std::shared_ptr<VertexArray> vertex_array, uint32_t instance_count) {
 		glDrawArraysInstanced(GL_TRIANGLES, 0, vertex_array->GetIndexBufferSize(), instance_count);
 	}
+
+	void OpenGLRendererAPI::DrawMultiIndirect(const void* indirect, uint32_t count, uint32_t stride) {
+		glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_INT, indirect, count, stride);
+	}
 }

@@ -27,4 +27,8 @@ namespace Pixel {
 	void RendererCommand::DrawVertexArrayInstanced(std::shared_ptr<VertexArray> vertex_array, uint32_t instance_count) {
 		renderer_api->DrawVertexArrayInstanced(vertex_array, instance_count);
 	}
+
+	void RendererCommand::DrawMultiIndirect(const void* indirect, uint32_t count, uint32_t stride) {
+		renderer_api->DrawMultiIndirect(indirect, count, stride);
+	}
 }

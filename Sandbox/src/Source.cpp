@@ -104,6 +104,7 @@ public:
 		ImGui::End();
 
 		ImGui::Begin("Scene Hierarchy");
+
 		ImGui::End();
 
 		ImGui::Begin("Log");
@@ -115,15 +116,12 @@ public:
 
 		Pixel::Renderer::BeginScene(camera.GetCamera());
 		//Pixel::Renderer::SetShader(&two_d_light_shader);
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				if((i + j) % 2 == 0)
-					Pixel::Renderer::DrawQuad({ i, j, 0 }, { 1, 1 }, light);
-				else 
-					Pixel::Renderer::DrawQuad({ i, j, 0 }, { 1, 1 }, { 1, 1, 0, 1 });
-			}
-		}
-
+		
+		Pixel::Renderer::DrawQuad({ 0, 0, 0 }, { 1, 1 }, light);
+		//Pixel::Renderer::MakeCommand();
+		//Pixel::Renderer::GoToNextDrawCommand(); 
+		Pixel::Renderer::DrawQuad({ 1, 0, 0 }, { 1, 1 }, { 0.5, 0.7, 0.8, 1.0 });
+		Pixel::Renderer::MakeCommand();
 		
 		/*
 		Pixel::Renderer::SetShader(&light_shader);
@@ -192,7 +190,7 @@ private:
 	std::shared_ptr<Pixel::Shader> two_d_light_shader;
 	std::shared_ptr<Pixel::FrameBuffer> framebuf;
 	Pixel::Spritesheet s;
-	Pixel::TextureMaterial m;
+//	Pixel::TextureMaterial m;
 };
 
 Pixel::Application* Pixel::CreateApplication()

@@ -14,7 +14,8 @@ namespace Pixel {
 		static void SetClearColor(float r, float g, float b, float a);
 		static void DrawVertexArray(std::shared_ptr<VertexArray> vertex_array); 
 		static void DrawVertexArrayInstanced(std::shared_ptr<VertexArray> vertex_array, uint32_t instance_count);
-		};
+		static void DrawMultiIndirect(const void* indirect, uint32_t count, uint32_t stride);
+	};
 }
 
 #endif // !RENDERER_COMMANDS_H

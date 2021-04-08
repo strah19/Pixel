@@ -31,44 +31,6 @@ namespace Pixel {
                 indices.insert(indices.end(), meshes[i].indices.begin(), meshes[i].indices.end());
             }
         }
-
-        vertex_buffer = VertexBuffer::CreateVertexBuffer((uint32_t)(vertices_size * sizeof(ModelMeshVertex)));
-        vertex_buffer->SetData(&vertices[0], (uint32_t)(vertices.size() * sizeof(ModelMeshVertex)));
-
-        VertexBufferLayout layout;
-        layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float)); //Position
-        layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float)); //Normals
-        layout.AddToBuffer(VertexBufferElement(2, false, VertexShaderType::Float)); //Texture Coordinates
-        vertex_array = VertexArray::CreateVertexArray();
-        vertex_buffer->SetLayout(layout);
-        index_buffer = IndexBuffer::CreateIndexBuffer(&indices[0], indices_size * sizeof(uint32_t));
-        vertex_array->SetIndexBufferSize(index_buffer->GetCount());
-        vertex_array->AddVertexBuffer(vertex_buffer);
-    }
-
-    void Model::Draw(std::shared_ptr<Shader>& shader, Camera& camera) {
-        shader->Bind();
-        shader->SetMat4f("proj_view", glm::mat4(camera.GetProjection() * camera.GetView()));
-        
-        uint32_t diffuseNr = 1;
-        uint32_t specularNr = 1;
-        for (uint32_t i = 0; i < textures_loaded.size(); i++) {
-            textures_loaded[i].texture->Bind(i);
-            std::string number;
-            std::string name = textures_loaded[i].texture_type;
-            if (name == "texture_diffuse")
-                number = std::to_string(diffuseNr++);
-            else if (name == "texture_specular")
-                number = std::to_string(specularNr++);
-
-            float id = (float)i;
-            shader->Set1f(name + number, id);
-        }
-
-        vertex_array->Bind();
-        index_buffer->Bind();
-        vertex_buffer->Bind();
-        Pixel::RendererCommand::DrawVertexArray(vertex_array);
     }
 
     void Model::LoadModel(const std::string& file_path) {

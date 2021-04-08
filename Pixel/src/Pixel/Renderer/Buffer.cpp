@@ -52,4 +52,12 @@ namespace Pixel {
 		}
 		return nullptr;
 	}
+
+	std::shared_ptr<ShaderStorageBuffer> ShaderStorageBuffer::CreateShaderStorageBuffer(uint32_t size) {
+		switch (RendererAPI::GetAPI()) {
+		case RenderAPI::OpenGL: return std::make_shared<OpenGLShaderStorageBuffer>(size);
+		case RenderAPI::None: return nullptr;
+		}
+		return nullptr;
+	}
 }

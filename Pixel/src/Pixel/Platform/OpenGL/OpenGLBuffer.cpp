@@ -115,7 +115,6 @@ namespace Pixel {
 
 	void OpenGLUniformBuffer::BindToShader(uint32_t shader_id, const std::string& block_name) {
 		glUniformBlockBinding(shader_id, GetUniformBlockId(shader_id, block_name), uniform_buffer_point);
-
 		BindToBindPoint();
 	}
 
@@ -161,5 +160,55 @@ namespace Pixel {
 
 	void OpenGLIndirectDrawBuffer::AllocateData(uint32_t size, void* data) {
 		glBufferData(GL_DRAW_INDIRECT_BUFFER, size, data, GL_DYNAMIC_DRAW);
+	}
+
+	static uint32_t shader_buffer_point_latest = 0;
+	static uint32_t current_shader_storage_id = 0;
+	OpenGLShaderStorageBuffer::OpenGLShaderStorageBuffer(uint32_t size) {
+		glGenBuffers(1, &shader_storage_id);
+		Bind();
+		AllocateData(size, nullptr);
+		size_of_buffer = size;
+		binding_point = shader_buffer_point_latest++;
+	}
+
+	OpenGLShaderStorageBuffer::~OpenGLShaderStorageBuffer() {
+		glDeleteBuffers(1, &shader_storage_id);
+	}
+
+	void OpenGLShaderStorageBuffer::Bind() {
+		if (current_shader_storage_id != shader_storage_id) {
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, shader_storage_id);
+			current_shader_storage_id = shader_storage_id;
+		}
+	}
+
+	void OpenGLShaderStorageBuffer::UnBind() {
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	}
+
+	uint32_t OpenGLShaderStorageBuffer::GetId() const {
+		return shader_storage_id;
+	}
+
+	void OpenGLShaderStorageBuffer::SetData(void* data, uint32_t size, uint32_t offset) {
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, size, data);
+	}
+
+	void OpenGLShaderStorageBuffer::AllocateData(uint32_t size, void* data) {
+		glBufferData(GL_SHADER_STORAGE_BUFFER, size, nullptr, GL_DYNAMIC_DRAW); 
+	}
+
+	uint32_t OpenGLShaderStorageBuffer::GetUniformBlockId(uint32_t shader_id, const std::string& block_name) {
+		return glGetUniformBlockIndex(shader_id, block_name.c_str());
+	}
+
+	void OpenGLShaderStorageBuffer::BindToShader(uint32_t shader_id, const std::string& block_name) {
+		glShaderStorageBlockBinding(shader_id, GetUniformBlockId(shader_id, block_name), binding_point);
+		BindToBindPoint();
+	}
+
+	void OpenGLShaderStorageBuffer::BindToBindPoint() {
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding_point, shader_storage_id);
 	}
 }

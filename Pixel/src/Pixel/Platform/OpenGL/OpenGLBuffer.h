@@ -73,6 +73,26 @@ namespace Pixel {
 		uint32_t indirect_buffer_id;
 		uint32_t size_of_buffer;
 	};
+
+	class OpenGLShaderStorageBuffer : public ShaderStorageBuffer {
+	public:
+		OpenGLShaderStorageBuffer(uint32_t size);
+		virtual ~OpenGLShaderStorageBuffer();
+
+		uint32_t GetUniformBlockId(uint32_t shader_id, const std::string& block_name);
+		void BindToBindPoint();
+		void BindToShader(uint32_t shader_id, const std::string& block_name);
+
+		void Bind();
+		void UnBind();
+		uint32_t GetId() const;
+		void SetData(void* data, uint32_t size, uint32_t offset);
+		void AllocateData(uint32_t size, void* data);
+	private:
+		uint32_t shader_storage_id;
+		uint32_t binding_point;
+		uint32_t size_of_buffer;
+	};
 }
 
 #endif // !OPENGL_BUFFER_H

@@ -6,14 +6,17 @@
 #include "Renderer/Texture.h"
 #include "Camera/Camera.h"
 #include "Lighting/Material.h"
+#include "Models/Model.h"
 
 namespace Pixel {
 	constexpr size_t MAX_QUAD_COUNT = 1000;
 	constexpr size_t QUAD_VERTEX_COUNT = 4;
 	constexpr size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * QUAD_VERTEX_COUNT;
 	constexpr size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
+	constexpr size_t CUBE_FACES = 6;
 	constexpr size_t MAX_TEXTURE_SLOTS = 32;
-	constexpr size_t MAX_DRAW_COMMANDS = 100;
+	constexpr size_t MAX_DRAW_COMMANDS = 1000;
+	constexpr size_t MAX_INSTANCE_COUNT = 10000;
 	constexpr glm::vec2 TEX_COORDS[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 	constexpr glm::vec4 QUAD_POSITIONS[QUAD_VERTEX_COUNT] = {
 		{ -0.5f, -0.5f, 0.0f, 1.0f },
@@ -39,13 +42,6 @@ namespace Pixel {
 		float texture_id;
 		float instance_id;
 		glm::vec3 normals = glm::vec3(0, 0, 0);
-	};
-
-	struct RenderMesh {
-		std::vector<Vertex> vertex_buffer_data;
-		std::vector<uint32_t> indices;
-		std::shared_ptr<Shader>* shader = nullptr;
-		Material* material;
 	};
 
 	class Renderer {
@@ -80,34 +76,19 @@ namespace Pixel {
 		static void DrawCube(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]);
 
 		static void DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]);
-		static void AddMesh(RenderMesh& mesh);
+
+		static void GoToNextDrawCommand();
+		static void MakeCommand();
 	private:
 		static void StartBatch();
 		static void Render();
 		static void InitDefaultShader();
 
 		static float CalculateTextureIndex(std::shared_ptr<Texture>& texture);
-		static RenderMesh* FindMesh();
-		static void CalculateSquareIndices(RenderMesh* current_mesh);
-
-		static void GoToNextDrawCommand(uint32_t base_vertex_update);
-		static void MakeCommand(uint32_t vertex_count, uint32_t max_instance);
+		static void CalculateSquareIndices();
 	};
 
-	glm::vec3 CalculateVertexNormals(const glm::vec3 triangle[]);
-	void CalculateVertexNormalsAsRects(RenderMesh& mesh);
-
-	class DrawList {
-	public:
-
-	private:
-
-	};
-
-	class Render {
-	public:
-
-	};
+	glm::vec3 CalculateVertexNormals(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c);
 }
 
 #endif // !RENDERER_H
