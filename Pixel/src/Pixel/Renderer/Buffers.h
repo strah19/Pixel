@@ -110,7 +110,7 @@ namespace Pixel {
 		virtual void BindToBindPoint() = 0;
 		virtual void BindToShader(uint32_t shader_id, const std::string& block_name) = 0;
 
-		static std::shared_ptr<UniformBuffer> CreateUnifromBuffer(uint32_t size);
+		static std::shared_ptr<UniformBuffer> CreateUniformBuffer(uint32_t size);
 	};
 
 	class IndirectDrawBuffer {

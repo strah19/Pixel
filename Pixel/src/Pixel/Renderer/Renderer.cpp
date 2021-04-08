@@ -21,7 +21,7 @@ namespace Pixel {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
 		std::shared_ptr<IndexBuffer> index_buffer;
-		std::shared_ptr<ShaderStorageBuffer> shader_buffer;
+		std::shared_ptr<ShaderStorageBuffer> matrix_buffer;
 		std::shared_ptr<IndirectDrawBuffer> indirect_draw_buffer;
 		std::shared_ptr<Shader>* current_shader;
 		std::shared_ptr<Shader> default_shader;
@@ -72,7 +72,7 @@ namespace Pixel {
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
 		
-		renderer_data.shader_buffer = ShaderStorageBuffer::CreateShaderStorageBuffer(sizeof(glm::mat4) * MAX_INSTANCE_COUNT);
+		renderer_data.matrix_buffer = ShaderStorageBuffer::CreateShaderStorageBuffer(sizeof(glm::mat4) * MAX_INSTANCE_COUNT);
 		renderer_data.indirect_draw_buffer = IndirectDrawBuffer::CreateIndirectDrawBuffer(sizeof(renderer_data.draw_commands));
 
 		InitDefaultShader();
@@ -128,13 +128,13 @@ namespace Pixel {
 		renderer_data.vertex_array->Bind();
 		renderer_data.index_buffer->Bind();
 		renderer_data.vertex_buffer->Bind();
-		renderer_data.shader_buffer->Bind();
+		renderer_data.matrix_buffer->Bind();
 		renderer_data.indirect_draw_buffer->Bind();
 
 		renderer_data.indirect_draw_buffer->SetData(renderer_data.draw_commands, sizeof(renderer_data.draw_commands), 0);
 		uint32_t offset = 0;
 		for (int i = 0; i < MAX_INSTANCE_COUNT; i++) {
-			renderer_data.shader_buffer->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4), offset);
+			renderer_data.matrix_buffer->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4), offset);
 			offset += sizeof(glm::mat4);
 		}
 
@@ -143,7 +143,7 @@ namespace Pixel {
 
 		std::shared_ptr<Shader>* shader = renderer_data.current_shader;
 		shader->get()->Bind();
-		renderer_data.shader_buffer->BindToShader(shader->get()->GetId(), "GlobalMatrices");
+		renderer_data.matrix_buffer->BindToShader(shader->get()->GetId(), "GlobalMatrices");
 
 		uint32_t vertex_buf_size = (uint32_t)((uint8_t*)renderer_data.vertices_ptr - (uint8_t*)renderer_data.vertices_base);
 		uint32_t index_buf_size = (uint32_t)((uint8_t*)renderer_data.index_ptr - (uint8_t*)renderer_data.index_base);

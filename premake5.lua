@@ -18,10 +18,12 @@ IncludeDir["stb_image"] = "Pixel/vendor/stb_image"
 IncludeDir["glm"] = "Pixel/vendor/glm"
 IncludeDir["assimp"] = "Pixel/vendor/assimp-lib/include"
 IncludeDir["imgui"] = "Pixel/vendor/imgui"
+IncludeDir["lua"] = "Pixel/vendor/lua/src"
 
 include "Pixel/vendor/GLFW"
 include "Pixel/vendor/GLAD"
 include "Pixel/vendor/imgui"
+include "Pixel/vendor/lua"
 
 project "Pixel"
 	location "Pixel"
@@ -50,7 +52,8 @@ project "Pixel"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.assimp}",
-		"%{IncludeDir.imgui}"
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.lua}"
 	}
 
 	defines
@@ -66,7 +69,8 @@ project "Pixel"
 		"GLAD",
 		"opengl32.lib",
 		"assimp-vc142-mtd.lib",
-		"ImGui"
+		"ImGui",
+		"Lua"
 	}
 
 	libdirs 
@@ -114,6 +118,7 @@ project "Sandbox"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.assimp}",
+		"%{IncludeDir.lua}"
 	}
 
 	links

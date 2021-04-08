@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;STB_IMAGE_IMPLEMENTATION;PIXEL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;vendor\assimp-lib\include;vendor\imgui;vendor\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;vendor\assimp-lib\include;vendor\imgui;vendor\lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -98,7 +98,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;STB_IMAGE_IMPLEMENTATION;PIXEL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;vendor\assimp-lib\include;vendor\imgui;vendor\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;vendor\assimp-lib\include;vendor\imgui;vendor\lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -123,7 +123,7 @@
       <PrecompiledHeaderFile>pixelpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;STB_IMAGE_IMPLEMENTATION;PIXEL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;vendor\assimp-lib\include;vendor\imgui;vendor\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Pixel;vendor\GLFW\include;vendor\GLAD\include;vendor\stb_image;vendor\glm;vendor\assimp-lib\include;vendor\imgui;vendor\lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -187,6 +187,7 @@
     <ClInclude Include="src\Pixel\Renderer\Shader.h" />
     <ClInclude Include="src\Pixel\Renderer\Texture.h" />
     <ClInclude Include="src\Pixel\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Pixel\Scripting\Scripting.h" />
     <ClInclude Include="src\Pixel\Spritesheet\Spritesheet.h" />
     <ClInclude Include="src\Pixel\pixelpch.h" />
   </ItemGroup>
@@ -219,7 +220,9 @@
     <ClCompile Include="src\Pixel\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\InstanceRenderer.cpp" />
-    <ClCompile Include="src\Pixel\Renderer\Material.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\Material.cpp">
+      <ObjectFileName>$(IntDir)\Material1.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Pixel\Renderer\RendererCommands.cpp" />
@@ -227,6 +230,7 @@
     <ClCompile Include="src\Pixel\Renderer\Shader.cpp" />
     <ClCompile Include="src\Pixel\Renderer\Texture.cpp" />
     <ClCompile Include="src\Pixel\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Pixel\Scripting\Scripting.cpp" />
     <ClCompile Include="src\Pixel\Spritesheet\Spritesheet.cpp" />
     <ClCompile Include="src\Pixel\pixelpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -242,8 +246,11 @@
     <ProjectReference Include="vendor\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
+    <ProjectReference Include="vendor\lua\Lua.vcxproj">
+      <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

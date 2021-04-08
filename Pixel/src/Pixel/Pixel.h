@@ -32,7 +32,7 @@
 #include "Renderer/FrameBuffer.h"
 
 #include "Spritesheet/Spritesheet.h"
-
 #include "ImGui/ImGuiLayer.h"
+#include "Scripting/Scripting.h"
 
 #endif // !PIXEL_H

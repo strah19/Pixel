@@ -19,6 +19,9 @@
     <Filter Include="Pixel\ImGui">
       <UniqueIdentifier>{91FE9FFD-FDB3-18F3-86A8-12CAF25C0FF7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pixel\Lighting">
+      <UniqueIdentifier>{8CF77473-78C5-6879-6159-D99F4DC644DE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Pixel\Models">
       <UniqueIdentifier>{FA4728BB-E6AA-B75F-8F30-F0157B7283E2}</UniqueIdentifier>
     </Filter>
@@ -75,6 +78,9 @@
     <ClInclude Include="src\Pixel\Core\KeyCodes.h">
       <Filter>Pixel\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pixel\Core\Logger.h">
+      <Filter>Pixel\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pixel\Core\PlatformDetection.h">
       <Filter>Pixel\Core</Filter>
     </ClInclude>
@@ -95,6 +101,12 @@
     </ClInclude>
     <ClInclude Include="src\Pixel\ImGui\ImGuiLayer.h">
       <Filter>Pixel\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Lighting\Light.h">
+      <Filter>Pixel\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Lighting\Material.h">
+      <Filter>Pixel\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Models\Mesh.h">
       <Filter>Pixel\Models</Filter>
@@ -141,6 +153,9 @@
     <ClInclude Include="src\Pixel\Renderer\InstanceRenderer.h">
       <Filter>Pixel\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pixel\Renderer\Material.h">
+      <Filter>Pixel\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\Renderer.h">
       <Filter>Pixel\Renderer</Filter>
     </ClInclude>
@@ -162,16 +177,15 @@
     <ClInclude Include="src\Pixel\Renderer\VertexArray.h">
       <Filter>Pixel\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pixel\Scripting\Scripting.h">
+      <Filter>Pixel\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pixel\Spritesheet\Spritesheet.h">
       <Filter>Pixel\Spritesheet</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\pixelpch.h">
       <Filter>Pixel</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\Core\Logger.h" />
-    <ClInclude Include="src\Pixel\Renderer\Material.h" />
-    <ClInclude Include="src\Pixel\Lighting\Material.h" />
-    <ClInclude Include="src\Pixel\Lighting\Light.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
@@ -198,6 +212,9 @@
     <ClCompile Include="src\Pixel\Core\Application.cpp">
       <Filter>Pixel\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pixel\Core\Logger.cpp">
+      <Filter>Pixel\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp">
       <Filter>Pixel\Events</Filter>
     </ClCompile>
@@ -206,6 +223,12 @@
     </ClCompile>
     <ClCompile Include="src\Pixel\ImGui\ImGuiLayer.cpp">
       <Filter>Pixel\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Lighting\Light.cpp">
+      <Filter>Pixel\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Lighting\Material.cpp">
+      <Filter>Pixel\Lighting</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Models\Mesh.cpp">
       <Filter>Pixel\Models</Filter>
@@ -249,6 +272,9 @@
     <ClCompile Include="src\Pixel\Renderer\InstanceRenderer.cpp">
       <Filter>Pixel\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pixel\Renderer\Material.cpp">
+      <Filter>Pixel\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Renderer.cpp">
       <Filter>Pixel\Renderer</Filter>
     </ClCompile>
@@ -270,15 +296,14 @@
     <ClCompile Include="src\Pixel\Renderer\VertexArray.cpp">
       <Filter>Pixel\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pixel\Scripting\Scripting.cpp">
+      <Filter>Pixel\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pixel\Spritesheet\Spritesheet.cpp">
       <Filter>Pixel\Spritesheet</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\pixelpch.cpp">
       <Filter>Pixel</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pixel\Core\Logger.cpp" />
-    <ClCompile Include="src\Pixel\Renderer\Material.cpp" />
-    <ClCompile Include="src\Pixel\Lighting\Light.cpp" />
-    <ClCompile Include="src\Pixel\Lighting\Material.cpp" />
   </ItemGroup>
 </Project>

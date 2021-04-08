@@ -44,6 +44,19 @@ namespace Pixel {
 		glm::vec3 normals = glm::vec3(0, 0, 0);
 	};
 
+	struct GlobalSSBOStorage {
+		std::vector<std::shared_ptr<ShaderStorageBuffer>> shader_storage_buffers;
+		std::vector<std::string> shader_storage_names;
+	};
+
+	struct ShaderInfo {
+		std::shared_ptr<Shader> shader;
+		std::vector<ShaderStorageBuffer*> shader_storage_refs;
+
+		void Init(const std::string& shader);
+		void SearchSSBOStorage(GlobalSSBOStorage& global_storage, const std::string& shader_storage_name);
+	};
+
 	class Renderer {
 	public:
 		static void Init();
