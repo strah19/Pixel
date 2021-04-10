@@ -9,6 +9,20 @@ namespace Pixel {
 		return glm::normalize(norm);
 	}
 
+	void ShaderInfo::Init(const std::string& shader) {
+		this->shader = Shader::CreateShader();
+		this->shader->Init(shader);
+	}
+
+	void ShaderInfo::SearchSSBOStorage(GlobalSSBOStorage& global_storage, const std::string& shader_storage_name) {
+		for (size_t i = 0; i < global_storage.shader_storage_buffers.size(); i++) {
+			if (global_storage.shader_storage_buffers[i].name == shader_storage_name) {
+				shader_storage_refs.push_back(&global_storage.shader_storage_buffers[i]);
+				break;
+			}
+		}
+	}
+
 	struct DrawElementsCommand {
 		uint32_t vertex_count = 0;
 		uint32_t instance_count = 0;
@@ -21,10 +35,12 @@ namespace Pixel {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
 		std::shared_ptr<IndexBuffer> index_buffer;
-		std::shared_ptr<ShaderStorageBuffer> matrix_buffer;
 		std::shared_ptr<IndirectDrawBuffer> indirect_draw_buffer;
-		std::shared_ptr<Shader>* current_shader;
-		std::shared_ptr<Shader> default_shader;
+
+		GlobalSSBOStorage shader_storage;
+		ShaderInfo* current_shader;
+		ShaderInfo default_shader;
+
 		Material* material;
 
 		uint32_t index_offset = 0;
@@ -38,7 +54,6 @@ namespace Pixel {
 		DrawElementsCommand draw_commands[MAX_DRAW_COMMANDS];
 		uint32_t base_vert = 0;
 		uint32_t instance_count = 0;
-		uint32_t current_instance_count_in_draw_call = 0;
 		uint32_t draw_count = 0;
 		uint32_t current_draw_command_vertex_size = 0;
 
@@ -72,17 +87,11 @@ namespace Pixel {
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
 		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
 		
-		renderer_data.matrix_buffer = ShaderStorageBuffer::CreateShaderStorageBuffer(sizeof(glm::mat4) * MAX_INSTANCE_COUNT);
 		renderer_data.indirect_draw_buffer = IndirectDrawBuffer::CreateIndirectDrawBuffer(sizeof(renderer_data.draw_commands));
 
-		InitDefaultShader();
-	}
-
-	void Renderer::InitDefaultShader() {
-		renderer_data.default_shader = Shader::CreateShader();
-		renderer_data.default_shader->Init("shaders/shader.glsl");
-
-		InitRendererShader(renderer_data.default_shader.get());
+		renderer_data.default_shader.Init("shaders/shader.glsl");
+		renderer_data.shader_storage.shader_storage_buffers.push_back({ ShaderStorageBuffer::CreateShaderStorageBuffer(sizeof(glm::mat4) * MAX_INSTANCE_COUNT), "GlobalMatrices" });
+		renderer_data.default_shader.SearchSSBOStorage(renderer_data.shader_storage, "GlobalMatrices");
 	}
 
 	void Renderer::InitRendererShader(Shader* shader) {
@@ -106,7 +115,7 @@ namespace Pixel {
 	}
 
 	uint32_t Renderer::GetShaderId() {
-		return renderer_data.current_shader->get()->GetId();
+		return renderer_data.current_shader->shader->GetId();
 	}
 
 	void Renderer::StartBatch() {
@@ -117,7 +126,6 @@ namespace Pixel {
 		renderer_data.base_vert = 0;
 		renderer_data.instance_count = 0;
 		renderer_data.draw_count = 0;
-		renderer_data.current_instance_count_in_draw_call = 0;
 		renderer_data.current_draw_command_vertex_size = 0;
 
 		renderer_data.vertices_ptr = renderer_data.vertices_base;
@@ -125,25 +133,28 @@ namespace Pixel {
 	}
 
 	void Renderer::Render() {
-		renderer_data.vertex_array->Bind();
+		renderer_data.vertex_array->Bind(); 
 		renderer_data.index_buffer->Bind();
 		renderer_data.vertex_buffer->Bind();
-		renderer_data.matrix_buffer->Bind();
-		renderer_data.indirect_draw_buffer->Bind();
 
+		renderer_data.indirect_draw_buffer->Bind();
 		renderer_data.indirect_draw_buffer->SetData(renderer_data.draw_commands, sizeof(renderer_data.draw_commands), 0);
-		uint32_t offset = 0;
-		for (int i = 0; i < MAX_INSTANCE_COUNT; i++) {
-			renderer_data.matrix_buffer->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4), offset);
-			offset += sizeof(glm::mat4);
+
+		std::shared_ptr<Shader>* shader = &renderer_data.current_shader->shader;
+		shader->get()->Bind();
+
+		if (shader == &renderer_data.default_shader.shader) {
+			uint32_t offset = 0;
+			renderer_data.current_shader->shader_storage_refs[0]->ssbo->Bind();
+			for (int i = 0; i < renderer_data.instance_count; i++) {
+				renderer_data.current_shader->shader_storage_refs[0]->ssbo->SetData((void*)&renderer_data.proj_view, sizeof(glm::mat4), offset);
+				offset += sizeof(glm::mat4);
+			}
+			renderer_data.current_shader->shader_storage_refs[0]->ssbo->BindToBindPoint();
 		}
 
 		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++)
 			renderer_data.textures[i]->get()->Bind(i);
-
-		std::shared_ptr<Shader>* shader = renderer_data.current_shader;
-		shader->get()->Bind();
-		renderer_data.matrix_buffer->BindToShader(shader->get()->GetId(), "GlobalMatrices");
 
 		uint32_t vertex_buf_size = (uint32_t)((uint8_t*)renderer_data.vertices_ptr - (uint8_t*)renderer_data.vertices_base);
 		uint32_t index_buf_size = (uint32_t)((uint8_t*)renderer_data.index_ptr - (uint8_t*)renderer_data.index_base);
@@ -183,7 +194,7 @@ namespace Pixel {
 			vertex.color = color;
 			vertex.texture_coordinates = tex_coords[i];
 			vertex.texture_id = texture_id;
-			vertex.instance_id = renderer_data.instance_count;
+			vertex.instance_id = (float) renderer_data.instance_count;
 			vertex.normals = norm;
 
 			*renderer_data.vertices_ptr = vertex;
@@ -194,7 +205,6 @@ namespace Pixel {
 
 		renderer_data.current_draw_command_vertex_size += 6;
 		renderer_data.instance_count++;
-		renderer_data.current_instance_count_in_draw_call++;
 	}
 
 	void Renderer::CalculateSquareIndices() {
@@ -217,24 +227,23 @@ namespace Pixel {
 	void Renderer::GoToNextDrawCommand() {
 		renderer_data.draw_count++;
 		renderer_data.base_vert += renderer_data.num_of_vertices_in_batch;
-		renderer_data.current_instance_count_in_draw_call = 0;
 		renderer_data.current_draw_command_vertex_size++;
 	}
 
 	void Renderer::MakeCommand() {
 		renderer_data.draw_commands[renderer_data.draw_count].vertex_count = renderer_data.current_draw_command_vertex_size;
-		renderer_data.draw_commands[renderer_data.draw_count].instance_count = renderer_data.current_instance_count_in_draw_call;
+		renderer_data.draw_commands[renderer_data.draw_count].instance_count = 1;
 		renderer_data.draw_commands[renderer_data.draw_count].first_index = 0;
 		renderer_data.draw_commands[renderer_data.draw_count].base_vertex = renderer_data.base_vert;
 		renderer_data.draw_commands[renderer_data.draw_count].base_instance = renderer_data.draw_count;
 	}
 
-	void Renderer::SetShader(std::shared_ptr<Shader>* shader) {
+	void Renderer::SetShader(ShaderInfo* shader) {
 		renderer_data.current_shader = shader;
 	}
 
-	void Renderer::SetMaterial(Material* material) {
-		renderer_data.material = material;
+	GlobalSSBOStorage* Renderer::GetLoadedSSBOS() {
+		return &renderer_data.shader_storage;
 	}
 
 	void Renderer::SetShaderToDefualt() {
@@ -308,6 +317,7 @@ namespace Pixel {
 			vertex.color = color;
 			vertex.texture_coordinates = tex_coords[i % 4];
 			vertex.texture_id = texture_id;
+			vertex.instance_id = (float)renderer_data.instance_count;
 
 			*renderer_data.vertices_ptr = vertex;
 			renderer_data.vertices_ptr++;
@@ -316,7 +326,6 @@ namespace Pixel {
 		}
 
 		renderer_data.instance_count++;
-		renderer_data.current_instance_count_in_draw_call++;
 	}
 
 	float Renderer::CalculateTextureIndex(std::shared_ptr<Texture>& texture) {

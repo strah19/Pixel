@@ -44,14 +44,18 @@ namespace Pixel {
 		glm::vec3 normals = glm::vec3(0, 0, 0);
 	};
 
+	struct ShaderStorageStringPair {
+		std::shared_ptr<ShaderStorageBuffer> ssbo;
+		std::string name;
+	};
+
 	struct GlobalSSBOStorage {
-		std::vector<std::shared_ptr<ShaderStorageBuffer>> shader_storage_buffers;
-		std::vector<std::string> shader_storage_names;
+		std::vector<ShaderStorageStringPair> shader_storage_buffers;
 	};
 
 	struct ShaderInfo {
 		std::shared_ptr<Shader> shader;
-		std::vector<ShaderStorageBuffer*> shader_storage_refs;
+		std::vector<ShaderStorageStringPair*> shader_storage_refs;
 
 		void Init(const std::string& shader);
 		void SearchSSBOStorage(GlobalSSBOStorage& global_storage, const std::string& shader_storage_name);
@@ -63,8 +67,8 @@ namespace Pixel {
 
 		static void SetShaderToDefualt();
 		static void InitRendererShader(Shader* shader);
-		static void SetShader(std::shared_ptr<Shader>* shader);
-		static void SetMaterial(Material* material);
+		static void SetShader(ShaderInfo* shader);
+		static GlobalSSBOStorage* GetLoadedSSBOS();
 
 		static uint32_t GetShaderId();
 
@@ -95,7 +99,6 @@ namespace Pixel {
 	private:
 		static void StartBatch();
 		static void Render();
-		static void InitDefaultShader();
 
 		static float CalculateTextureIndex(std::shared_ptr<Texture>& texture);
 		static void CalculateSquareIndices();
