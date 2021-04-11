@@ -11,10 +11,10 @@ namespace Pixel {
 
         uint32_t vertices_size = 0;
         uint32_t indices_size = 0;
-        std::vector<ModelMeshVertex> vertices;
+        std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         for (size_t i = 0; i < meshes.size(); i++) {
-            ModelMesh* past_mesh = nullptr;
+            Mesh* past_mesh = nullptr;
             if (i > 0)
                 past_mesh = &meshes[i - 1];
             vertices_size += (uint32_t) meshes[i].vertices.size();
@@ -38,7 +38,7 @@ namespace Pixel {
         const aiScene* scene = import.ReadFile(file_path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            PIXEL_LOG_ERROR("::ASSIMP::%s", import.GetErrorString());
+            PIXEL_LOG_ERROR("ERROR::ASSIMP::%s", import.GetErrorString());
             return;
         }
 
@@ -57,13 +57,13 @@ namespace Pixel {
         }
     }
 
-    ModelMesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
-        std::vector<ModelMeshVertex> vertices;
+    Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
+        std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
-        std::vector<ModelMeshTexture> textures;
+        std::vector<MeshTexture> textures;
 
         for (uint32_t i = 0; i < mesh->mNumVertices; i++) {
-            ModelMeshVertex vertex;
+            Vertex vertex;
 
             glm::vec3 vector;
             vector.x = mesh->mVertices[i].x;
@@ -74,16 +74,16 @@ namespace Pixel {
             vector.x = mesh->mNormals[i].x;
             vector.y = mesh->mNormals[i].y;
             vector.z = mesh->mNormals[i].z;
-            vertex.normal = vector;
+            vertex.normals = vector;
 
             if (mesh->mTextureCoords[0]) {
                 glm::vec2 vec;
                 vec.x = mesh->mTextureCoords[0][i].x;
                 vec.y = mesh->mTextureCoords[0][i].y;
-                vertex.tex_coords = vec;
+                vertex.texture_coordinates = vec;
             }
             else
-                vertex.tex_coords = glm::vec2(0.0f, 0.0f);
+                vertex.texture_coordinates = glm::vec2(0.0f, 0.0f);
 
             vertices.push_back(vertex);
         }
@@ -96,19 +96,19 @@ namespace Pixel {
 
         if (mesh->mMaterialIndex >= 0) {
             aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            std::vector<ModelMeshTexture> diffuseMaps = LoadMaterialTextures(material,
+            std::vector<MeshTexture> diffuseMaps = LoadMaterialTextures(material,
                 aiTextureType_DIFFUSE, "texture_diffuse");
             textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-            std::vector<ModelMeshTexture> specularMaps = LoadMaterialTextures(material,
+            std::vector<MeshTexture> specularMaps = LoadMaterialTextures(material,
                 aiTextureType_SPECULAR, "texture_specular");
             textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         }
         
-        return ModelMesh(vertices, indices, textures);
+        return Mesh(vertices, indices, textures);
     }
 
-    std::vector<ModelMeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& type_name) {
-        std::vector<ModelMeshTexture> textures;
+    std::vector<MeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& type_name) {
+        std::vector<MeshTexture> textures;
         for (uint32_t i = 0; i < mat->GetTextureCount(type); i++) {
             aiString str;
             mat->GetTexture(type, i, &str);
@@ -121,11 +121,10 @@ namespace Pixel {
                 }
             }
             if (!skip) {
-                ModelMeshTexture texture;
+                MeshTexture texture;
                 std::string filename = std::string(str.C_Str());
                 filename = path + '/' + filename;
                 texture.texture = Texture::CreateTexture(filename.c_str());
-                texture.texture_type = type_name;
                 texture.path = str.C_Str();
                 textures.push_back(texture);
                 textures_loaded.push_back(texture);

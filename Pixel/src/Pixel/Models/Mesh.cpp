@@ -2,7 +2,7 @@
 #include "Mesh.h"
 
 namespace Pixel {
-    ModelMesh::ModelMesh(std::vector<ModelMeshVertex>& vertices, std::vector<uint32_t>& indices, std::vector<ModelMeshTexture>& textures) {
+    Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<MeshTexture>& textures) {
         this->vertices = vertices;
         this->textures = textures;
         this->indices = indices;

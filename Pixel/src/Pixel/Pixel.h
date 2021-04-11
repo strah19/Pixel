@@ -10,6 +10,7 @@
 #include "Events/WindowEvents.h"
 #include "Core/KeyCodes.h"
 #include "Core/Logger.h"
+#include "Core/ResourceManagers.h"
 
 #include "Camera/Camera.h"
 #include "Camera/OrthoCamera.h"

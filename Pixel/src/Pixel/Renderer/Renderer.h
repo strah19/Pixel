@@ -7,9 +7,10 @@
 #include "Camera/Camera.h"
 #include "Lighting/Material.h"
 #include "Models/Model.h"
+#include "Core/ResourceManagers.h"
 
 namespace Pixel {
-	constexpr size_t MAX_QUAD_COUNT = 1000;
+	constexpr size_t MAX_QUAD_COUNT = 10000;
 	constexpr size_t QUAD_VERTEX_COUNT = 4;
 	constexpr size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * QUAD_VERTEX_COUNT;
 	constexpr size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
@@ -35,40 +36,14 @@ namespace Pixel {
 		{ -0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, -1.0f }, { 0.5f,  -0.5f, 0.0f }, { -0.5f,  -0.5f, 0.0f }
 	};
 
-	struct Vertex {
-		glm::vec3 position;
-		glm::vec4 color;
-		glm::vec2 texture_coordinates;
-		float texture_id;
-		float instance_id;
-		glm::vec3 normals = glm::vec3(0, 0, 0);
-	};
-
-	struct ShaderStorageStringPair {
-		std::shared_ptr<ShaderStorageBuffer> ssbo;
-		std::string name;
-	};
-
-	struct GlobalSSBOStorage {
-		std::vector<ShaderStorageStringPair> shader_storage_buffers;
-	};
-
-	struct ShaderInfo {
-		std::shared_ptr<Shader> shader;
-		std::vector<ShaderStorageStringPair*> shader_storage_refs;
-
-		void Init(const std::string& shader);
-		void SearchSSBOStorage(GlobalSSBOStorage& global_storage, const std::string& shader_storage_name);
-	};
-
 	class Renderer {
 	public:
 		static void Init();
+		static void Destroy();
 
 		static void SetShaderToDefualt();
 		static void InitRendererShader(Shader* shader);
 		static void SetShader(ShaderInfo* shader);
-		static GlobalSSBOStorage* GetLoadedSSBOS();
 
 		static uint32_t GetShaderId();
 

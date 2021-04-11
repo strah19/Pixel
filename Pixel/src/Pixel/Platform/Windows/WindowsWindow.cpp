@@ -49,6 +49,7 @@ namespace Pixel {
 		if (!glfwInit())
 			return false;
 
+		glfwWindowHint(GLFW_SAMPLES, 4);
 		native_window = glfwCreateWindow(data.properties.width, data.properties.height, data.properties.title.c_str(), NULL, NULL);
 		PIXEL_LOG("Window Created::%s::%d::%d", data.properties.title.c_str(), data.properties.width, data.properties.height);
 

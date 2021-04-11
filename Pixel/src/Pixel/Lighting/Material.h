@@ -7,15 +7,7 @@
 #include "Light.h"
 
 namespace Pixel {
-	struct Material {
-		bool initialized = false;
-
-		Material() = default;
-
-		virtual void PassToShader(std::shared_ptr<Shader>* shader, uint32_t& latest_texture_index) = 0;
-	};
-
-	struct TextureMaterial : public Material{
+	struct TextureMaterial {
 		std::shared_ptr<Texture>* diffuse;
 		std::shared_ptr<Texture>* specular;
 		float shininess;
@@ -23,7 +15,6 @@ namespace Pixel {
 
 		TextureMaterial(std::shared_ptr<Texture>& diffuse, std::shared_ptr<Texture>& specular, float shininess, const LightSource& light_source)
 			: diffuse(&diffuse), specular(&specular), shininess(shininess), light_source(light_source) {
-			initialized = true;
 		}
 
 		TextureMaterial(const TextureMaterial& material) {
@@ -31,42 +22,31 @@ namespace Pixel {
 			specular = material.specular;
 			shininess = material.shininess;
 			light_source = material.light_source;
-
-			initialized = true;
 		}
 
 		TextureMaterial() = default;
-
-		void PassToShader(std::shared_ptr<Shader>* shader, uint32_t& latest_texture_index) override;
 	};
 
-	struct BasicMaterial : public Material{
+	struct Material {
 		glm::vec3 ambient;
 		glm::vec3 diffuse;
 		glm::vec3 specular;
-		LightSource light_source;
 
 		float shininess;
 
-		BasicMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess, const LightSource& light_source)
-			: ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess), light_source(light_source) {
-			initialized = true;
+		Material(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess)
+			: ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess) {
 		}
 
-		BasicMaterial(const BasicMaterial& material) {
+		Material(const Material& material) {
 			ambient = material.ambient;
 			diffuse = material.diffuse;
 			specular = material.specular;
 
 			shininess = material.shininess;
-			light_source = material.light_source;
-
-			initialized = true;
 		}
 
-		BasicMaterial() = default;
-
-		void PassToShader(std::shared_ptr<Shader>* shader, uint32_t& latest_texture_index) override;
+		Material() = default;
 	};
 }
 

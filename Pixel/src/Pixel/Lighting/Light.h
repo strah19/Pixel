@@ -30,8 +30,6 @@ namespace Pixel {
 		bool operator==(const LightSource& source) {
 			return (position == source.position && view_pos == source.view_pos && ambient == source.ambient && diffuse == source.diffuse && specular == source.specular);
 		}
-
-		void PassToShader(std::shared_ptr<Shader>* shader);
 	};
 }
 

@@ -28,7 +28,13 @@ public:
 		s.Divide({ 16, 16 });
 	}
 
+	~Sandbox() {
+		Pixel::Renderer::Destroy();
+	}
+
 	void OnUpdate(float delta) {
+		Pixel::SSBOManager::QueueForNewFrame();
+
 		framebuf->Bind();
 		Pixel::RendererCommand::Clear();
 		Pixel::RendererCommand::SetClearColor(0.4f, 0.5f, 0.55f, 1.0f);
@@ -116,11 +122,22 @@ public:
 
 		Pixel::Renderer::BeginScene(camera.GetCamera());
 		//Pixel::Renderer::SetShader(&two_d_light_shader);
-		
-		Pixel::Renderer::DrawQuad({ 0, 0, 0 }, { 1, 1 }, light);
+		/*
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
+				if((i + j) % 2 == 0)
+				else
+					Pixel::Renderer::DrawQuad({ i, j, 0 }, { 1, 1 }, texture1, { 0.5, 0.7, 0.8, 1.0 });
+			}
+		}
+		*/
+		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
+		Pixel::Renderer::DrawQuad({ 1, 0, 0 }, { 1, 1 }, texture1, { 0.5, 0.7, 0.8, 1.0 });
+		Pixel::Renderer::DrawCube({ 2, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
+		Pixel::Renderer::DrawCube({ 3, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
+		Pixel::Renderer::DrawCube({ 4, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
 		//Pixel::Renderer::MakeCommand();
 		//Pixel::Renderer::GoToNextDrawCommand(); 
-		Pixel::Renderer::DrawQuad({ 1, 0, 0 }, { 1, 1 }, { 0.5, 0.7, 0.8, 1.0 });
 		Pixel::Renderer::MakeCommand();
 		
 		/*
