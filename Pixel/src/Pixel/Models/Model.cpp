@@ -1,36 +1,16 @@
 #include "pixelpch.h"
 #include "Model.h"
 #include "Renderer/RendererCommands.h"
-#include <glad/glad.h>
 #include "Core/Logger.h"
+#include <filesystem>
 
 namespace Pixel {
     void Model::Init(const char* file_path) {
         path = file_path;
         LoadModel(file_path);
 
-        uint32_t vertices_size = 0;
-        uint32_t indices_size = 0;
-        std::vector<Vertex> vertices;
-        std::vector<uint32_t> indices;
-        for (size_t i = 0; i < meshes.size(); i++) {
-            Mesh* past_mesh = nullptr;
-            if (i > 0)
-                past_mesh = &meshes[i - 1];
-            vertices_size += (uint32_t) meshes[i].vertices.size();
-            indices_size += (uint32_t) meshes[i].indices.size();
-
-            vertices.insert(vertices.end(), meshes[i].vertices.begin(), meshes[i].vertices.end());
-            if(past_mesh == nullptr)
-                indices.insert(indices.end(), meshes[i].indices.begin(), meshes[i].indices.end());
-            else {
-                meshes[i].indices.front() = past_mesh->indices.back() + 1;
-                for (int j = 1; j < meshes[i].indices.size(); j++) {
-                    meshes[i].indices[j] = meshes[i].indices[j - 1] + 1;
-                }
-                indices.insert(indices.end(), meshes[i].indices.begin(), meshes[i].indices.end());
-            }
-        }
+        size_t found = std::string(file_path).find_last_of('/');
+        std::string dir = std::string(file_path).substr(0, found);
     }
 
     void Model::LoadModel(const std::string& file_path) {
@@ -58,12 +38,11 @@ namespace Pixel {
     }
 
     Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
-        std::vector<Vertex> vertices;
+        std::vector<MeshVertex> vertices;
         std::vector<uint32_t> indices;
-        std::vector<MeshTexture> textures;
 
         for (uint32_t i = 0; i < mesh->mNumVertices; i++) {
-            Vertex vertex;
+            MeshVertex vertex;
 
             glm::vec3 vector;
             vector.x = mesh->mVertices[i].x;
@@ -96,40 +75,34 @@ namespace Pixel {
 
         if (mesh->mMaterialIndex >= 0) {
             aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            std::vector<MeshTexture> diffuseMaps = LoadMaterialTextures(material,
-                aiTextureType_DIFFUSE, "texture_diffuse");
-            textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-            std::vector<MeshTexture> specularMaps = LoadMaterialTextures(material,
-                aiTextureType_SPECULAR, "texture_specular");
-            textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+            
+            LoadMaterialTextures(material, aiTextureType_DIFFUSE);
+            LoadMaterialTextures(material, aiTextureType_SPECULAR);
+            LoadMaterialTextures(material, aiTextureType_NORMALS);
         }
         
-        return Mesh(vertices, indices, textures);
+        return Mesh(vertices, indices);
     }
 
-    std::vector<MeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& type_name) {
-        std::vector<MeshTexture> textures;
+    void Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type) {
         for (uint32_t i = 0; i < mat->GetTextureCount(type); i++) {
             aiString str;
             mat->GetTexture(type, i, &str);
             bool skip = false;
             for (uint32_t j = 0; j < textures_loaded.size(); j++) {
-                if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
-                    textures.push_back(textures_loaded[j]);
+                if (textures_loaded[j].path == str.C_Str()) {
                     skip = true;
                     break;
                 }
             }
             if (!skip) {
                 MeshTexture texture;
+                texture.path = str.C_Str();
                 std::string filename = std::string(str.C_Str());
                 filename = path + '/' + filename;
                 texture.texture = Texture::CreateTexture(filename.c_str());
-                texture.path = str.C_Str();
-                textures.push_back(texture);
                 textures_loaded.push_back(texture);
             }
         }
-        return textures;
     }
 }

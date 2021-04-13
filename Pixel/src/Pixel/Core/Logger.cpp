@@ -39,7 +39,7 @@ namespace Pixel {
             else if (found_new_arg) {
                 switch (*input) {
                 case 'd': user_in += std::to_string(va_arg(args, int)); break;
-                case 'f': user_in += std::to_string(va_arg(args, float)); break;
+                case 'f': user_in += std::to_string(va_arg(args, double)); break;
                 case 's': user_in += va_arg(args, char*); break;
                 }
                 found_new_arg = false;
@@ -175,6 +175,9 @@ namespace Pixel {
     static Pixel::Logger def_log;
     static Pixel::LogFormat def_format;
 
+    static Pixel::Logger def_log_good;
+    static Pixel::LogFormat def_format_good;
+
     void LogImpl::Init() {
         Pixel::InitializeLoggingSystem();
 
@@ -186,6 +189,9 @@ namespace Pixel {
 
         def_format.Init("{cDef}[{ts}]::{s}::{l}\n", "Pixel");
         def_log.SetLogFormat(&def_format);
+
+        def_format_good.Init("{cG}[{ts}]::{s}::{l}\n", "Pixel");
+        def_log_good.SetLogFormat(&def_format_good);
     }
 
     Logger& LogImpl::GetLogError() { return error_log; }
@@ -193,4 +199,6 @@ namespace Pixel {
     Pixel::Logger& LogImpl::GetLogWarning() { return warning_log; }
 
     Pixel::Logger& LogImpl::GetLogDef() { return def_log; }
+
+    Pixel::Logger& LogImpl::GetLogDefGood() { return def_log_good; }
 }

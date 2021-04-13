@@ -26,8 +26,6 @@ namespace Pixel {
 		ShaderInfo* current_shader;
 		ShaderInfo default_shader;
 
-		Material* material;
-
 		uint32_t index_offset = 0;
 
 		uint32_t texture_slot_index = 0;
@@ -38,7 +36,6 @@ namespace Pixel {
 
 		DrawElementsCommand draw_commands[MAX_DRAW_COMMANDS];
 		uint32_t base_vert = 0;
-		uint32_t instance_count = 0;
 		uint32_t draw_count = 0;
 		uint32_t current_draw_command_vertex_size = 0;
 
@@ -47,6 +44,7 @@ namespace Pixel {
 
 		uint32_t* index_base = nullptr;
 		uint32_t* index_ptr = nullptr;
+		uint32_t current_material_id = -1;
 	};
 
 	static RendererData renderer_data;
@@ -75,7 +73,7 @@ namespace Pixel {
 		renderer_data.indirect_draw_buffer = IndirectDrawBuffer::CreateIndirectDrawBuffer(sizeof(renderer_data.draw_commands));
 
 		renderer_data.default_shader.Init("shaders/shader.glsl");
-		SSBOManager::AddSSBOToManager("GlobalMatrices", ShaderStorageBuffer::CreateShaderStorageBuffer(sizeof(glm::mat4) * MAX_INSTANCE_COUNT));
+		SSBOManager::AddSSBOToManager("GlobalMatrices", ShaderStorageBuffer::CreateShaderStorageBuffer(sizeof(glm::mat4)));
 		renderer_data.default_shader.AddSSBOReference("GlobalMatrices");
 	}
 
@@ -96,7 +94,7 @@ namespace Pixel {
 	void Renderer::BeginScene(Camera& camera) {
 		renderer_data.proj_view = camera.GetProjection() * camera.GetView();
 		renderer_data.current_shader = &renderer_data.default_shader;
-		renderer_data.material = nullptr;
+		renderer_data.current_material_id = -1;
 		StartBatch();
 	}
 
@@ -114,7 +112,6 @@ namespace Pixel {
 		renderer_data.index_offset = 0;
 
 		renderer_data.base_vert = 0;
-		renderer_data.instance_count = 0;
 		renderer_data.draw_count = 0;
 		renderer_data.current_draw_command_vertex_size = 0;
 
@@ -136,8 +133,7 @@ namespace Pixel {
 		if (shader == renderer_data.default_shader.GetShader()) {
 			SSBOData* ssbo = renderer_data.current_shader->GetBufferPointer("GlobalMatrices");
 			ssbo->ssbo->Bind();
-			for (int i = 0; i < renderer_data.instance_count; i++) 
-				renderer_data.current_shader->UpdateSSBO(ssbo, i, (void*)&renderer_data.proj_view, sizeof(glm::mat4));
+			renderer_data.current_shader->UpdateSSBO(ssbo, 0, (void*)&renderer_data.proj_view, sizeof(glm::mat4));
 			renderer_data.current_shader->SSBOUploadFinised(ssbo);
 			ssbo->ssbo->BindToBindPoint();
 		}
@@ -183,7 +179,7 @@ namespace Pixel {
 			vertex.color = color;
 			vertex.texture_coordinates = tex_coords[i];
 			vertex.texture_id = texture_id;
-			vertex.instance_id = (float) renderer_data.instance_count;
+			vertex.material_id = (float) renderer_data.current_material_id;
 			vertex.normals = norm;
 
 			*renderer_data.vertices_ptr = vertex;
@@ -193,7 +189,6 @@ namespace Pixel {
 		}
 
 		renderer_data.current_draw_command_vertex_size += 6;
-		renderer_data.instance_count++;
 	}
 
 	void Renderer::CalculateSquareIndices() {
@@ -221,7 +216,7 @@ namespace Pixel {
 
 	void Renderer::MakeCommand() {
 		renderer_data.draw_commands[renderer_data.draw_count].vertex_count = renderer_data.current_draw_command_vertex_size;
-		renderer_data.draw_commands[renderer_data.draw_count].instance_count = 1;
+		renderer_data.draw_commands[renderer_data.draw_count].instance_count = 2;
 		renderer_data.draw_commands[renderer_data.draw_count].first_index = 0;
 		renderer_data.draw_commands[renderer_data.draw_count].base_vertex = renderer_data.base_vert;
 		renderer_data.draw_commands[renderer_data.draw_count].base_instance = renderer_data.draw_count;
@@ -233,6 +228,10 @@ namespace Pixel {
 
 	void Renderer::SetShaderToDefualt() {
 		renderer_data.current_shader = &renderer_data.default_shader;
+	}
+
+	void Renderer::SetMaterialId(uint32_t material_id) {
+		renderer_data.current_material_id = material_id;
 	}
 
 	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
@@ -302,7 +301,7 @@ namespace Pixel {
 			vertex.color = color;
 			vertex.texture_coordinates = tex_coords[i % 4];
 			vertex.texture_id = texture_id;
-			vertex.instance_id = (float)renderer_data.instance_count;
+			vertex.material_id = (float) renderer_data.current_material_id;
 
 			*renderer_data.vertices_ptr = vertex;
 			renderer_data.vertices_ptr++;
@@ -311,7 +310,6 @@ namespace Pixel {
 		}
 
 		renderer_data.current_draw_command_vertex_size += 36;
-		renderer_data.instance_count++;
 	}
 
 	float Renderer::CalculateTextureIndex(std::shared_ptr<Texture>& texture) {

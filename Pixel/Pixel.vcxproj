@@ -156,7 +156,10 @@
     <ClInclude Include="src\Pixel\Core\KeyCodes.h" />
     <ClInclude Include="src\Pixel\Core\Logger.h" />
     <ClInclude Include="src\Pixel\Core\PlatformDetection.h" />
+    <ClInclude Include="src\Pixel\Core\Utility\MemoryManager.h" />
+    <ClInclude Include="src\Pixel\Core\Utility\RandomNumberGenerator.h" />
     <ClInclude Include="src\Pixel\Core\ResourceManagers.h" />
+    <ClInclude Include="src\Pixel\Core\Utility\Timer.h" />
     <ClInclude Include="src\Pixel\Events\EventHandler.h" />
     <ClInclude Include="src\Pixel\Events\Events.h" />
     <ClInclude Include="src\Pixel\Events\KeyboardEvents.h" />
@@ -203,6 +206,8 @@
     <ClCompile Include="src\Pixel\Core\Application.cpp" />
     <ClCompile Include="src\Pixel\Core\Logger.cpp" />
     <ClCompile Include="src\Pixel\Core\ResoucrManagers.cpp" />
+    <ClCompile Include="src\Pixel\Core\Utility\RandomNumberGenerator.cpp" />
+    <ClCompile Include="src\Pixel\Core\Utility\Timer.cpp" />
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp" />
     <ClCompile Include="src\Pixel\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Pixel\ImGui\ImGuiLayer.cpp" />

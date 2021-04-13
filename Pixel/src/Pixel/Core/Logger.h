@@ -126,11 +126,13 @@ namespace Pixel {
 		static Pixel::Logger& GetLogError();
 		static Pixel::Logger& GetLogWarning();
 		static Pixel::Logger& GetLogDef();
+		static Pixel::Logger& GetLogDefGood();
 	};
 }
 
 #define PIXEL_LOG_ERROR(...) Pixel::LogImpl::GetLogError().Log(__VA_ARGS__);
 #define PIXEL_LOG_WARNING(...) Pixel::LogImpl::GetLogWarning().Log(__VA_ARGS__);
 #define PIXEL_LOG(...) Pixel::LogImpl::GetLogDef().Log(__VA_ARGS__);
+#define PIXEL_LOG_GOOD(...) Pixel::LogImpl::GetLogDefGood().Log(__VA_ARGS__);
 
 #endif // !LOGGER_H

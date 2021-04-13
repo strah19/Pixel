@@ -11,6 +11,8 @@
 #include "Core/KeyCodes.h"
 #include "Core/Logger.h"
 #include "Core/ResourceManagers.h"
+#include "Core/Utility/RandomNumberGenerator.h"
+#include "Core/Utility/Timer.h"
 
 #include "Camera/Camera.h"
 #include "Camera/OrthoCamera.h"

@@ -1,5 +1,6 @@
 #include "pixelpch.h"
 #include "OpenGLTexture.h"
+#include "Core/Logger.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>
@@ -36,7 +37,7 @@ namespace Pixel {
 			glTextureSubImage2D(texture_id, 0, 0, 0, width, height, data_format, GL_UNSIGNED_BYTE, data);
 		}
 		else
-			std::cout << "Failed to load texture: " << file_path << std::endl;
+			PIXEL_LOG_ERROR("FAILED::TO::LOAD::TEXTURE::%s", file_path);
 		
 		stbi_image_free(data);
 	}

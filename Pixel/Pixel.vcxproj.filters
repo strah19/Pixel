@@ -187,6 +187,9 @@
       <Filter>Pixel</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\ResourceManagers.h" />
+    <ClInclude Include="src\Pixel\Core\Utility\RandomNumberGenerator.h" />
+    <ClInclude Include="src\Pixel\Core\Utility\MemoryManager.h" />
+    <ClInclude Include="src\Pixel\Core\Utility\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
@@ -307,5 +310,7 @@
       <Filter>Pixel</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Core\ResoucrManagers.cpp" />
+    <ClCompile Include="src\Pixel\Core\Utility\RandomNumberGenerator.cpp" />
+    <ClCompile Include="src\Pixel\Core\Utility\Timer.cpp" />
   </ItemGroup>
 </Project>

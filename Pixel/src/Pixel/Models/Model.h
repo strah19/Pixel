@@ -12,15 +12,15 @@ namespace Pixel {
 	class Model {
 	public:
 		void Init(const char* file_path);
-		std::vector<Mesh> meshes;
 	private:
 		void LoadModel(const std::string& file_path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
-		std::vector<MeshTexture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& type_name);
+		void LoadMaterialTextures(aiMaterial* mat, aiTextureType type);
 
 		std::string path;
 		std::vector<MeshTexture> textures_loaded;
+		std::vector<Mesh> meshes;
 	};
 }
 

@@ -44,6 +44,7 @@ namespace Pixel {
 		static void SetShaderToDefualt();
 		static void InitRendererShader(Shader* shader);
 		static void SetShader(ShaderInfo* shader);
+		static void SetMaterialId(uint32_t material_id);
 
 		static uint32_t GetShaderId();
 

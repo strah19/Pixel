@@ -26,6 +26,8 @@ public:
 
 		s.Init(texture1);
 		s.Divide({ 16, 16 });
+
+		m.Init("obj/mars/planet.obj");
 	}
 
 	~Sandbox() {
@@ -39,7 +41,7 @@ public:
 		Pixel::RendererCommand::Clear();
 		Pixel::RendererCommand::SetClearColor(0.4f, 0.5f, 0.55f, 1.0f);
 
-			Pixel::ImGuiLayer::Begin();
+		Pixel::ImGuiLayer::Begin();
 
         static bool opt_fullscreen = true;
         static bool opt_padding = false;
@@ -207,6 +209,7 @@ private:
 	std::shared_ptr<Pixel::Shader> two_d_light_shader;
 	std::shared_ptr<Pixel::FrameBuffer> framebuf;
 	Pixel::Spritesheet s;
+	Pixel::Model m;
 //	Pixel::TextureMaterial m;
 };
 

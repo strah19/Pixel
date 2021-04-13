@@ -12,6 +12,13 @@ namespace Pixel {
 		glm::vec2 texture_coordinates;
 		float texture_id;
 		glm::vec3 normals = glm::vec3(0, 0, 0);
+		float material_id;
+	};
+
+	struct MeshVertex {
+		glm::vec3 position;
+		glm::vec2 texture_coordinates;
+		glm::vec3 normals = glm::vec3(0, 0, 0);
 		float instance_id;
 	};
 
@@ -21,11 +28,10 @@ namespace Pixel {
 	};
 
 	struct Mesh {
-		std::vector<Vertex> vertices;
-		std::vector<MeshTexture> textures;
+		std::vector<MeshVertex> vertices;
 		std::vector<uint32_t> indices;
 
-		Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<MeshTexture>& textures);
+		Mesh(std::vector<MeshVertex>& vertices, std::vector<uint32_t>& indices);
 	};
 }
 
