@@ -6,6 +6,7 @@
 namespace Pixel {
 	class OpenGLShader : public Shader {
 	public:
+		OpenGLShader(const std::string& file_path);
 		virtual ~OpenGLShader();
 
 		void Bind();
@@ -23,9 +24,9 @@ namespace Pixel {
 		uint32_t GetId() const { return shader_id; }
 	private:
 		uint32_t shader_id;
-		ShaderSources ParseShader(const std::string& path);
+		ShaderSources ParseShader(const std::string& file_path);
 		uint32_t CompileShader(const std::string& source, uint32_t type);
-		uint32_t CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+		uint32_t CreateShader(const std::string& vertex_shader, const std::string& fragment_shader);
 	};
 }
 

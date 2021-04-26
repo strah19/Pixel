@@ -34,20 +34,44 @@ namespace Pixel {
 		current_vertex_array_id = 0;
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertex_buf) {
+	void OpenGLVertexArray::AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertex_buf, VertexBufferFormat format) {
 		uint32_t stride = vertex_buf->GetLayout()->Calculate();
 
 		vertex_buf->Bind();
 		Bind();
 
 		for (auto& elements : vertex_buf->GetLayout()->GetLayout()) {
-			glVertexAttribPointer(elements.index, elements.size, VertexShaderTypeToOpenGL(elements.type), elements.normalized ? GL_TRUE : GL_FALSE, 
-				stride * GetSizeInBytes(elements.type),
-				(void*)(elements.offset * GetSizeInBytes(elements.type)));
+			switch (format) {
+			case VertexBufferFormat::VNCVNCVNC:
+				glVertexAttribPointer(elements.index, elements.size, VertexShaderTypeToOpenGL(elements.type), elements.normalized ? GL_TRUE : GL_FALSE,
+					stride * GetSizeInBytes(elements.type),
+					(void*)(elements.offset * GetSizeInBytes(elements.type)));
+				break;
+			case VertexBufferFormat::VVVCCCNNN:
+				glVertexAttribPointer(elements.index, elements.size, VertexShaderTypeToOpenGL(elements.type), elements.normalized ? GL_TRUE : GL_FALSE,
+					0,
+					(void*)(elements.offset * GetSizeInBytes(elements.type)));
+				break;
+			}
 
-			glEnableVertexAttribArray(elements.index);
+			EnableVertexAttrib(elements.index);
 		}
+	}
 
-		vertex_buffers.push_back(vertex_buf);
+	void OpenGLVertexArray::EnableVertexAttrib(uint32_t index) {
+		glEnableVertexAttribArray(index);
+	}
+
+	void OpenGLVertexArray::SetArrayForInstancing(std::shared_ptr<VertexBuffer>& vertex_buf, uint32_t offset_sizes[], uint32_t stride_sizes[]) {
+		vertex_buf->Bind();
+		Bind();
+		uint32_t i = 0;
+		for (auto& elements : vertex_buf->GetLayout()->GetLayout()) {
+			glVertexAttribPointer(elements.index, elements.size, VertexShaderTypeToOpenGL(elements.type), elements.normalized ? GL_TRUE : GL_FALSE,
+				stride_sizes[i],
+				(void*)offset_sizes[i]);
+			i++;
+			EnableVertexAttrib(elements.index);
+		}
 	}
 }

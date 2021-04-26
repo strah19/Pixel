@@ -18,7 +18,7 @@ namespace Pixel {
 		glm::vec2* CalculateRectCoordinates(const glm::vec2& pixel_point, const glm::vec2& sprite_size);
 		glm::vec2* FetchRectCoordinatesWithDivision(const glm::vec2& pixel_point);
 	private:
-		std::shared_ptr<Texture> texture;
+		std::shared_ptr<Texture>* texture;
 		glm::vec2 in_range_coordinates;
 		glm::vec2 sprite_size;
 

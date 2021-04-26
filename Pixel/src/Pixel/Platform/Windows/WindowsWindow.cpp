@@ -51,7 +51,7 @@ namespace Pixel {
 
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		native_window = glfwCreateWindow(data.properties.width, data.properties.height, data.properties.title.c_str(), NULL, NULL);
-		PIXEL_LOG("Window Created::%s::%d::%d", data.properties.title.c_str(), data.properties.width, data.properties.height);
+		PIXEL_LOG_GOOD("WINDOW_CREATED::%s::%d::%d", data.properties.title.c_str(), data.properties.width, data.properties.height);
 
 		glfw_window_count++;
 
@@ -110,6 +110,7 @@ namespace Pixel {
 	}
 
 	void WindowsWindow::Destroy() {
+		PIXEL_LOG_ERROR("WINDOW_DESTROYED::%s::%d::%d", data.properties.title.c_str(), data.properties.width, data.properties.height);
 		--glfw_window_count;
 		glfwDestroyWindow(native_window);
 		if (glfw_window_count == 0)

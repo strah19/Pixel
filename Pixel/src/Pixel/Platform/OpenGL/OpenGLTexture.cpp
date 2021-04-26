@@ -37,7 +37,7 @@ namespace Pixel {
 			glTextureSubImage2D(texture_id, 0, 0, 0, width, height, data_format, GL_UNSIGNED_BYTE, data);
 		}
 		else
-			PIXEL_LOG_ERROR("FAILED::TO::LOAD::TEXTURE::%s", file_path);
+			PIXEL_LOG_ERROR("FAILED_TEXTURE_LOAD::%s", file_path);
 		
 		stbi_image_free(data);
 	}

@@ -7,11 +7,14 @@ layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 
-uniform mat4 proj_view;
+layout(binding = 0) buffer GlobalMatrices 
+{
+    mat4 proj_view;
+};
 
 void main()
 {
-    gl_Position =  proj_view * vec4(aPos, 1.0);
+    gl_Position = proj_view * vec4(aPos, 1.0);
     TexCoords = aTexCoords;    
 }
 

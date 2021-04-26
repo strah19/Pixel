@@ -12,7 +12,7 @@ namespace Pixel {
 
 		void Bind();
 		void UnBind();
-		void SetData(void* data, uint32_t size);
+		void SetData(void* data, uint32_t size, uint32_t offset = 0);
 
 		uint32_t GetId() const { return vertex_buffer_id; }
 

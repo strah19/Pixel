@@ -1,7 +1,6 @@
 #include "pixelpch.h"
 #include "Renderer/Buffers.h"
 #include "Renderer/RendererCommands.h"
-
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Pixel {

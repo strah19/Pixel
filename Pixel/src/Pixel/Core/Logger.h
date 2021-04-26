@@ -89,7 +89,7 @@ namespace Pixel {
 		ColorCode code;
 	};
 
-	class ColorLogCommand : public LogCommand {
+	class ColorLogCommand : public LogCommand {  
 	public:
 		ColorLogCommand() { }
 		void RunCommand(va_list& args, const char* input) override;
@@ -130,9 +130,25 @@ namespace Pixel {
 	};
 }
 
-#define PIXEL_LOG_ERROR(...) Pixel::LogImpl::GetLogError().Log(__VA_ARGS__);
-#define PIXEL_LOG_WARNING(...) Pixel::LogImpl::GetLogWarning().Log(__VA_ARGS__);
-#define PIXEL_LOG(...) Pixel::LogImpl::GetLogDef().Log(__VA_ARGS__);
-#define PIXEL_LOG_GOOD(...) Pixel::LogImpl::GetLogDefGood().Log(__VA_ARGS__);
+#ifdef PIXEL_DEBUG
+	#define PIXEL_LOG_ERROR(...) Pixel::LogImpl::GetLogError().Log(__VA_ARGS__);
+	#define PIXEL_LOG_WARNING(...) Pixel::LogImpl::GetLogWarning().Log(__VA_ARGS__);
+	#define PIXEL_LOG(...) Pixel::LogImpl::GetLogDef().Log(__VA_ARGS__);
+	#define PIXEL_LOG_GOOD(...) Pixel::LogImpl::GetLogDefGood().Log(__VA_ARGS__);
+#endif // PIXEL_DEBUG
+
+#ifdef PIXEL_RELEASE
+	#define PIXEL_LOG_ERROR(...) 
+	#define PIXEL_LOG_WARNING(...) 
+	#define PIXEL_LOG(...) 
+	#define PIXEL_LOG_GOOD(...) 
+#endif // PIXEL_RELEASE
+
+#ifdef PIXEL_DIST
+	#define PIXEL_LOG_ERROR(...) 
+	#define PIXEL_LOG_WARNING(...) 
+	#define PIXEL_LOG(...) 
+	#define PIXEL_LOG_GOOD(...) 
+#endif // PIXEL_RELEASE
 
 #endif // !LOGGER_H

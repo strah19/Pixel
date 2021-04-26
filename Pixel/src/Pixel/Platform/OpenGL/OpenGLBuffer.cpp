@@ -35,9 +35,9 @@ namespace Pixel {
 		current_index_buffer_id = 0;
 	}
 
-	void OpenGLVertexBuffer::SetData(void* data, uint32_t size) {
+	void OpenGLVertexBuffer::SetData(void* data, uint32_t size, uint32_t offset) {
 		Bind();
-		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+		glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 	}
 
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t size) {

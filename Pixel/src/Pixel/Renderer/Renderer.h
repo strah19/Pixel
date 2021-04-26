@@ -10,7 +10,7 @@
 #include "Core/ResourceManagers.h"
 
 namespace Pixel {
-	constexpr size_t MAX_QUAD_COUNT = 10000;
+	constexpr size_t MAX_QUAD_COUNT = 100000;
 	constexpr size_t QUAD_VERTEX_COUNT = 4;
 	constexpr size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * QUAD_VERTEX_COUNT;
 	constexpr size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;

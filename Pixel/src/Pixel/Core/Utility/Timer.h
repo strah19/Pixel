@@ -2,26 +2,32 @@
 #define TIMER_H
 
 #include <chrono>
-#include "Core/Logger.h"
+#include <atomic>
 
 namespace Pixel {
 	namespace Utility {
-		class Timer {
-		public:
-			Timer();
-			~Timer();
+        template <typename Clock = std::chrono::high_resolution_clock>
+        class Timer
+        {
+            const typename Clock::time_point start_point;
+        public:
+            Timer() :
+                start_point(Clock::now())
+            {}
 
-			void Start();
-			void Stop();
-			float ElapsedMilliSeconds();
-			float ElapsedSeconds();
-		private:
-			std::chrono::time_point<std::chrono::system_clock> start_time;
-			std::chrono::time_point<std::chrono::system_clock> end_time;
-			bool running = false;
-		};
+            template <typename Rep = typename Clock::duration::rep, typename Unit = std::chrono::microseconds>
+            Rep ElapsedTime() const
+            {
+                std::atomic_thread_fence(std::memory_order_relaxed);
+                auto counted_time = std::chrono::duration_cast<Unit>(Clock::now() - start_point).count();
+                std::atomic_thread_fence(std::memory_order_relaxed);
+                return static_cast<Rep>(counted_time);
+            }
+        };
 
-#define PIXEL_PROFILE PIXEL_LOG_GOOD("DEBUG_TIMER_STARTED::%s::LINE::%d::TIME::%s", __FUNCTION__, __LINE__, __TIME__) Pixel::Utility::Timer t 
+        using PreciseTimer = Timer<>;
+        using SystemTimer = Timer<std::chrono::system_clock>;
+        using MonotonicTimer = Timer<std::chrono::steady_clock>;
 	}
 }
 

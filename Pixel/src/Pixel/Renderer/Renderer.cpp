@@ -9,14 +9,6 @@ namespace Pixel {
 		return glm::normalize(norm);
 	}
 
-	struct DrawElementsCommand {
-		uint32_t vertex_count = 0;
-		uint32_t instance_count = 0;
-		uint32_t first_index = 0;
-		uint32_t base_vertex = 0;
-		uint32_t base_instance = 0;
-	};
-
 	struct RendererData {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
@@ -57,9 +49,8 @@ namespace Pixel {
 		layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float));
 		layout.AddToBuffer(VertexBufferElement(4, false, VertexShaderType::Float));
 		layout.AddToBuffer(VertexBufferElement(2, false, VertexShaderType::Float));
-		layout.AddToBuffer(VertexBufferElement(1, false, VertexShaderType::Float));
+		layout.AddToBuffer(VertexBufferElement(2, false, VertexShaderType::Float));
 		layout.AddToBuffer(VertexBufferElement(3, false, VertexShaderType::Float));
-		layout.AddToBuffer(VertexBufferElement(1, false, VertexShaderType::Float));
 
 		renderer_data.vertex_buffer->SetLayout(layout);
 
@@ -68,15 +59,15 @@ namespace Pixel {
 
 		renderer_data.index_buffer = IndexBuffer::CreateIndexBuffer(MAX_INDEX_COUNT * sizeof(uint32_t));
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
-		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer);
+		renderer_data.vertex_array->AddVertexBuffer(renderer_data.vertex_buffer, VertexBufferFormat::VNCVNCVNC);
 		
 		renderer_data.indirect_draw_buffer = IndirectDrawBuffer::CreateIndirectDrawBuffer(sizeof(renderer_data.draw_commands));
 
-		renderer_data.default_shader.Init("shaders/shader.glsl");
-		SSBOManager::AddSSBOToManager("GlobalMatrices", ShaderStorageBuffer::CreateShaderStorageBuffer(sizeof(glm::mat4)));
-		renderer_data.default_shader.AddSSBOReference("GlobalMatrices");
-	}
+		renderer_data.default_shader.Init("shaders/default_shader.glsl");
 
+		renderer_data.default_shader.AddSSBOReference("GlobalMatrices", sizeof(glm::mat4));
+	}
+	
 	void Renderer::Destroy() {
 		delete[] renderer_data.vertices_base;
 		delete[] renderer_data.index_base;
@@ -216,7 +207,7 @@ namespace Pixel {
 
 	void Renderer::MakeCommand() {
 		renderer_data.draw_commands[renderer_data.draw_count].vertex_count = renderer_data.current_draw_command_vertex_size;
-		renderer_data.draw_commands[renderer_data.draw_count].instance_count = 2;
+		renderer_data.draw_commands[renderer_data.draw_count].instance_count = 1;
 		renderer_data.draw_commands[renderer_data.draw_count].first_index = 0;
 		renderer_data.draw_commands[renderer_data.draw_count].base_vertex = renderer_data.base_vert;
 		renderer_data.draw_commands[renderer_data.draw_count].base_instance = renderer_data.draw_count;

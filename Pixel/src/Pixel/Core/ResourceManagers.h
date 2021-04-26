@@ -3,36 +3,72 @@
 
 #include "Renderer/Buffers.h"
 #include "Renderer/Shader.h"
-#include <vector>
+#include "Renderer/Texture.h"
+#include "Models/Model.h"
 
 namespace Pixel {
+	template<class T> class ResourceManager {
+	public:
+		void AddToManager(const std::string& name, const T& data);
+		std::unordered_map<std::string, T>& GetLoadedData();
+		T* SearchStorage(const std::string& name);
+	protected:
+		std::unordered_map<std::string, T> loaded_resources;
+	};
+
 	struct SSBOData {
 		std::shared_ptr<ShaderStorageBuffer> ssbo;
 		bool complete;
 	};
 
-	using ShaderSSBOS = std::unordered_map<std::string, SSBOData>;
-
-	class SSBOManager {
+	class SSBOManager : public ResourceManager<SSBOData> {
 	public:
-		static void QueueForNewFrame();
-		static void AddSSBOToManager(const std::string& name, std::shared_ptr<ShaderStorageBuffer>& ssbo);
-		static ShaderSSBOS& GetSSBOS();
-		static std::shared_ptr<ShaderStorageBuffer>* SearchSSBOStorage(const std::string& shader_storage_name);
+		void QueueForNewFrame();
+		static SSBOManager* GetSSBOManager();
+		virtual ~SSBOManager();
+	private:
+		static SSBOManager* manager;
 	};
 
 	class ShaderInfo {
 	public:
 		void Init(const std::string& shader);
-		bool AddSSBOReference(const std::string& shader_storage_name);
-		std::shared_ptr<Shader>* GetShader() { return &shader; }
+		bool AddSSBOReference(const std::string& shader_storage_name, uint32_t size);
+		std::shared_ptr<Shader>* GetShader() { return shader; }
 		SSBOData* GetBufferPointer(const std::string& name);
 
 		void UpdateSSBO(SSBOData* ssbo, uint32_t instance, void* data, uint32_t data_size);
 		void SSBOUploadFinised(SSBOData* ssbo);
 	private:
-		std::shared_ptr<Shader> shader;
+		std::shared_ptr<Shader>* shader;
 		std::vector<std::shared_ptr<ShaderStorageBuffer>*> shader_storage_refs;
+	};
+
+	class ShaderManager : public ResourceManager<std::shared_ptr<Shader>> {
+	public:
+		std::shared_ptr<Shader>* CreateShader(const std::string& file_path);
+		static ShaderManager* GetShaderManager();
+		virtual ~ShaderManager();
+	private:
+		static ShaderManager* manager;
+	};
+
+	class TextureManager : public ResourceManager<std::shared_ptr<Texture>> {
+	public:
+		std::shared_ptr<Texture>* CreateTexture(const std::string& file_path);
+		static TextureManager* GetTextureManager();
+		virtual ~TextureManager();
+	private:
+		static TextureManager* manager;
+	};
+
+	class ModelManager : public ResourceManager<std::shared_ptr<Model>> {
+	public:
+		std::shared_ptr<Model>* CreateModel(const std::string& file_path);
+		static ModelManager* GetModelManager();
+		virtual ~ModelManager();
+	private:
+		static ModelManager* manager;
 	};
 }
 

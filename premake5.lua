@@ -68,8 +68,8 @@ project "Pixel"
 		"GLFW",
 		"GLAD",
 		"opengl32.lib",
-		"assimp-vc142-mtd.lib",
 		"ImGui",
+		"assimp-vc142-mtd.lib",
 		"Lua"
 	}
 

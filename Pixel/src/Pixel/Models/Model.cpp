@@ -21,6 +21,8 @@ namespace Pixel {
             PIXEL_LOG_ERROR("ERROR::ASSIMP::%s", import.GetErrorString());
             return;
         }
+        else 
+            PIXEL_LOG("MODEL_LOADED::%s", file_path.c_str());
 
         path = path.substr(0, path.find_last_of('/'));
         ProcessNode(scene->mRootNode, scene);

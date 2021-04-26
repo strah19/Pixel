@@ -20,9 +20,8 @@ namespace Pixel {
 
 		virtual void Init(const std::string& file_path) = 0;
 
-		static std::shared_ptr<Shader> CreateShader();
+		static std::shared_ptr<Shader> CreateShader(const std::string& file_path);
 
-		/* Uniforms go here! */
 		virtual void Set1f(const std::string& name, float value) = 0;
 		virtual void SetMat4f(const std::string& name, const glm::mat4& mat4) = 0;
 		virtual void SetVec3f(const std::string& name, const glm::vec3& vec3) = 0;

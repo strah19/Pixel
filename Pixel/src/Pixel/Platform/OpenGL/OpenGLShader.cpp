@@ -11,6 +11,10 @@
 namespace Pixel {
 	static uint32_t current_shader_binded = 0;
 
+	OpenGLShader::OpenGLShader(const std::string& file_path) {
+		Init(file_path);
+	}
+
 	OpenGLShader::~OpenGLShader() {
 		glDeleteProgram(shader_id);
 	}
@@ -32,9 +36,8 @@ namespace Pixel {
 		shader_id = CreateShader(source.vertex, source.fragment);
 	}
 
-	uint32_t OpenGLShader::CompileShader(const std::string& source, uint32_t type)
-	{
-		unsigned int id = glCreateShader(type);
+	uint32_t OpenGLShader::CompileShader(const std::string& source, uint32_t type) {
+		uint32_t id = glCreateShader(type);
 		const char* src = source.c_str();
 		glShaderSource(id, 1, &src, nullptr);
 		glCompileShader(id);
@@ -55,9 +58,8 @@ namespace Pixel {
 		return id;
 	}
 
-	ShaderSources OpenGLShader::ParseShader(const std::string& filePath)
-	{
-		std::ifstream stream(filePath);
+	ShaderSources OpenGLShader::ParseShader(const std::string& file_path) {
+		std::ifstream stream(file_path);
 
 		enum class ShaderType {
 			NONE = -1, VERTEX = 0, FRAGMENT = 1
@@ -66,6 +68,13 @@ namespace Pixel {
 		ShaderType type = ShaderType::NONE;
 		std::string line;
 		std::stringstream ss[2];
+
+		if (!stream.is_open()) {
+			PIXEL_LOG_ERROR("SHADER_LOAD_FAILED::%s", file_path.c_str());
+			return { ss[0].str(), ss[1].str() };
+		}
+		else
+			PIXEL_LOG("LOADED_SHADER::%s", file_path.c_str());
 
 		while (getline(stream, line)) {
 			if (line.find("#shader") != std::string::npos) {
@@ -82,11 +91,10 @@ namespace Pixel {
 		return { ss[0].str(), ss[1].str() };
 	}
 
-	unsigned int OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
-	{
-		unsigned int program = glCreateProgram();
-		unsigned int vs = CompileShader(vertexShader, GL_VERTEX_SHADER);
-		unsigned int fs = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);
+	uint32_t OpenGLShader::CreateShader(const std::string& vertex_shader, const std::string& fragment_shader) {
+		uint32_t program = glCreateProgram();
+		uint32_t vs = CompileShader(vertex_shader, GL_VERTEX_SHADER);
+		uint32_t fs = CompileShader(fragment_shader, GL_FRAGMENT_SHADER);
 
 		glAttachShader(program, vs);
 		glAttachShader(program, fs);

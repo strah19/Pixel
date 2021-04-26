@@ -13,6 +13,9 @@
     <Filter Include="Pixel\Core">
       <UniqueIdentifier>{DF9C015D-CB54-43AA-345C-1C062033DE9A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pixel\Core\Utility">
+      <UniqueIdentifier>{22CAAF20-0EAE-7076-770E-6BC963115BF8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Pixel\Events">
       <UniqueIdentifier>{2B62FEA8-17C5-8D4D-C04A-C603AC8C59D0}</UniqueIdentifier>
     </Filter>
@@ -83,6 +86,15 @@
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\PlatformDetection.h">
       <Filter>Pixel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Core\ResourceManagers.h">
+      <Filter>Pixel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Core\Utility\RandomNumberGenerator.h">
+      <Filter>Pixel\Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Core\Utility\Timer.h">
+      <Filter>Pixel\Core\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\EventHandler.h">
       <Filter>Pixel\Events</Filter>
@@ -186,10 +198,6 @@
     <ClInclude Include="src\Pixel\pixelpch.h">
       <Filter>Pixel</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\Core\ResourceManagers.h" />
-    <ClInclude Include="src\Pixel\Core\Utility\RandomNumberGenerator.h" />
-    <ClInclude Include="src\Pixel\Core\Utility\MemoryManager.h" />
-    <ClInclude Include="src\Pixel\Core\Utility\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
@@ -218,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="src\Pixel\Core\Logger.cpp">
       <Filter>Pixel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Core\ResoucreManagers.cpp">
+      <Filter>Pixel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Core\Utility\RandomNumberGenerator.cpp">
+      <Filter>Pixel\Core\Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp">
       <Filter>Pixel\Events</Filter>
@@ -309,8 +323,5 @@
     <ClCompile Include="src\Pixel\pixelpch.cpp">
       <Filter>Pixel</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pixel\Core\ResoucrManagers.cpp" />
-    <ClCompile Include="src\Pixel\Core\Utility\RandomNumberGenerator.cpp" />
-    <ClCompile Include="src\Pixel\Core\Utility\Timer.cpp" />
   </ItemGroup>
 </Project>

@@ -16,8 +16,11 @@ namespace Pixel {
 		std::vector<std::shared_ptr<VertexBuffer>> GetVertexBuffers() { return vertex_buffers; };
 		uint32_t GetIndexBufferSize() const { return index_size; }
 
-		void AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertex_buf);
+		void AddVertexBuffer(std::shared_ptr<VertexBuffer>& vertex_buf, VertexBufferFormat format);
 		void SetIndexBufferSize(uint32_t index_buf) { index_size = index_buf; }
+
+		virtual void EnableVertexAttrib(uint32_t index);
+		virtual void SetArrayForInstancing(std::shared_ptr<VertexBuffer>& vertex_buf, uint32_t offset_sizes[], uint32_t stride_sizes[]);
 
 		uint32_t GetId() const { return vertex_array_buffer_id; }
 	private:
