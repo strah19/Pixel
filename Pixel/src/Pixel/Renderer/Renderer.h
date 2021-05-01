@@ -10,6 +10,15 @@
 #include "Core/ResourceManagers.h"
 
 namespace Pixel {
+	struct Vertex {
+		glm::vec3 position;
+		glm::vec4 color;
+		glm::vec2 texture_coordinates;
+		float texture_id;
+		glm::vec3 normals = glm::vec3(0, 0, 0);
+		float material_id;
+	};
+
 	constexpr size_t MAX_QUAD_COUNT = 100000;
 	constexpr size_t QUAD_VERTEX_COUNT = 4;
 	constexpr size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * QUAD_VERTEX_COUNT;

@@ -4,6 +4,12 @@
 #include "Models/Model.h"
 
 namespace Pixel {
+	struct InstanceVertex {
+		glm::vec3 position;
+		glm::vec2 texture_coordinates;
+		float texture_id;
+	};
+
 	class InstanceRenderer {
 	public:
 		static void Init();

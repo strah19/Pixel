@@ -17,8 +17,8 @@
 #include "Camera/Camera.h"
 #include "Camera/OrthoCamera.h"
 #include "Camera/PerspectiveCamera.h"
-#include "Camera/PerspectiveCamera.h"
 #include "Camera/PerspectiveCameraController.h"
+#include "Camera/OrthoCameraController.h"
 
 #include "Models/Model.h"
 #include "Models/Mesh.h"

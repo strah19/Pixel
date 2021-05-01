@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Pixel.h>
+#include "gtc/type_ptr.hpp"
 
 glm::vec2 LIGHT_UV_COORDS[] = { { -1.0f, 1.0f }, { -1.0f, -1.0f }, { 1.0f, -1.0f }, { 1.0f, 1.0f } };
 
@@ -15,6 +16,13 @@ public:
 		texture1 = Pixel::TextureManager::GetTextureManager()->CreateTexture("container_diffuse.png");
 		framebuf = Pixel::FrameBuffer::Create(1280, 720);
 		model.Init("obj/mars/planet.obj");
+		model2.Init("obj/rock/rock.obj");
+
+		material_shader.Init("shaders/color_material_shaders/material_point_light_shader.glsl");
+		material_shader.AddSSBOReference("Materials", sizeof(Pixel::Material) + sizeof(Pixel::LightSourcePoint) + sizeof(glm::vec4));
+
+		for (int i = 0; i < 10; i++)
+			cube_pos[i] = { Pixel::Utility::RandomGenerator::GenRandom(0.0, 10.0), Pixel::Utility::RandomGenerator::GenRandom(0.0, 10.0), Pixel::Utility::RandomGenerator::GenRandom(0.0, 10.0) };
 	}
 
 	~Sandbox() {
@@ -99,31 +107,57 @@ public:
 
 		ImGui::Begin("Console");
 		ImGui::End();
-		/*
+		
 		Pixel::Renderer::BeginScene(camera.GetCamera());
 
-		Pixel::Renderer::DrawCube({ 0, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
+		Pixel::Renderer::DrawCube({ 0, 0, 1 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
 		Pixel::Renderer::MakeCommand();
-		Pixel::Renderer::DrawQuad({ 1, 0, 0 }, { 1, 1 }, *texture1, { 0.5, 0.7, 0.8, 1.0 });
-		Pixel::Renderer::DrawCube({ 2, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
-		Pixel::Renderer::DrawCube({ 3, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
-		Pixel::Renderer::DrawCube({ 4, 0, 0 }, { 1, 1, 1 }, { 0.9, 0.7, 0.4, 1.0 });
+		Pixel::Renderer::NewBatch();
 
-		Pixel::Renderer::MakeCommand();
-		
+		Pixel::Renderer::SetShader(&material_shader);
+		Pixel::Renderer::SetMaterialId(0);
+
+		glm::vec3 lightColor;
+		lightColor.x = sin(Pixel::Application::GetTick() * 2.0f);
+		lightColor.y = sin(Pixel::Application::GetTick() * 0.7f);
+		lightColor.z = sin(Pixel::Application::GetTick() * 1.3f);
+
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
+		Pixel::LightSourcePoint light = Pixel::LightSourcePoint({ 0.2, 0.2, 0.2 }, { 0.5, 0.5, 0.5 }, { 1.0, 1.0, 1.0 }, { 0, 0, 1 }, 0.6f, 0.009f, 0.0032f);
+		Pixel::Material material = Pixel::Material({ 0.0215,	0.1745,	0.0215 }, { 0.07568,	0.61424,	0.07568 }, { 0.633,	0.727811,	0.633 }, 32);
+
+
+		Pixel::SSBOData* ssbo = material_shader.GetBufferPointer("Materials");
+
+		ssbo->ssbo->Bind();
+		ssbo->ssbo->SetData((void*)&light, sizeof(Pixel::LightSourcePoint), 0);
+		ssbo->ssbo->SetData((void*)&material, sizeof(Pixel::Material), sizeof(Pixel::LightSourcePoint));
+		ssbo->ssbo->SetData((void*)&camera.GetCamera().GetPosition(), sizeof(glm::vec3), sizeof(Pixel::LightSourcePoint) + sizeof(Pixel::Material));
+
+		ssbo->ssbo->BindToBindPoint();
+		material_shader.SSBOUploadFinised(ssbo);
+
+		//for (int i = 0; i < 10; i++) {
+		//	Pixel::Renderer::DrawCube({ cube_pos[i].x , cube_pos[i].y, cube_pos[i].z }, { 1, 1, 1 }, { 0, 1, 0, 1 });
+		//}
+
+		Pixel::Renderer::DrawQuad({ -5, 5, 0 }, { 20, 20 }, { 0, 1, 0, 1 });
+
+		Pixel::Renderer::MakeCommand();		
 
 		Pixel::Renderer::EndScene();
-		*/
-
+		
+		/*
 		Pixel::InstanceRenderer::BeginScene(camera.GetCamera());
-		for (int i = 0; i < 100; i++) {
-			Pixel::InstanceRenderer::DrawModel(&model, { cos(i) * 80 + 20, 0, sin(i) * 80 + 20 }, { 1, 1, 1 }, { 1, 1, 0, 1 });
-
-		}
-
+		Pixel::InstanceRenderer::DrawModel(&model2, { 0, 0, 0 }, { 1, 1, 1 }, { 1, 1, 0, 1 });
 		Pixel::InstanceRenderer::MakeCommand();
-
+		Pixel::InstanceRenderer::GoToNextDrawCommand();
+		Pixel::InstanceRenderer::DrawModel(&model, { 7, 0, 0 }, { 1, 1, 1 }, { 1, 1, 0, 1 });
+		Pixel::InstanceRenderer::MakeCommand();
 		Pixel::InstanceRenderer::EndScene();
+		*/
 		framebuf->UnBind();
 
 		Pixel::ImGuiLayer::End();
@@ -134,12 +168,15 @@ public:
 		camera.OnEvent(event);
 	}
 private:
-	glm::vec4 light = { 1, 1, 1, 1 };
+	//glm::vec4 light = { 1, 1, 1, 1 };
 	glm::vec3 light_source = { 0.0f, 3.0f, 0.0f };
 	std::shared_ptr<Pixel::Texture>* texture1;
 	Pixel::PerspectiveCameraController camera;
 	std::shared_ptr<Pixel::FrameBuffer> framebuf;
 	Pixel::Model model;
+	Pixel::Model model2;
+	Pixel::ShaderInfo material_shader;
+	glm::vec3 cube_pos[10];
 };
 
 Pixel::Application* Pixel::CreateApplication()

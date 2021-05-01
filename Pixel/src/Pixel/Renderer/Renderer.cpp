@@ -79,7 +79,7 @@ namespace Pixel {
 		for (int i = 0; i < MAX_TEXTURE_SLOTS; i++) {
 			sampler[i] = i;
 		}
-		shader->SetIntArray("ourTexture", sampler);
+		shader->SetIntArray("textures", sampler);
 	}
 
 	void Renderer::BeginScene(Camera& camera) {
@@ -121,13 +121,11 @@ namespace Pixel {
 		std::shared_ptr<Shader>* shader = renderer_data.current_shader->GetShader();
 		shader->get()->Bind();
 
-		if (shader == renderer_data.default_shader.GetShader()) {
-			SSBOData* ssbo = renderer_data.current_shader->GetBufferPointer("GlobalMatrices");
-			ssbo->ssbo->Bind();
-			renderer_data.current_shader->UpdateSSBO(ssbo, 0, (void*)&renderer_data.proj_view, sizeof(glm::mat4));
-			renderer_data.current_shader->SSBOUploadFinised(ssbo);
-			ssbo->ssbo->BindToBindPoint();
-		}
+		SSBOData* ssbo = renderer_data.default_shader.GetBufferPointer("GlobalMatrices");
+		ssbo->ssbo->Bind();
+		renderer_data.current_shader->UpdateSSBO(ssbo, 0, (void*)&renderer_data.proj_view, sizeof(glm::mat4));
+		renderer_data.current_shader->SSBOUploadFinised(ssbo);
+		ssbo->ssbo->BindToBindPoint();
 
 		for (uint32_t i = 0; i < renderer_data.texture_slot_index; i++)
 			renderer_data.textures[i]->get()->Bind(i);
@@ -286,7 +284,22 @@ namespace Pixel {
 		for (uint32_t i = 0; i < CUBE_FACES; i++)
 			CalculateSquareIndices();
 		
+		Vertex* start_base = renderer_data.vertices_ptr;
+		uint32_t face = -4;
 		for (size_t i = 0; i < CUBE_VERTEX_COUNT; i++) {
+			if (i % 4 == 0) {
+				face += 4;
+				Vertex* face_base_ptr = &start_base[face];
+
+				glm::vec3 norm = CalculateVertexNormals(face_base_ptr[0].position, face_base_ptr[1].position, face_base_ptr[2].position);
+				face_base_ptr[0].normals = norm;
+				face_base_ptr[1].normals = norm;
+				face_base_ptr[2].normals = norm;
+				face_base_ptr[3].normals = norm;
+
+			}
+
+
 			Vertex vertex;
 			vertex.position = translation * glm::vec4(CUBE_POSITIONS[i].x, CUBE_POSITIONS[i].y, CUBE_POSITIONS[i].z, 1.0f);
 			vertex.color = color;

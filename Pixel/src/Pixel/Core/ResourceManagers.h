@@ -38,6 +38,7 @@ namespace Pixel {
 		SSBOData* GetBufferPointer(const std::string& name);
 
 		void UpdateSSBO(SSBOData* ssbo, uint32_t instance, void* data, uint32_t data_size);
+		void UpdateSSBO(SSBOData* ssbo, void* data, uint32_t data_size, uint32_t offset);
 		void SSBOUploadFinised(SSBOData* ssbo);
 	private:
 		std::shared_ptr<Shader>* shader;

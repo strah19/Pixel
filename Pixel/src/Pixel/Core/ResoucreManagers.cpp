@@ -44,7 +44,7 @@ namespace Pixel {
 	ShaderManager* ShaderManager::manager = nullptr;
 	std::shared_ptr<Shader>* ShaderManager::CreateShader(const std::string& file_path) {
 		std::shared_ptr<Shader>* shader = SearchStorage(file_path);
-		if (!shader)
+		if (!shader) 
 			AddToManager(file_path, Shader::CreateShader(file_path));
 
 		return &GetLoadedData()[file_path];
@@ -137,5 +137,10 @@ namespace Pixel {
 
 	void ShaderInfo::SSBOUploadFinised(SSBOData* data) {
 		data->complete = true;
+	}
+
+	void ShaderInfo::UpdateSSBO(SSBOData* ssbo, void* data, uint32_t data_size, uint32_t offset) {
+		if (!ssbo->complete)
+			ssbo->ssbo->SetData(data, data_size, offset);
 	}
 }

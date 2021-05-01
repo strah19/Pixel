@@ -138,6 +138,10 @@
       <Project>{2748E20D-935C-0ABF-5CDE-AD1EC8B106F0}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\color_material_shaders\material_directional_light_shader.glsl" />
+    <None Include="shaders\color_material_shaders\material_point_light_shader.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

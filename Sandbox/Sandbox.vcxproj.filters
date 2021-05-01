@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\light_texture.glsl" />
-    <None Include="shaders\uniform_block_test.glsl" />
+    <None Include="shaders\color_material_shaders\material_point_light_shader.glsl" />
+    <None Include="shaders\color_material_shaders\material_directional_light_shader.glsl" />
   </ItemGroup>
 </Project>

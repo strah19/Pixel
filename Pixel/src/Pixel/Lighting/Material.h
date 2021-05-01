@@ -27,15 +27,15 @@ namespace Pixel {
 		TextureMaterial() = default;
 	};
 
-	struct Material {
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
+	struct Material { 
+		glm::vec4 ambient;
+		glm::vec4 diffuse;
+		glm::vec4 specular;
 
-		float shininess;
+		glm::vec4 shininess;
 
 		Material(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess)
-			: ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess) {
+			: ambient(glm::vec4(ambient, 1.0)), diffuse(glm::vec4(diffuse, 1.0)), specular(glm::vec4(specular, 1.0)), shininess(glm::vec4(shininess, 1.0, 1.0, 1.0)) {
 		}
 
 		Material(const Material& material) {

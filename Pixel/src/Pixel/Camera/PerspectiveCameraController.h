@@ -16,6 +16,8 @@ namespace Pixel {
 		void OnEvent(Event& event);
 		void Update();
 		void SetFreeze(bool f);
+
+		inline glm::vec3 GetFrontCamera() const { return camera_front; }
 	private:
 		bool MouseWheelHandler(MouseWheelEvent& mousewheel);
 		bool KeyboardHandler(KeyboardEvents& keyboard);

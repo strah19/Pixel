@@ -6,15 +6,6 @@
 #include "Renderer/Texture.h"
 
 namespace Pixel {
-	struct Vertex {
-		glm::vec3 position;
-		glm::vec4 color;
-		glm::vec2 texture_coordinates;
-		float texture_id;
-		glm::vec3 normals = glm::vec3(0, 0, 0);
-		float material_id;
-	};
-
 	struct MeshVertex {
 		glm::vec3 position;
 		glm::vec2 texture_coordinates;

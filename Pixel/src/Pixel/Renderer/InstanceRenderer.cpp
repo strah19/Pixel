@@ -6,12 +6,6 @@
 #include "Core/Utility/Timer.h"
 
 namespace Pixel {
-	struct InstanceVertex {
-		glm::vec3 position;
-		glm::vec2 texture_coordinates;
-		float texture_id;
-	};
-
 	struct InstanceRendererData {
 		std::shared_ptr<VertexArray> vertex_array;
 		std::shared_ptr<VertexBuffer> vertex_buffer;
@@ -116,16 +110,21 @@ namespace Pixel {
 				return;
 			}
 		}
-		float i = CalculateTextureIndex(model->GetTextures()[0].texture);
+		float tex_id = -1.0f;
+		if(!model->GetTextures().empty())
+			tex_id = CalculateTextureIndex(model->GetTextures()[0].texture);
+
 		for (size_t mesh = 0; mesh < model->GetMeshes().size(); mesh++) {
 			Mesh* past_mesh = nullptr;
-			if (mesh > 0) 
+			if (mesh > 0)
 				past_mesh = &model->GetMeshes()[mesh - 1];
+			else if (mesh == 0 && !renderer_data.in_buffer_models.empty())
+				past_mesh = &renderer_data.in_buffer_models.back()->GetMeshes().back();
 			for (size_t vertex = 0; vertex < model->GetMeshes()[mesh].vertices.size(); vertex++) {
 				renderer_data.vertices_ptr->position = model->GetMeshes()[mesh].vertices[vertex].position;
 				renderer_data.vertices_ptr->texture_coordinates = model->GetMeshes()[mesh].vertices[vertex].texture_coordinates;
 
-				renderer_data.vertices_ptr->texture_id = i;
+				renderer_data.vertices_ptr->texture_id = tex_id;
 				renderer_data.vertices_ptr++;
 			}
 			renderer_data.num_of_vertices_in_batch += model->GetMeshes()[mesh].vertices.size() + 1;
@@ -192,7 +191,14 @@ namespace Pixel {
 		uint32_t matrix_buf_size = (uint32_t)((uint8_t*)renderer_data.model_ptr - (uint8_t*)renderer_data.model_base);
 
 		uint32_t offsets[] = {
-			0, sizeof(glm::vec3), sizeof(glm::vec3) + sizeof(glm::vec2), vertex_buf_size, vertex_buf_size + color_buf_size, vertex_buf_size + color_buf_size + 16, vertex_buf_size + color_buf_size + 32, vertex_buf_size + color_buf_size + 48
+			0, 
+			sizeof(glm::vec3), 
+			sizeof(glm::vec3) + sizeof(glm::vec2), 
+			vertex_buf_size, 
+			vertex_buf_size + color_buf_size, 
+			vertex_buf_size + color_buf_size + 16, 
+			vertex_buf_size + color_buf_size + 32, 
+			vertex_buf_size + color_buf_size + 48
 		};
 		static uint32_t stride[] = { sizeof(InstanceVertex), sizeof(InstanceVertex), sizeof(InstanceVertex), 16, 64, 64, 64, 64 };
 		renderer_data.vertex_array->SetArrayForInstancing(renderer_data.vertex_buffer, offsets, stride);
@@ -206,7 +212,7 @@ namespace Pixel {
 		glVertexAttribDivisor(5, 1);
 		glVertexAttribDivisor(6, 1);
 		glVertexAttribDivisor(7, 1);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 		renderer_data.index_buffer->SetData(renderer_data.index_base, index_buf_size);
 
 		renderer_data.vertex_array->SetIndexBufferSize(renderer_data.index_buffer->GetCount());
@@ -223,7 +229,7 @@ namespace Pixel {
 
 	void InstanceRenderer::GoToNextDrawCommand() {
 		renderer_data.draw_count++;
-		renderer_data.base_vert += renderer_data.num_of_vertices_in_batch;
+		renderer_data.base_vert += renderer_data.current_draw_command_vertex_size;
 		renderer_data.current_draw_command_vertex_size = 0;
 		renderer_data.instance_count = 0;
 	}

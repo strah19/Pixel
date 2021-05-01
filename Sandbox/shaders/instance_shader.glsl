@@ -33,9 +33,9 @@ in vec2 out_tex_coords;
 
 out vec4 frag_color;
 
-uniform sampler2D ourTexture[32];
+uniform sampler2D textures[32];
 
 void main()
 {
-	frag_color = texture(ourTexture[int(out_texture_id)], out_tex_coords);
+	frag_color = texture(textures[int(out_texture_id)], out_tex_coords);
 }
