@@ -17,12 +17,18 @@ public:
 		framebuf = Pixel::FrameBuffer::Create(1280, 720);
 		model.Init("obj/mars/planet.obj");
 		model2.Init("obj/rock/rock.obj");
+		std::vector<std::string> faces = 
+		{
+				"skybox/right.jpg",
+				"skybox/left.jpg",
+				"skybox/top.jpg",
+				"skybox/bottom.jpg",
+				"skybox/front.jpg",
+				"skybox/back.jpg"
+		};
 
 		material_shader.Init("shaders/color_material_shaders/material_point_light_shader.glsl");
-		material_shader.AddSSBOReference("Materials", sizeof(Pixel::Material) + sizeof(Pixel::LightSourcePoint) + sizeof(glm::vec4));
-
-		for (int i = 0; i < 10; i++)
-			cube_pos[i] = { Pixel::Utility::RandomGenerator::GenRandom(0.0, 10.0), Pixel::Utility::RandomGenerator::GenRandom(0.0, 10.0), Pixel::Utility::RandomGenerator::GenRandom(0.0, 10.0) };
+		material_shader.AddSSBOReference("Materials", (sizeof(Pixel::Material) * 64) + sizeof(Pixel::LightSourcePoint) + sizeof(glm::vec4));
 	}
 
 	~Sandbox() {
@@ -108,47 +114,35 @@ public:
 		ImGui::Begin("Console");
 		ImGui::End();
 		
-		Pixel::Renderer::BeginScene(camera.GetCamera());
-
-		Pixel::Renderer::DrawCube({ 0, 0, 1 }, { 1, 1, 1 }, { 1, 0, 0, 1 });
+		Pixel::Renderer::BeginScene(camera.GetCamera(), Pixel::RenderFlags::None);
+		
+		Pixel::Renderer::SetShaderToDefualt();
+		Pixel::Renderer::DrawQuad({ 0, 0, 1 }, { 1, 1 }, { 1, 0, 0, 1 });
 		Pixel::Renderer::MakeCommand();
 		Pixel::Renderer::NewBatch();
 
-		Pixel::Renderer::SetShader(&material_shader);
+		Pixel::Renderer::SetShader(material_shader.GetShader());
 		Pixel::Renderer::SetMaterialId(0);
-
-		glm::vec3 lightColor;
-		lightColor.x = sin(Pixel::Application::GetTick() * 2.0f);
-		lightColor.y = sin(Pixel::Application::GetTick() * 0.7f);
-		lightColor.z = sin(Pixel::Application::GetTick() * 1.3f);
-
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
 		Pixel::LightSourcePoint light = Pixel::LightSourcePoint({ 0.2, 0.2, 0.2 }, { 0.5, 0.5, 0.5 }, { 1.0, 1.0, 1.0 }, { 0, 0, 1 }, 0.6f, 0.009f, 0.0032f);
 		Pixel::Material material = Pixel::Material({ 0.0215,	0.1745,	0.0215 }, { 0.07568,	0.61424,	0.07568 }, { 0.633,	0.727811,	0.633 }, 32);
-
 
 		Pixel::SSBOData* ssbo = material_shader.GetBufferPointer("Materials");
 
 		ssbo->ssbo->Bind();
 		ssbo->ssbo->SetData((void*)&light, sizeof(Pixel::LightSourcePoint), 0);
-		ssbo->ssbo->SetData((void*)&material, sizeof(Pixel::Material), sizeof(Pixel::LightSourcePoint));
-		ssbo->ssbo->SetData((void*)&camera.GetCamera().GetPosition(), sizeof(glm::vec3), sizeof(Pixel::LightSourcePoint) + sizeof(Pixel::Material));
+		ssbo->ssbo->SetData((void*)&camera.GetCamera().GetPosition(), sizeof(glm::vec3), sizeof(Pixel::LightSourcePoint));
+		ssbo->ssbo->SetData((void*)&material, sizeof(Pixel::Material), sizeof(Pixel::LightSourcePoint) + sizeof(glm::vec4));
 
 		ssbo->ssbo->BindToBindPoint();
 		material_shader.SSBOUploadFinised(ssbo);
 
-		//for (int i = 0; i < 10; i++) {
-		//	Pixel::Renderer::DrawCube({ cube_pos[i].x , cube_pos[i].y, cube_pos[i].z }, { 1, 1, 1 }, { 0, 1, 0, 1 });
-		//}
-
 		Pixel::Renderer::DrawQuad({ -5, 5, 0 }, { 20, 20 }, { 0, 1, 0, 1 });
 
 		Pixel::Renderer::MakeCommand();		
-
-		Pixel::Renderer::EndScene();
 		
+		Pixel::Renderer::EndScene();
+
 		/*
 		Pixel::InstanceRenderer::BeginScene(camera.GetCamera());
 		Pixel::InstanceRenderer::DrawModel(&model2, { 0, 0, 0 }, { 1, 1, 1 }, { 1, 1, 0, 1 });
@@ -168,7 +162,6 @@ public:
 		camera.OnEvent(event);
 	}
 private:
-	//glm::vec4 light = { 1, 1, 1, 1 };
 	glm::vec3 light_source = { 0.0f, 3.0f, 0.0f };
 	std::shared_ptr<Pixel::Texture>* texture1;
 	Pixel::PerspectiveCameraController camera;
@@ -176,7 +169,6 @@ private:
 	Pixel::Model model;
 	Pixel::Model model2;
 	Pixel::ShaderInfo material_shader;
-	glm::vec3 cube_pos[10];
 };
 
 Pixel::Application* Pixel::CreateApplication()

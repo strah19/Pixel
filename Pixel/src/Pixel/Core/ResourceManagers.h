@@ -40,6 +40,7 @@ namespace Pixel {
 		void UpdateSSBO(SSBOData* ssbo, uint32_t instance, void* data, uint32_t data_size);
 		void UpdateSSBO(SSBOData* ssbo, void* data, uint32_t data_size, uint32_t offset);
 		void SSBOUploadFinised(SSBOData* ssbo);
+		void SetShader(std::shared_ptr<Shader>* shader) { this->shader = shader; }
 	private:
 		std::shared_ptr<Shader>* shader;
 		std::vector<std::shared_ptr<ShaderStorageBuffer>*> shader_storage_refs;

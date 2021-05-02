@@ -23,6 +23,7 @@ namespace Pixel {
 		uint32_t texture_slot_index = 0;
 		std::shared_ptr<Texture>* textures[MAX_TEXTURE_SLOTS];
 		glm::mat4 proj_view = glm::mat4(1.0f);
+		Camera* camera;
 
 		uint32_t num_of_vertices_in_batch = 0;
 
@@ -82,8 +83,15 @@ namespace Pixel {
 		shader->SetIntArray("textures", sampler);
 	}
 
-	void Renderer::BeginScene(Camera& camera) {
-		renderer_data.proj_view = camera.GetProjection() * camera.GetView();
+	void Renderer::BeginScene(Camera& camera, RenderFlags flags) {
+		if (flags & RenderFlags::SkyBoxFlag) {
+			glm::mat4 view = glm::mat4(glm::mat3(camera.GetView()));
+			renderer_data.proj_view = camera.GetProjection() * view;
+		}
+		else 
+			renderer_data.proj_view = camera.GetProjection() * camera.GetView();
+		
+		renderer_data.camera = &camera;
 		renderer_data.current_shader = &renderer_data.default_shader;
 		renderer_data.current_material_id = -1;
 		StartBatch();
@@ -211,8 +219,8 @@ namespace Pixel {
 		renderer_data.draw_commands[renderer_data.draw_count].base_instance = renderer_data.draw_count;
 	}
 
-	void Renderer::SetShader(ShaderInfo* shader) {
-		renderer_data.current_shader = shader;
+	void Renderer::SetShader(std::shared_ptr<Shader>* shader) {
+		renderer_data.current_shader->SetShader(shader);
 	}
 
 	void Renderer::SetShaderToDefualt() {
@@ -298,8 +306,7 @@ namespace Pixel {
 				face_base_ptr[3].normals = norm;
 
 			}
-
-
+		
 			Vertex vertex;
 			vertex.position = translation * glm::vec4(CUBE_POSITIONS[i].x, CUBE_POSITIONS[i].y, CUBE_POSITIONS[i].z, 1.0f);
 			vertex.color = color;

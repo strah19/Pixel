@@ -141,6 +141,7 @@
   <ItemGroup>
     <None Include="shaders\color_material_shaders\material_directional_light_shader.glsl" />
     <None Include="shaders\color_material_shaders\material_point_light_shader.glsl" />
+    <None Include="shaders\cube_map_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

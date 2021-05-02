@@ -26,7 +26,7 @@ namespace Pixel {
 		PerspectiveCamera camera;
 		float fov = 60.0f;
 
-		glm::vec3 camera_pos = glm::vec3(0, 0, 0 );
+		glm::vec3 camera_pos = glm::vec3(0, 0, 3 );
 		glm::vec3 camera_target = glm::vec3(0, 0, 0);
 		glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
 

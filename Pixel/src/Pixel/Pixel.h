@@ -33,9 +33,13 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/InstanceRenderer.h"
 #include "Renderer/FrameBuffer.h"
+#include "Renderer/CubeMap.h"
 
 #include "Spritesheet/Spritesheet.h"
 #include "ImGui/ImGuiLayer.h"
 #include "Scripting/Scripting.h"
+
+#include "ECS/EntityComponentSystem.h"
+#include "ECS/PositionComponent.h"
 
 #endif // !PIXEL_H

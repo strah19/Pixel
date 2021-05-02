@@ -8,6 +8,7 @@
 #include "Lighting/Material.h"
 #include "Models/Model.h"
 #include "Core/ResourceManagers.h"
+#include "Renderer/CubeMap.h"
 
 namespace Pixel {
 	struct Vertex {
@@ -27,6 +28,8 @@ namespace Pixel {
 	constexpr size_t MAX_TEXTURE_SLOTS = 32;
 	constexpr size_t MAX_DRAW_COMMANDS = 1000;
 	constexpr size_t MAX_INSTANCE_COUNT = 10000;
+	constexpr size_t MAX_MATERIAL_COUNT = 64;
+	constexpr size_t MAX_LIGHT_COUNT = 64;
 	constexpr glm::vec2 TEX_COORDS[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 	constexpr glm::vec4 QUAD_POSITIONS[QUAD_VERTEX_COUNT] = {
 		{ -0.5f, -0.5f, 0.0f, 1.0f },
@@ -45,6 +48,10 @@ namespace Pixel {
 		{ -0.5f, -0.5f, -1.0f }, { 0.5f, -0.5f, -1.0f }, { 0.5f,  -0.5f, 0.0f }, { -0.5f,  -0.5f, 0.0f }
 	};
 
+	enum RenderFlags {
+		SkyBoxFlag = 0x01, None = 0x02
+	};
+
 	class Renderer {
 	public:
 		static void Init();
@@ -52,12 +59,12 @@ namespace Pixel {
 
 		static void SetShaderToDefualt();
 		static void InitRendererShader(Shader* shader);
-		static void SetShader(ShaderInfo* shader);
+		static void SetShader(std::shared_ptr<Shader>* shader);
 		static void SetMaterialId(uint32_t material_id);
 
 		static uint32_t GetShaderId();
 
-		static void BeginScene(Camera& camera);
+		static void BeginScene(Camera& camera, RenderFlags flags = RenderFlags::None);
 		static void EndScene();
 		static void NewBatch();
 
@@ -78,7 +85,7 @@ namespace Pixel {
 		static void DrawCube(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]);
 
 		static void DrawQuad(const glm::mat4& translation, const glm::vec4& color, float texture_id, const glm::vec2 tex_coords[]);
-
+		
 		static void GoToNextDrawCommand();
 		static void MakeCommand();
 	private:

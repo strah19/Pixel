@@ -76,5 +76,17 @@ namespace Pixel {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		current_texture_id = 0;
 	}
+
+	unsigned char* LoadTexture(const char* file_path, int* x, int* y, int* comp, int req) {
+		return stbi_load(file_path, x, y, comp, req);
+	}
+
+	void FlipBeforeLoad() {
+		stbi_set_flip_vertically_on_load(1);
+	}
+
+	void FreeTexture(void* data) {
+		stbi_image_free(data);
+	}
 }
 

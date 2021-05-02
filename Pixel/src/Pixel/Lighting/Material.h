@@ -11,17 +11,15 @@ namespace Pixel {
 		std::shared_ptr<Texture>* diffuse;
 		std::shared_ptr<Texture>* specular;
 		float shininess;
-		LightSource light_source;
 
-		TextureMaterial(std::shared_ptr<Texture>& diffuse, std::shared_ptr<Texture>& specular, float shininess, const LightSource& light_source)
-			: diffuse(&diffuse), specular(&specular), shininess(shininess), light_source(light_source) {
+		TextureMaterial(std::shared_ptr<Texture>& diffuse, std::shared_ptr<Texture>& specular, float shininess)
+			: diffuse(&diffuse), specular(&specular), shininess(shininess) {
 		}
 
 		TextureMaterial(const TextureMaterial& material) {
 			diffuse = material.diffuse;
 			specular = material.specular;
 			shininess = material.shininess;
-			light_source = material.light_source;
 		}
 
 		TextureMaterial() = default;

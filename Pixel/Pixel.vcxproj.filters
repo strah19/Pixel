@@ -165,9 +165,6 @@
     <ClInclude Include="src\Pixel\Renderer\InstanceRenderer.h">
       <Filter>Pixel\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\Renderer\Material.h">
-      <Filter>Pixel\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\Renderer.h">
       <Filter>Pixel\Renderer</Filter>
     </ClInclude>
@@ -198,6 +195,10 @@
     <ClInclude Include="src\Pixel\pixelpch.h">
       <Filter>Pixel</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pixel\ECS\EntityComponentSystem.h" />
+    <ClInclude Include="src\Pixel\ECS\PositionComponent.h" />
+    <ClInclude Include="src\Pixel\Renderer\CubeMap.h" />
+    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLCubeMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
@@ -242,12 +243,6 @@
     <ClCompile Include="src\Pixel\ImGui\ImGuiLayer.cpp">
       <Filter>Pixel\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pixel\Lighting\Light.cpp">
-      <Filter>Pixel\Lighting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Pixel\Lighting\Material.cpp">
-      <Filter>Pixel\Lighting</Filter>
-    </ClCompile>
     <ClCompile Include="src\Pixel\Models\Mesh.cpp">
       <Filter>Pixel\Models</Filter>
     </ClCompile>
@@ -290,9 +285,6 @@
     <ClCompile Include="src\Pixel\Renderer\InstanceRenderer.cpp">
       <Filter>Pixel\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pixel\Renderer\Material.cpp">
-      <Filter>Pixel\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Renderer.cpp">
       <Filter>Pixel\Renderer</Filter>
     </ClCompile>
@@ -323,5 +315,9 @@
     <ClCompile Include="src\Pixel\pixelpch.cpp">
       <Filter>Pixel</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pixel\ECS\EntityComponentSystem.cpp" />
+    <ClCompile Include="src\Pixel\ECS\PositionComponent.cpp" />
+    <ClCompile Include="src\Pixel\Renderer\CubeMap.cpp" />
+    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLCubeMap.cpp" />
   </ItemGroup>
 </Project>

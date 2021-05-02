@@ -62,28 +62,30 @@ struct Light {
     float quadratic;
 };
 
+#define MAX_MATERIAL_SIZE 64
+
 layout(binding = 1) buffer Materials 
 {
     Light light;
-    Material material;
     vec4 view_pos;
+    Material material[MAX_MATERIAL_SIZE];
 };
 
 uniform sampler2D textures[32];
 
 void main()
 {
-    vec4 ambient  = light.ambient * material.ambient;
+    vec4 ambient  = light.ambient * material[int(out_material_id)].ambient;
 
     vec4 norm = normalize(vec4(out_normal, 1.0));
     vec4 light_dir = normalize(light.position - out_pos);
     float diff = max(dot(norm, light_dir), 0.0);
-    vec4 diffuse  = light.diffuse * (diff * material.diffuse);
+    vec4 diffuse  = light.diffuse * (diff * material[int(out_material_id)].diffuse);
     
     vec4 view_dir = normalize(view_pos - out_pos);
     vec4 reflect_dir = reflect(-light_dir, norm);  
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess.x);
-    vec4 specular = light.specular * (spec * material.specular);  
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), material[int(out_material_id)].shininess.x);
+    vec4 specular = light.specular * (spec * material[int(out_material_id)].specular);  
         
     float distance    = length(light.position - out_pos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + 

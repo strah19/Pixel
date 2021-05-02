@@ -27,6 +27,10 @@ namespace Pixel {
 		uint32_t height = 0;
 		GLenum internal_format = 0, data_format = 0;
 	};
+
+	unsigned char* LoadTexture(const char* file_path, int* x, int* y, int* comp, int req);
+	void FlipBeforeLoad();
+	void FreeTexture(void* data);
 }
 
 #endif // !OPENGL_TEXTURE_H
