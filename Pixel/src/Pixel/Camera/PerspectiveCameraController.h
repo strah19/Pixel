@@ -12,16 +12,18 @@ namespace Pixel {
 	public:
 		PerspectiveCameraController() = default;
 		PerspectiveCameraController(glm::vec2& window_size);
-		PerspectiveCamera& GetCamera() { return camera; }
 		void OnEvent(Event& event);
 		void Update();
-		void SetFreeze(bool f);
+		void SetFreeze(bool freeze);
+		inline void SetCameraSpeed(float speed) { this->speed = speed; }
 
 		inline glm::vec3 GetFrontCamera() const { return camera_front; }
+		inline PerspectiveCamera& GetCamera() { return camera; }
 	private:
-		bool MouseWheelHandler(MouseWheelEvent& mousewheel);
-		bool KeyboardHandler(KeyboardEvents& keyboard);
-		bool WindowResizeHandler(ResizeEvent& resize);
+		void MouseWheelHandler(MouseWheelEvent& mousewheel);
+		void KeyboardHandler(KeyboardEvents& keyboard);
+		void WindowResizeHandler(ResizeEvent& resize);
+	private:
 		float aspect_ratio = 0.0f;
 		PerspectiveCamera camera;
 		float fov = 60.0f;
@@ -36,6 +38,7 @@ namespace Pixel {
 
 		glm::vec3 camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 camera_front = glm::vec3(0.0f, 0.0f, -1.0f);
+		float speed = 0.2f;
 
 		bool in_camera_mode = false;
 		bool freeze = false;

@@ -10,17 +10,11 @@ namespace Pixel {
 	class Event {
 	public:
 		Event(const std::string& name)
-			: active(true), Handled(false), name(name) { }
+			: name(name) { }
 		virtual ~Event() = default;
-
-		bool ActivityCheck() const { return active; }
-		void Active(bool active) { this->active = active; }
-
-		bool Handled;
 
 		virtual std::string GetName() const = 0;
 	protected:
-		bool active;
 		std::string name;
 	};
 
@@ -35,9 +29,9 @@ namespace Pixel {
 		}
 
 		template<typename T>
-		bool Dispatch(const std::function<bool(T&)> func) {
-			if (event->ActivityCheck() && dynamic_cast<T*>(event)) {
-				event->Handled = func(static_cast<T&>(*event));
+		bool Dispatch(const std::function<void(T&)> func) {
+			if (dynamic_cast<T*>(event)) {
+				func(static_cast<T&>(*event));
 				return true;
 			}
 			return false;

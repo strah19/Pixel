@@ -86,6 +86,7 @@ namespace Pixel {
 	}
 
 	void InstanceRenderer::BeginScene(Camera& camera) {
+		Pixel::SSBOManager::GetSSBOManager()->QueueForNewFrame();
 		renderer_data.proj_view = camera.GetProjection() * camera.GetView();
 		renderer_data.current_shader = &renderer_data.default_shader;
 		StartBatch();
@@ -127,7 +128,7 @@ namespace Pixel {
 				renderer_data.vertices_ptr->texture_id = tex_id;
 				renderer_data.vertices_ptr++;
 			}
-			renderer_data.num_of_vertices_in_batch += model->GetMeshes()[mesh].vertices.size() + 1;
+			renderer_data.num_of_vertices_in_batch += (uint32_t) model->GetMeshes()[mesh].vertices.size() + 1;
 
 			if (past_mesh != nullptr) {
 				model->GetMeshes()[mesh].indices.front() = past_mesh->indices.back() + 1;
@@ -139,7 +140,7 @@ namespace Pixel {
 				*renderer_data.index_ptr = model->GetMeshes()[mesh].indices[index];
 				renderer_data.index_ptr++;
 			}
-			renderer_data.current_draw_command_vertex_size += model->GetMeshes()[mesh].indices.size();
+			renderer_data.current_draw_command_vertex_size += (uint32_t) model->GetMeshes()[mesh].indices.size();
 		}
 
 		renderer_data.in_buffer_models.push_back(model);

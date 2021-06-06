@@ -10,7 +10,6 @@ namespace Pixel {
 		glm::vec3 position;
 		glm::vec2 texture_coordinates;
 		glm::vec3 normals = glm::vec3(0, 0, 0);
-		float instance_id;
 	};
 
 	struct MeshTexture {

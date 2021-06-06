@@ -16,14 +16,17 @@
     <Filter Include="Pixel\Core\Utility">
       <UniqueIdentifier>{22CAAF20-0EAE-7076-770E-6BC963115BF8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pixel\ECS">
+      <UniqueIdentifier>{F1F7A248-5D62-57BF-A6A0-0865124A3514}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Pixel\Events">
       <UniqueIdentifier>{2B62FEA8-17C5-8D4D-C04A-C603AC8C59D0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pixel\ImGui">
       <UniqueIdentifier>{91FE9FFD-FDB3-18F3-86A8-12CAF25C0FF7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pixel\Lighting">
-      <UniqueIdentifier>{8CF77473-78C5-6879-6159-D99F4DC644DE}</UniqueIdentifier>
+    <Filter Include="Pixel\Materials">
+      <UniqueIdentifier>{B8E712D6-2473-809A-2D84-038F998EDC9A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pixel\Models">
       <UniqueIdentifier>{FA4728BB-E6AA-B75F-8F30-F0157B7283E2}</UniqueIdentifier>
@@ -81,6 +84,9 @@
     <ClInclude Include="src\Pixel\Core\KeyCodes.h">
       <Filter>Pixel\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pixel\Core\Layer.h">
+      <Filter>Pixel\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Pixel\Core\Logger.h">
       <Filter>Pixel\Core</Filter>
     </ClInclude>
@@ -95,6 +101,12 @@
     </ClInclude>
     <ClInclude Include="src\Pixel\Core\Utility\Timer.h">
       <Filter>Pixel\Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\ECS\EntityComponentSystem.h">
+      <Filter>Pixel\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\ECS\Components\PositionComponent.h">
+      <Filter>Pixel\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Events\EventHandler.h">
       <Filter>Pixel\Events</Filter>
@@ -114,11 +126,11 @@
     <ClInclude Include="src\Pixel\ImGui\ImGuiLayer.h">
       <Filter>Pixel\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\Lighting\Light.h">
-      <Filter>Pixel\Lighting</Filter>
+    <ClInclude Include="src\Pixel\Materials\Light.h">
+      <Filter>Pixel\Materials</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\Lighting\Material.h">
-      <Filter>Pixel\Lighting</Filter>
+    <ClInclude Include="src\Pixel\Materials\Material.h">
+      <Filter>Pixel\Materials</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Models\Mesh.h">
       <Filter>Pixel\Models</Filter>
@@ -133,6 +145,9 @@
       <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLContext.h">
+      <Filter>Pixel\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLCubeMap.h">
       <Filter>Pixel\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.h">
@@ -157,6 +172,9 @@
       <Filter>Pixel\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\Buffers.h">
+      <Filter>Pixel\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pixel\Renderer\CubeMap.h">
       <Filter>Pixel\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Pixel\Renderer\FrameBuffer.h">
@@ -195,10 +213,9 @@
     <ClInclude Include="src\Pixel\pixelpch.h">
       <Filter>Pixel</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pixel\ECS\EntityComponentSystem.h" />
-    <ClInclude Include="src\Pixel\ECS\PositionComponent.h" />
-    <ClInclude Include="src\Pixel\Renderer\CubeMap.h" />
-    <ClInclude Include="src\Pixel\Platform\OpenGL\OpenGLCubeMap.h" />
+    <ClInclude Include="src\Pixel\ECS\Scene\Scene.h" />
+    <ClInclude Include="src\Pixel\ECS\Components\TagComponent.h" />
+    <ClInclude Include="src\Pixel\ECS\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CinderFileSystem\CFSFile.cpp">
@@ -225,6 +242,9 @@
     <ClCompile Include="src\Pixel\Core\Application.cpp">
       <Filter>Pixel\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pixel\Core\Layer.cpp">
+      <Filter>Pixel\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Pixel\Core\Logger.cpp">
       <Filter>Pixel\Core</Filter>
     </ClCompile>
@@ -233,6 +253,12 @@
     </ClCompile>
     <ClCompile Include="src\Pixel\Core\Utility\RandomNumberGenerator.cpp">
       <Filter>Pixel\Core\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\ECS\EntityComponentSystem.cpp">
+      <Filter>Pixel\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\ECS\Components\PositionComponent.cpp">
+      <Filter>Pixel\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Events\EventHandler.cpp">
       <Filter>Pixel\Events</Filter>
@@ -253,6 +279,9 @@
       <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>Pixel\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLCubeMap.cpp">
       <Filter>Pixel\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLFrameBuffer.cpp">
@@ -277,6 +306,9 @@
       <Filter>Pixel\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\Buffer.cpp">
+      <Filter>Pixel\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pixel\Renderer\CubeMap.cpp">
       <Filter>Pixel\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Pixel\Renderer\FrameBuffer.cpp">
@@ -315,9 +347,7 @@
     <ClCompile Include="src\Pixel\pixelpch.cpp">
       <Filter>Pixel</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pixel\ECS\EntityComponentSystem.cpp" />
-    <ClCompile Include="src\Pixel\ECS\PositionComponent.cpp" />
-    <ClCompile Include="src\Pixel\Renderer\CubeMap.cpp" />
-    <ClCompile Include="src\Pixel\Platform\OpenGL\OpenGLCubeMap.cpp" />
+    <ClCompile Include="src\Pixel\ECS\Scene\Scene.cpp" />
+    <ClCompile Include="src\Pixel\ECS\Components\TagComponent.cpp" />
   </ItemGroup>
 </Project>

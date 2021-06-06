@@ -26,21 +26,18 @@ namespace Pixel {
 
 	void OrthoCameraController::OnEvent(Event& event) {
 		EventDispatcher dispatcher(&event);
-		if (!freeze) {
+		if (!freeze) 
 			dispatcher.Dispatch<MouseWheelEvent>(PIXEL_BIND_EVENT(MouseWheelHandler));
-		}
 		dispatcher.Dispatch<ResizeEvent>(PIXEL_BIND_EVENT(WindowResizeHandler));
 	}
 
-	bool OrthoCameraController::MouseWheelHandler(MouseWheelEvent& mousewheel) {
+	void OrthoCameraController::MouseWheelHandler(MouseWheelEvent& mousewheel) {
 		zoom += mousewheel.yoffset * ZOOM_SPEED;
 		camera.SetProjection(aspect_ratio * zoom, -aspect_ratio * zoom, zoom, -zoom);
-		return true;
 	}
 
-	bool OrthoCameraController::WindowResizeHandler(ResizeEvent& resize) {
+	void OrthoCameraController::WindowResizeHandler(ResizeEvent& resize) {
 		aspect_ratio = (float) resize.width / (float) resize.height;
 		camera.SetProjection(aspect_ratio * zoom, -aspect_ratio * zoom, zoom, -zoom);
-		return true;
 	}
 }

@@ -5,7 +5,7 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/Texture.h"
 #include "Camera/Camera.h"
-#include "Lighting/Material.h"
+#include "Materials/Material.h"
 #include "Models/Model.h"
 #include "Core/ResourceManagers.h"
 #include "Renderer/CubeMap.h"

@@ -7,7 +7,6 @@
 namespace Pixel {
 	constexpr float SMALLEST_ZOOM = 1.0f;
 	constexpr float HIGHEST_ZOOM = 60.0f;
-	constexpr float CAMERA_SPEED = 0.2f;
 
 	PerspectiveCameraController::PerspectiveCameraController(glm::vec2& window_size) {
 		aspect_ratio = (float)window_size.x / (float)window_size.y;
@@ -26,13 +25,13 @@ namespace Pixel {
 			latest_camera_position = camera_pos;
 
 				if (EventHandler::KeyPressed(PIXEL_KEY_D))
-				camera_pos += glm::normalize(glm::cross(camera_front, camera_up)) * CAMERA_SPEED;
+				camera_pos += glm::normalize(glm::cross(camera_front, camera_up)) * speed;
 				if (EventHandler::KeyPressed(PIXEL_KEY_A))
-					camera_pos -= glm::normalize(glm::cross(camera_front, camera_up)) * CAMERA_SPEED;
+					camera_pos -= glm::normalize(glm::cross(camera_front, camera_up)) * speed;
 				if (EventHandler::KeyPressed(PIXEL_KEY_W))
-					camera_pos += CAMERA_SPEED * camera_front;
+					camera_pos += speed * camera_front;
 				if (EventHandler::KeyPressed(PIXEL_KEY_S))
-					camera_pos -= CAMERA_SPEED * camera_front;
+					camera_pos -= speed * camera_front;
 
 			float xoffset = EventHandler::GetMouseCoordinates().x - last_mouse_position.x;
 			float yoffset = last_mouse_position.y - EventHandler::GetMouseCoordinates().y;
@@ -67,30 +66,28 @@ namespace Pixel {
 		dispatcher.Dispatch<ResizeEvent>(PIXEL_BIND_EVENT(WindowResizeHandler));
 	}
 
-	bool PerspectiveCameraController::MouseWheelHandler(MouseWheelEvent& mousewheel) {
+	void PerspectiveCameraController::MouseWheelHandler(MouseWheelEvent& mousewheel) {
 		fov -= mousewheel.yoffset;
 		if (fov < SMALLEST_ZOOM)
 			fov = SMALLEST_ZOOM;
 		if (fov > HIGHEST_ZOOM)
 			fov = HIGHEST_ZOOM;
 		camera.SetProjection(glm::radians(fov), aspect_ratio);
-		return true;
 	}
 
-	bool PerspectiveCameraController::WindowResizeHandler(ResizeEvent& resize) {
+	void PerspectiveCameraController::WindowResizeHandler(ResizeEvent& resize) {
 		aspect_ratio = (float)resize.width / (float)resize.height;
 		camera.SetProjection(glm::radians(fov), aspect_ratio);
-		return true;
 	}
 
-	void PerspectiveCameraController::SetFreeze(bool f) {
-		freeze = f;
+	void PerspectiveCameraController::SetFreeze(bool freeze) {
+		this->freeze = freeze;
 
-		if(freeze)
+		if(this->freeze)
 			glfwSetInputMode(static_cast<GLFWwindow*>(Application::GetApp()->GetWindow()->GetNativeWindow()), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	bool PerspectiveCameraController::KeyboardHandler(KeyboardEvents& keyboard) {
+	void PerspectiveCameraController::KeyboardHandler(KeyboardEvents& keyboard) {
 		if (keyboard.key == PIXEL_KEY_M && keyboard.action == GLFW_PRESS) {
 			in_camera_mode = !in_camera_mode;
 			last_mouse_position = EventHandler::GetMouseCoordinates();
@@ -99,6 +96,5 @@ namespace Pixel {
 			else
 				glfwSetInputMode(static_cast<GLFWwindow*>(Application::GetApp()->GetWindow()->GetNativeWindow()), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
-		return true;
 	}
 }

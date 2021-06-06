@@ -7,6 +7,9 @@
 #include "Events/Events.h"
 #include "Events/WindowEvents.h"
 #include "Events/MouseEvents.h"
+#include "Renderer/FrameBuffer.h"
+#include "Layer.h"
+#include "ImGui/ImGuiLayer.h"
 
 int main(int argc, char** argv);
 
@@ -17,10 +20,12 @@ namespace Pixel {
 		virtual ~Application();
 
 		void Run();
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
+
 		virtual void UserDefEvent(Event& event) { }
 		virtual void OnUpdate(float delta) { }
 		virtual void OnDestroy() { }
-
 
 		static float GetTick();
 		static Application* GetApp() { return instance; }
@@ -28,12 +33,14 @@ namespace Pixel {
 	private:
 		bool is_running;
 		std::unique_ptr<Window> window;
+		LayerStack layers;
+		ImGuiLayer* imgui_layer;
 
 		float delta = 0.0f;
 		float old_time_since_start = 0.0f;
 
-		bool OnClose(const QuitEvent& event);
-		bool OnResize(const ResizeEvent& event);
+		void OnClose(const QuitEvent& event);
+		void OnResize(const ResizeEvent& event);
 		void OnEvent(Event& event);
 
 		static Application* instance; 

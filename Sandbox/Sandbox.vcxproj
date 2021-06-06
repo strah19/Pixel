@@ -137,11 +137,9 @@
     <ProjectReference Include="..\Pixel\Pixel.vcxproj">
       <Project>{2748E20D-935C-0ABF-5CDE-AD1EC8B106F0}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\color_material_shaders\material_directional_light_shader.glsl" />
-    <None Include="shaders\color_material_shaders\material_point_light_shader.glsl" />
-    <None Include="shaders\cube_map_shader.glsl" />
+    <ProjectReference Include="..\PixelEditor\PixelEditor.vcxproj">
+      <Project>{2E9FD832-9A54-5128-2349-4BFF8FFD472C}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

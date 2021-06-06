@@ -11,13 +11,14 @@ namespace Pixel {
 	public:
 		OrthoCameraController() = default;
 		OrthoCameraController(glm::vec2& window_size);
+
 		OrthoCamera& GetCamera() { return camera; }
 		void OnEvent(Event& event);
 		void Update();
-		void SetFreeze(bool f) { freeze = f; }
+		inline void SetFreeze(bool freeze) { this->freeze = freeze; }
 	private:
-		bool MouseWheelHandler(MouseWheelEvent& mousewheel);
-		bool WindowResizeHandler(ResizeEvent& resize);
+		void MouseWheelHandler(MouseWheelEvent& mousewheel);
+		void WindowResizeHandler(ResizeEvent& resize);
 	private:
 		OrthoCamera camera;
 

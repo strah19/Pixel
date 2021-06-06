@@ -13,6 +13,7 @@
 #include "Core/ResourceManagers.h"
 #include "Core/Utility/RandomNumberGenerator.h"
 #include "Core/Utility/Timer.h"
+#include "Core/Layer.h"
 
 #include "Camera/Camera.h"
 #include "Camera/OrthoCamera.h"
@@ -40,6 +41,6 @@
 #include "Scripting/Scripting.h"
 
 #include "ECS/EntityComponentSystem.h"
-#include "ECS/PositionComponent.h"
+#include "ECS/Components/PositionComponent.h"
 
 #endif // !PIXEL_H

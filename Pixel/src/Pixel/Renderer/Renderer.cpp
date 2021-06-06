@@ -84,6 +84,7 @@ namespace Pixel {
 	}
 
 	void Renderer::BeginScene(Camera& camera, RenderFlags flags) {
+		Pixel::SSBOManager::GetSSBOManager()->QueueForNewFrame();
 		if (flags & RenderFlags::SkyBoxFlag) {
 			glm::mat4 view = glm::mat4(glm::mat3(camera.GetView()));
 			renderer_data.proj_view = camera.GetProjection() * view;
