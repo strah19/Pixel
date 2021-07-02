@@ -1,7 +1,6 @@
 # Pixel
 
 ```c++
-#include <iostream>
 #include <Pixel.h>
 
 class Sandbox : public Pixel::Application {
@@ -34,3 +33,8 @@ Pixel::Application* Pixel::CreateApplication()
 }
 
 ```
+
+<h1>To Do</h1>
+
+<ul>
+	<li>Refactor ALL renderering code (get rid of smart pointers and do some bentchmarking), finish up the instance renderer for models.<li>
