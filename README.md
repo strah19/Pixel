@@ -43,5 +43,9 @@ Pixel::Application* Pixel::CreateApplication()
 	<li>Implement a simple lighting system that is derived from Entities.</li>
 	<li>Try out an animation system.</li>
 	<li>(FUTURE) Make my own model loader and math library</li>
-	<li></li>
+	<li>Continue the GUI for the engine. Finish up the entity gui system and start adding more components. Sprite Component, Script Component, Lighting Component. Also add a renderer list for the scene that can be edited using frustum culling and other rendering fixes. This should improve performance.</li>
+	<li>Add a scene serializer. Probably make our own using my file manager library.</li>
+	<li>Create a directory viewer for our files and assets.</li>
+	<li>Make a command console and logger where we can see output and commands from their game but also from the engine. (Anything that is being logged can be seen in the gui).</li>
+	<li>Create a menu header for quick access to useful features (Stuff like file, edit, view).</li>
 </ul>
