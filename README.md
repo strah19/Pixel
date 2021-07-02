@@ -36,7 +36,12 @@ Pixel::Application* Pixel::CreateApplication()
 
 <h1>To Do</h1>
 
-<ul style=" list-style-type: none;">
-	<li>Refactor ALL renderering code (get rid of smart pointers and do some bentchmarking), finish up the instance renderer for models.<li>
-	<li>Test the material system with different lighting effects.<li>
+<ul>
+	<li>Refactor ALL renderering code (get rid of smart pointers and do some benchmarking), finish up the instance renderer for models. Refer to the Ember renderer for the batch renderer. </li>
+	<li>Test the material system with different lighting effects.</li>
+	<li>Try to fix the cubemap bug.</li>
+	<li>Implement a simple lighting system that is derived from Entities.</li>
+	<li>Try out an animation system.</li>
+	<li>(FUTURE) Make my own model loader and math library</li>
+	<li></li>
 </ul>
