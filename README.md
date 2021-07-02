@@ -36,5 +36,7 @@ Pixel::Application* Pixel::CreateApplication()
 
 <h1>To Do</h1>
 
-<ul>
+<ul style=" list-style-type: none;">
 	<li>Refactor ALL renderering code (get rid of smart pointers and do some bentchmarking), finish up the instance renderer for models.<li>
+	<li>Test the material system with different lighting effects.<li>
+</ul>
